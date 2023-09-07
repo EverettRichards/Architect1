@@ -1,0 +1,32 @@
+<form action="#"
+      th:action="@{/update/{name}(name=${stock.name})}"
+      th:object="${stock}"
+      method="post">
+    <label for="name">Name</label>
+    <input type="text" th:field="*{name}" id="name" placeholder="Name">
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+    <input type="submit" value="Create or Update Stock">
+</form>
+
+<div th:switch="${stocks}">
+    <h2 th:case="null">No stocks yet!</h2>
+    <div th:case="*">
+        <h2>Stocks</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="stock : ${stocks}">
+                <td th:text="${stock.name}"></td>
+                <td><a th:href="@{/edit/{name}(name=${stock.name})}">Edit</a></td>
+                <td><a th:href="@{/delete/{name}(name=${stock.name})}">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
