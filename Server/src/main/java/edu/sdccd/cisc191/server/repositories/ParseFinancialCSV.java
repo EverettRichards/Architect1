@@ -20,7 +20,17 @@ public class ParseFinancialCSV {
         System.out.println(totalOutput);
     }
 
-    public ParseFinancialCSV(String fileAddress){
+    public ParseFinancialCSV(String fileAddress) throws IOException{
+        try (FileReader fr = new FileReader(fileAddress,StandardCharsets.UTF_8);
+             CSVReader reader = new CSVReader(fr)) {
 
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                for (String e : nextLine) {
+                    System.out.println(e);
+                }
+            }
+
+        }
     }
 }
