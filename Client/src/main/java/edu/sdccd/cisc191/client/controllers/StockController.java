@@ -1,6 +1,5 @@
 package edu.sdccd.cisc191.client.controllers;
 
-import edu.sdccd.cisc191.common.entities.Stock;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

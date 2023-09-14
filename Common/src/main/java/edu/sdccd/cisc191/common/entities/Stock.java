@@ -22,7 +22,7 @@ public class Stock {
     }
 
     public Stock(String newTicker, String newName, String newDescription,
-                 double newDividend, String newSector, double newPrice){
+                 String newSector, double newPrice, double newDividend){
         setTicker(newTicker);
         setName(newName);
         setDescription(newDescription);

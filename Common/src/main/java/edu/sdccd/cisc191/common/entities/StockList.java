@@ -28,7 +28,7 @@ public class StockList {
 
     public String getAllStockInfo(){
         String outputString = "";
-        String formatString = "%s (%s). $%.2f/share. $%.2f dividend/share (%.2f%). Sector: %s. Description: %s.";
+        String formatString = "%s (%s). $%.2f/share. Div yield $%.2f (%.2f%%). Sector: %s. Description: %s.";
         for (int i=0;i<stocks.length;i++){
             Stock thisStock = stocks[i];
             String thisLine = String.format(formatString,

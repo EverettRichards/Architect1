@@ -1,6 +1,5 @@
 package edu.sdccd.cisc191.client;
 
-import edu.sdccd.cisc191.common.entities.Stock;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

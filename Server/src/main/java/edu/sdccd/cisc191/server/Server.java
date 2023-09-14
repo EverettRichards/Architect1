@@ -1,6 +1,5 @@
 package edu.sdccd.cisc191.server;
 
-import edu.sdccd.cisc191.common.entities.Stock;
 import edu.sdccd.cisc191.server.repositories.StockRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
