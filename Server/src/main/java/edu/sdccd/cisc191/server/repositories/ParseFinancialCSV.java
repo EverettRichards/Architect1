@@ -2,6 +2,11 @@ package edu.sdccd.cisc191.server.repositories;
 
 import edu.sdccd.cisc191.common.entities.Stock;
 import edu.sdccd.cisc191.common.entities.StockList;
+import com.opencsv.CSVReader;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class ParseFinancialCSV {
     public static void main(String[] args){
