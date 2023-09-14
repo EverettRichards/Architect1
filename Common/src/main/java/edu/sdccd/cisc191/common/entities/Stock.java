@@ -1,19 +1,17 @@
 package edu.sdccd.cisc191.common.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
-@Entity
 public class Stock {
-    @Id
     String ticker;
 
-    @Column(length=14)
     String name;
 
-    @Column(length=255)
     String description;
+
+    double sharePrice;
+
+    double dividendYield;
+
+    String stockSector;
 
     public Stock(){};
 
@@ -21,6 +19,16 @@ public class Stock {
     public Stock(String newTicker) {
         setTicker(newTicker);
 
+    }
+
+    public Stock(String newTicker, String newName, String newDescription,
+                 double newDividend, String newSector, double newPrice){
+        setTicker(newTicker);
+        setName(newName);
+        setDescription(newDescription);
+        setDividend(newDividend);
+        setSector(newSector);
+        setPrice(newPrice);
     }
 
     public String getTicker() {
@@ -45,5 +53,29 @@ public class Stock {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public double getPrice() {
+        return sharePrice;
+    }
+
+    public void setPrice(double price) {
+        this.sharePrice = price;
+    }
+
+    public double getDividend() {
+        return dividendYield;
+    }
+
+    public void setDividend(double dividend) {
+        this.dividendYield = dividend;
+    }
+
+    public String getSector() {
+        return stockSector;
+    }
+
+    public void setSector(String name) {
+        this.stockSector = name;
     }
 }
