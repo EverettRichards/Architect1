@@ -24,13 +24,21 @@ public class ParseFinancialCSV {
     public static void ParseCSV(String fileAddress) throws IOException, CsvValidationException {
         try (FileReader fr = new FileReader(fileAddress,StandardCharsets.UTF_8);
              CSVReader reader = new CSVReader(fr)) {
-            System.out.println("Check1");
             String[] nextLine;
+            reader.readNext();
+            Stock[] theseStocks = new Stock[1000];
+            int i = 0;
             while ((nextLine = reader.readNext()) != null) {
-                for (String e : nextLine) {
-                    System.out.println(e);
-                }
+                Stock thisStock = new Stock(nextLine[0],nextLine[1],"Generic company",nextLine[2],Double.parseDouble(nextLine[3]),Double.parseDouble(nextLine[5]));
+                theseStocks[i]=thisStock;
+                i++;
             }
+            Stock[] theseAdjustedStocks = new Stock[i];
+            for (int j=0; j<i; j++) {
+                theseAdjustedStocks[j] = theseStocks[j];
+            }
+            StockList thisStockList = new StockList(theseAdjustedStocks);
+            System.out.println(thisStockList.getAllStockInfo());
         }
     }
     public ParseFinancialCSV(){
