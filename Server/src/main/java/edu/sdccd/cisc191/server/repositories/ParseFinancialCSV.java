@@ -1,5 +1,6 @@
 package edu.sdccd.cisc191.server.repositories;
 
+import com.opencsv.exceptions.CsvValidationException;
 import edu.sdccd.cisc191.common.entities.Stock;
 import edu.sdccd.cisc191.common.entities.StockList;
 import com.opencsv.CSVReader;
@@ -20,7 +21,7 @@ public class ParseFinancialCSV {
         System.out.println(totalOutput);
     }
 
-    public ParseFinancialCSV(String fileAddress) throws IOException{
+    public ParseFinancialCSV(String fileAddress) throws IOException, CsvValidationException {
         try (FileReader fr = new FileReader(fileAddress,StandardCharsets.UTF_8);
              CSVReader reader = new CSVReader(fr)) {
 
