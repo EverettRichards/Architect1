@@ -13,7 +13,7 @@ public class Stock {
 
     String stockSector;
 
-    public Stock(){};
+    public Stock(){}
 
 
     public Stock(String newTicker) {

@@ -10,14 +10,14 @@ public class StockList {
 
     public StockList(Stock[] conveyedStocks) {
         stocks = new Stock[conveyedStocks.length];
-        for (i=0;i<conveyedStocks.length;i++){
+        for (int i=0;i<conveyedStocks.length;i++){
             stocks[i] = conveyedStocks[i];
         }
     }
 
     public String getTickers(){
         String outputString = "";
-        for (i=0;i<stocks.length;i++){
+        for (int i=0;i<stocks.length;i++){
             outputString = outputString + stocks[i].ticker;
             if (i<stocks.length-1){
                 outputString = outputString + ",";
@@ -29,7 +29,7 @@ public class StockList {
     public String getAllStockInfo(){
         String outputString = "";
         String formatString = "%s (%s). $%.2f/share. $%.2f dividend/share (%.2f%). Sector: %s. Description: %s.";
-        for (i=0;i<stocks.length;i++){
+        for (int i=0;i<stocks.length;i++){
             Stock thisStock = stocks[i];
             String thisLine = String.format(formatString,
                     thisStock.getName(), thisStock.getTicker(),
