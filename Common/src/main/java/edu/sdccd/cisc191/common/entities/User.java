@@ -11,7 +11,7 @@ public abstract class User {
         return username;
     }
 
-    public User(String name, int authLevel){
+    public User(String name, int authLevel){ // constructor for the abstract class
         username = name;
         authorizationLevel = authLevel;
         userid = ++currentID;
