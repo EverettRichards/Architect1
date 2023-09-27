@@ -8,4 +8,17 @@ public class AdminAccount {
     public boolean isActive = false;
 
     //TODO methods to manage admin accounts
+
+    public AdminAccount (String name, String passWord){
+        this.adminAccountName = name;
+        this.adminAccountPassword =  passWord;
+    }
+
+    public String getAdminAccountName() {
+        return adminAccountName;
+    }
+
+    public void setAdminAccountName(String adminAccountName) {
+        this.adminAccountName = adminAccountName;
+    }
 }
