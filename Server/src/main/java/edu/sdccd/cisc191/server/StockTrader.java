@@ -1,10 +1,16 @@
 package edu.sdccd.cisc191.server;
 
-public class StockTrader
+import edu.sdccd.cisc191.common.entities.User;
+
+public class StockTrader extends User
 {
     public String stockTraderName;
 
     public String stockTraderID;
+
+    public StockTrader(String name, int authLevel) {
+        super(name, authLevel);
+    }
 
     public String getStockTraderName() {
         return stockTraderName;
