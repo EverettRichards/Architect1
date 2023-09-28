@@ -15,7 +15,7 @@ public class StockTrader extends User
      * @see User
      */
     public StockTrader(String name, int authLevel) {
-        super(name, authLevel);
+        super();
     }
 
     @Override
