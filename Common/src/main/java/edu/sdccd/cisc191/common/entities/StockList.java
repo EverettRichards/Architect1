@@ -1,7 +1,5 @@
 package edu.sdccd.cisc191.common.entities;
 
-import edu.sdccd.cisc191.server.database.Stock;
-
 public class StockList {
     private Stock[] stocks;
     private User owner;

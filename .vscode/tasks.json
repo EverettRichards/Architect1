@@ -12,7 +12,7 @@
         {
             "label": "compile and run server",
             "type": "shell",
-            "command": "mvn -pl Server -am spring-boot:run",
+            "command": "mvn clean install -pl Server -am",
             "group": "build"
         },
         {
