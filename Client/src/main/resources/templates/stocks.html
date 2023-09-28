@@ -1,32 +1,52 @@
-<form action="#"
-      th:action="@{/update/{name}(name=${stock.name})}"
-      th:object="${stock}"
-      method="post">
-    <label for="name">Name</label>
-    <input type="text" th:field="*{name}" id="name" placeholder="Name">
-    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
-    <input type="submit" value="Create or Update Stock">
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CISC 191 Architect 1 | Stocks</title>
+</head>
+<body>
+    <header>
+      <h1>Your Stocks!</h1>
+    </header>
+
+    <div>
+        <h2>Go back to home:</h2>
+        <a th:href="@{/}">Home</a>
+    </div>
+<!--<form action="#"
+  th:action="@{/update/{name}(name=${stock.name})}"
+  th:object="${stock}"
+  method="post">
+<label for="name">Name</label>
+<input type="text" th:field="*{name}" id="name" placeholder="Name">
+<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+<input type="submit" value="Create or Update Stock">
 </form>
 
 <div th:switch="${stocks}">
-    <h2 th:case="null">No stocks yet!</h2>
-    <div th:case="*">
-        <h2>Stocks</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="stock : ${stocks}">
-                <td th:text="${stock.name}"></td>
-                <td><a th:href="@{/edit/{name}(name=${stock.name})}">Edit</a></td>
-                <td><a th:href="@{/delete/{name}(name=${stock.name})}">Delete</a></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<h2 th:case="null">No stocks yet!</h2>
+<div th:case="*">
+    <h2>Stocks</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="stock : ${stocks}">
+            <td th:text="${stock.name}"></td>
+            <td><a th:href="@{/edit/{name}(name=${stock.name})}">Edit</a></td>
+            <td><a th:href="@{/delete/{name}(name=${stock.name})}">Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
+</div> -->
+</body>
+</html>

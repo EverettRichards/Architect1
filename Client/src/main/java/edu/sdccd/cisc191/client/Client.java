@@ -21,12 +21,13 @@ public class Client {
     @Bean
     public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
         return args -> {
-            Stock[] stocks = restTemplate.getForObject(
+/*            Stock[] stocks = restTemplate.getForObject(
                     "http://localhost:8080/stocks", Stock[].class);
 
             for(Stock stock : stocks) {
                 System.out.println(stock.getName());
-            }
+            }*/
+            System.out.println("Listening on port 8080.");
         };
     }
 }
