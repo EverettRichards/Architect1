@@ -26,7 +26,25 @@ public class StockController {
     }*/
 
     @GetMapping("/stocks")
-    public String stocks() {
+    public static String stocks() {
         return "stocks";
+    }
+
+    //CREATE, READ, UPDATE, DELETE
+    public static void CreateFile(String filename, String content){
+        // create a file with name [filename] and content [content]
+    }
+
+    public static String ReadFile(String filename){
+        String contents = "The contents of the file";
+        return contents;
+    }
+
+    public static void UpdateFile(String filename, String content){
+        // access the file, then set its contents to [content]
+    }
+
+    public static void DeleteFile(String filename){
+        //delete the file
     }
 }
