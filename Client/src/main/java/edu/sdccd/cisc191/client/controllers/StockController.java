@@ -23,7 +23,7 @@ import java.util.List;
 public class StockController implements DataFetcher {
 
     //Dummy Data to initialize UIStock objects
-    private UIStock[] stocksArray = {
+    public UIStock[] stocksArray = {
           new UIStock(1L, "AAPL", "Apple", "Apple is expensive!", "Technology", 400.12, 0.5),
           new UIStock(2L, "MCST", "Microsoft", "Microsoft is also expensive but not quite as expensive as Apple.", "Technology", 240.15, 0.25),
           new UIStock(3L, "APCX", "AppTech Payments Corp.", "AppTech is a Fintech company.", "Financial Technology", 2.25, 0.15),
