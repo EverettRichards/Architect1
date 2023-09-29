@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;*/
 import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.PostMapping;
+import edu.sdccd.cisc191.common.entities.Stock;
 
 @Controller
 public class StockController {
@@ -24,6 +25,7 @@ public class StockController {
         // TODO: call server
         return "redirect:/stocks";
     }*/
+    public static final String stockRepositoryAddress = "stockrepo.txt";
 
     @GetMapping("/stocks")
     public static String stocks() {
@@ -46,5 +48,16 @@ public class StockController {
 
     public static void DeleteFile(String filename){
         //delete the file
+    }
+
+    public static void AddStock(Stock stock){
+        String fileContents = ReadFile(stockRepositoryAddress);
+        // convert file contents from JSON to data structure
+        // check to see if the stock already exists
+        // error if already exists
+        // if doesn't exist already, add to data structure
+        // if a change was made, JSON-ify the data structure and then save it (below)
+        String finalFileContents = fileContents;
+        UpdateFile(stockRepositoryAddress,finalFileContents);
     }
 }
