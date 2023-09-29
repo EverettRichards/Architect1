@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;*/
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.bind.annotation.PostMapping;
+import edu.sdccd.cisc191.common.entities.Stock;
 
 /*
 * (String newTicker, String newName, String newDescription,
@@ -46,6 +47,7 @@ public class StockController {
         // TODO: call server
         return "redirect:/stocks";
     }*/
+    public static final String stockRepositoryAddress = "stockrepo.txt";
 
     @GetMapping("/stocks")
     public String getStocks() {
