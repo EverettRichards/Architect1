@@ -1,6 +1,6 @@
 package edu.sdccd.cisc191.common.entities;
 
-public class StockList {
+public class StockList extends StockContainer {
     private Stock[] stocks;
     private User owner;
 
