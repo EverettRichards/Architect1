@@ -27,21 +27,25 @@ public class StockCandle {
 
         double[][] result = new double[1][];
         result[0] = new double[tNode.size()];
-
+        //System.out.println("SIZE:"+tNode.size());
         for (int i=0;i<tNode.size();i++){
             result[0][i] = tNode.get(i).asDouble();
         }
 
         stockInfo = result;
 
-        System.out.println(stockInfo[0][0]);
+        //System.out.println(stockInfo[0][0]);
     }
 
-    public static void main(String[] args) throws JsonProcessingException {
+    /*public static void main(String[] args) throws JsonProcessingException {
         refreshData(candleExample);
-    }
+    }*/
 
     public StockCandle(String jsonInput) throws JsonProcessingException {
         refreshData(jsonInput);
+    }
+
+    public double[][] getStockInfo(){
+        return stockInfo;
     }
 }
