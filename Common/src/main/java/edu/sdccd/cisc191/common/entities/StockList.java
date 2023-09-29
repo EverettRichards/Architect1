@@ -36,26 +36,27 @@ public class StockList {
             mainArray[i][3] = thisStock.getSector();
             mainArray[i][4] = thisStock.getPrice();
             mainArray[i][5] = thisStock.getDividend();
-            i++;
+            i++;//increase index
         }
         return mainArray;
     }
 
-    // public String getAllStockInfo(){
-    //     String outputString = "";
-    //     String formatString = "%s (%s). $%.2f/share. Div yield $%.2f (%.2f%%). Sector: %s. Description: %s.";
-    //     for (Stock thisStock : stocks){
-    //         String thisLine = String.format(formatString,
-    //                 thisStock.getName(), thisStock.getTicker(),
-    //                 thisStock.getPrice(), thisStock.getDividend(),
-    //                 thisStock.getDividend() / thisStock.getPrice() * 100,
-    //                 thisStock.getSector(), thisStock.getDescription()
-    //                 );
-    //         outputString = outputString + thisLine;
-    //         if (i<stocks.length-1){
-    //             outputString = outputString + "\n";
-    //         }
-    //     }
-    //     return outputString;
-    // }
+    public String getAllStockInfo(){
+        String outputString = "";
+        String formatString = "%s (%s). $%.2f/share. Div yield $%.2f (%.2f%%). Sector: %s. Description: %s.";
+        for (int i=0; i<stocks.length;i++){
+            Stock thisStock = stocks[i];
+            String thisLine = String.format(formatString,
+                    thisStock.getName(), thisStock.getTicker(),
+                    thisStock.getPrice(), thisStock.getDividend(),
+                    thisStock.getDividend() / thisStock.getPrice() * 100,
+                    thisStock.getSector(), thisStock.getDescription()
+                    );
+            outputString = outputString + thisLine;
+            if (i<stocks.length-1){
+                outputString = outputString + "\n";
+            }
+        }
+        return outputString;
+    }
 }
