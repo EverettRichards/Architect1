@@ -19,6 +19,21 @@ public class StockCandle {
         return ticker;
     }
 
+    public static double[][] invert2DArray(double[][] inputArray){
+        int rows = inputArray.length;
+        int columns = inputArray[0].length;
+
+        double[][] newArray = new double[columns][rows];
+
+        for (int i=0;i<rows;i++){
+            for (int j=0;j<columns;j++){
+                newArray[j][i] = inputArray[i][j];
+            }
+        }
+
+        return newArray;
+    }
+
     private static void refreshData(String jsonInput) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(jsonInput);
@@ -32,7 +47,7 @@ public class StockCandle {
             result[0][i] = tNode.get(i).asDouble();
         }
 
-        stockInfo = result;
+        stockInfo = invert2DArray(result);
 
         //System.out.println(stockInfo[0][0]);
     }

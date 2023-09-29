@@ -18,15 +18,14 @@ public class Client {
 
         // Test a pull request
         String testOutput = ClientController.getRequest("https://finnhub.io/api/v1/stock/candle?symbol=AAPL&resolution=60&from=1693493346&to=1693752546&token=bsq5ig8fkcbcavsjbrrg");
-        //System.out.println(testOutput);
+        System.out.println(testOutput);
         StockCandle candles = new StockCandle(testOutput);
         double[][] data = candles.getStockInfo();
-        //System.out.println(data[0].length);
-        for (double[] row : data){
+        /*for (double[] row : data){
             for (double item : row){
                 System.out.println(item);
             }
-        }
+        }*/
     }
 
     @Bean
