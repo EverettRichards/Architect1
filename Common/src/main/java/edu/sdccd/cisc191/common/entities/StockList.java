@@ -1,6 +1,6 @@
 package edu.sdccd.cisc191.common.entities;
 
-public class StockList extends StockContainer {
+public class StockList {
     private Stock[] stocks;
     private User owner;
 
@@ -41,21 +41,21 @@ public class StockList extends StockContainer {
         return mainArray;
     }
 
-    public String getAllStockInfo(){
-        String outputString = "";
-        String formatString = "%s (%s). $%.2f/share. Div yield $%.2f (%.2f%%). Sector: %s. Description: %s.";
-        for (Stock thisStock : stocks){
-            String thisLine = String.format(formatString,
-                    thisStock.getName(), thisStock.getTicker(),
-                    thisStock.getPrice(), thisStock.getDividend(),
-                    thisStock.getDividend() / thisStock.getPrice() * 100,
-                    thisStock.getSector(), thisStock.getDescription()
-                    );
-            outputString = outputString + thisLine;
-            if (i<stocks.length-1){
-                outputString = outputString + "\n";
-            }
-        }
-        return outputString;
-    }
+    // public String getAllStockInfo(){
+    //     String outputString = "";
+    //     String formatString = "%s (%s). $%.2f/share. Div yield $%.2f (%.2f%%). Sector: %s. Description: %s.";
+    //     for (Stock thisStock : stocks){
+    //         String thisLine = String.format(formatString,
+    //                 thisStock.getName(), thisStock.getTicker(),
+    //                 thisStock.getPrice(), thisStock.getDividend(),
+    //                 thisStock.getDividend() / thisStock.getPrice() * 100,
+    //                 thisStock.getSector(), thisStock.getDescription()
+    //                 );
+    //         outputString = outputString + thisLine;
+    //         if (i<stocks.length-1){
+    //             outputString = outputString + "\n";
+    //         }
+    //     }
+    //     return outputString;
+    // }
 }
