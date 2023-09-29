@@ -1,6 +1,6 @@
 package edu.sdccd.cisc191.common.entities;
 
-public class StockList extends StockContainer {
+public class StockList {
     private Stock[] stocks;
     private User owner;
 
@@ -44,7 +44,8 @@ public class StockList extends StockContainer {
     public String getAllStockInfo(){
         String outputString = "";
         String formatString = "%s (%s). $%.2f/share. Div yield $%.2f (%.2f%%). Sector: %s. Description: %s.";
-        for (Stock thisStock : stocks){
+        for (int i=0; i<stocks.length;i++){
+            Stock thisStock = stocks[i];
             String thisLine = String.format(formatString,
                     thisStock.getName(), thisStock.getTicker(),
                     thisStock.getPrice(), thisStock.getDividend(),
