@@ -36,7 +36,7 @@ public class StockList {
             mainArray[i][3] = thisStock.getSector();
             mainArray[i][4] = thisStock.getPrice();
             mainArray[i][5] = thisStock.getDividend();
-            i++;
+            i++;//increase index
         }
         return mainArray;
     }
