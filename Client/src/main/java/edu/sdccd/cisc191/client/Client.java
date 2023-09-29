@@ -8,7 +8,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 import edu.sdccd.cisc191.client.controllers.ClientController;
-import edu.sdccd.cisc191.common.entities.StockCandle;
+import edu.sdccd.cisc191.common.entities.StockCandle ;
 
 @SpringBootApplication
 public class Client {
@@ -22,12 +22,8 @@ public class Client {
         //System.out.println(testOutput);
         StockCandle candles = new StockCandle(testTicker,testOutput);
         double[][] data = candles.getStockInfo();
-        for (double[] row : data){
-            for (double item : row){
-                System.out.println(item);
-            }
-        }
         System.out.println(candles.toString());
+        candles.printConciseContents();
     }
 
     @Bean

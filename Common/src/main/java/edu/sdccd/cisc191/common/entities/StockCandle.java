@@ -76,11 +76,27 @@ public class StockCandle {
     public String toString(){
         String outputString = "";
         for (double[] row : stockInfo){
-            outputString += String.format("At time %.2f, haha",row[4]);
-            for (double item : row){
-
-            }
+            outputString += String.format("At time %f, %s ranged from %.2f to %.2f, opening at %.2f and closing at %.2f.",row[4],ticker,row[2],row[1],row[3],row[0]);
+            outputString += "\n";
         }
         return outputString;
+    }
+
+    public void printConciseContents(){
+        System.out.println(ticker+":");
+        for (double[] row : stockInfo){
+            String outputString = "{";
+            for (double item : row){
+                outputString += item;
+                if (item != row[row.length-1]){
+                    outputString+=", ";
+                }
+            }
+            outputString+="}";
+            if (row != stockInfo[stockInfo.length-1]) {
+                outputString += ", ";
+            }
+            System.out.println(outputString);
+        }
     }
 }
