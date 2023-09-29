@@ -26,11 +26,25 @@ public class StockList extends StockContainer {
         return outputString;
     }
 
+    public Object[][] getStocksAs2DArray(){
+        Object[][] mainArray = new Object[stocks.length][6];
+        int i = 0;
+        for (Stock thisStock : stocks) {
+            mainArray[i][0] = thisStock.getTicker();
+            mainArray[i][1] = thisStock.getName();
+            mainArray[i][2] = thisStock.getDescription();
+            mainArray[i][3] = thisStock.getSector();
+            mainArray[i][4] = thisStock.getPrice();
+            mainArray[i][5] = thisStock.getDividend();
+            i++;
+        }
+        return mainArray;
+    }
+
     public String getAllStockInfo(){
         String outputString = "";
         String formatString = "%s (%s). $%.2f/share. Div yield $%.2f (%.2f%%). Sector: %s. Description: %s.";
-        for (int i=0;i<stocks.length;i++){
-            Stock thisStock = stocks[i];
+        for (Stock thisStock : stocks){
             String thisLine = String.format(formatString,
                     thisStock.getName(), thisStock.getTicker(),
                     thisStock.getPrice(), thisStock.getDividend(),
