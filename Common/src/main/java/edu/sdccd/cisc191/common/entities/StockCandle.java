@@ -43,7 +43,5 @@ public class StockCandle {
 
     public StockCandle(String jsonInput) throws JsonProcessingException {
         refreshData(jsonInput);
-
-        // parse jsonInput
     }
 }
