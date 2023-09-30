@@ -18,7 +18,7 @@ public class StockList {
     public String getTickers(){
         String outputString = "";
         for (int i=0;i<stocks.length;i++){
-            outputString = outputString + stocks[i].ticker;
+            outputString = outputString + stocks[i].getTicker();
             if (i<stocks.length-1){
                 outputString = outputString + ",";
             }

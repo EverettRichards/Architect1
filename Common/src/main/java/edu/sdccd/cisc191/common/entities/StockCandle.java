@@ -5,6 +5,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.MalformedURLException;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Date;
 
 public class StockCandle {
     private String ticker;
@@ -37,8 +44,25 @@ public class StockCandle {
 
     private static final String token = "bsq5ig8fkcbcavsjbrrg";
 
+    public static long getLastMktOpenTime(){
+        ZoneId estZoneId = ZoneId.of("America/New_York");
+        LocalDateTime now = LocalDateTime.now(estZoneId);
+        DayOfWeek currentDayOfWeek = now.getDayOfWeek();
+        LocalDateTime targetDateTime;
+
+        if (currentDayOfWeek == DayOfWeek.SATURDAY || currentDayOfWeek == DayOfWeek.SUNDAY) {
+            targetDateTime = now.with(TemporalAdjusters.previous(DayOfWeek.FRIDAY));
+        } else {
+            targetDateTime = now;
+        }
+
+        targetDateTime = targetDateTime.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        long timestamp = targetDateTime.atZone(estZoneId).toInstant().toEpochMilli()/1000;
+        return timestamp;
+    }
     public static void refreshData(String newTicker) throws MalformedURLException, JsonProcessingException {
-        refreshData(newTicker,"60",1693493346L,1693752546L);
+        long longTime = getLastMktOpenTime();
+        refreshData(newTicker,"5", (long) (longTime+(60*60*9.5)),(longTime+(60*60*16)));
     }
     private static void refreshData(String newTicker, String resolution, long time1, long time2)
             throws JsonProcessingException, MalformedURLException {
