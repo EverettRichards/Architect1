@@ -23,7 +23,7 @@
         type: 'candlestick',
         data: {
             datasets: [{
-                label: 'CHRT - Chart.js Corporation',
+                label: TICKER + ' - stock candles',
                 data: barData
             }]
         }
