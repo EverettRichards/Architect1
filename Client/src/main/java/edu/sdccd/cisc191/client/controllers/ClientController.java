@@ -17,6 +17,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
+/**
+ * ClientController - a program to create a webpage to display the stock information
+ */
 @Controller
 public class ClientController {
 
@@ -27,11 +30,20 @@ public class ClientController {
         return new ObjectMapper().writeValueAsString(jsonObject);
     }
 
+    /**
+     * Sets up to display the index
+     * @return index the index page
+     */
     @GetMapping("/")
     public String index() {
         return "index";
     }
 
+    /**
+     * Sets up to display the dashboard
+     * @param model model to display stocks
+     * @return dashboard the dashboard page
+     */
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         //restTemplate.getForObject
@@ -55,6 +67,12 @@ public class ClientController {
         return "dashboard";
     }
 
+    /**
+     * Sets up to display the stock page
+     * @param id the Long id that identifies each stock
+     * @param model the method to create the stock listing
+     * @return stock the stock page
+     */
     @GetMapping("/dashboard/stock/{id}")
     public String stockDetails(@PathVariable("id") Long id, Model model) {
         ResponseEntity<Stock> response = restTemplate.exchange(

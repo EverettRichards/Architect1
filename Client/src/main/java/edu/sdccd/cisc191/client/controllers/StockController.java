@@ -22,6 +22,9 @@ import java.util.List;
                  String newSector, double newPrice, double newDividend)
 * */
 
+/**
+ * StockController a class to generate the data to display on the client webpage
+ */
 @RequestMapping(DataFetcher.apiEndpointURL)
 @RestController
 public class StockController implements DataFetcher {
@@ -44,12 +47,20 @@ public class StockController implements DataFetcher {
     //operations on them.
 //    public static final String stockRepositoryAddress = "stockrepo.txt";
 
+    /**
+     * Lists all the stocks to display on the webpage
+     * @return stocks the stocks that are being watched
+     */
     //CRUD Get all stocks
     @GetMapping("/stocks")
     public List<Stock> getAll() {
         return stocks;
     }
 
+    /**
+     * Creates a new stock to be added to the website
+     * @param stock the new stock created
+     */
     //CRUD Create a new stock and add to stocks List
     @PostMapping("/stocks")
     public void create(@RequestBody Stock stock) {
@@ -61,6 +72,11 @@ public class StockController implements DataFetcher {
         this.stocks.add(newStock);
     }
 
+    /**
+     * Gets the information for a single stock
+     * @param id the Long id of the stock to get its information
+     * @return stock the stock with that id or null if no match
+     */
     //CRUD Get a single stock
     @GetMapping("/stocks/{id}")
     public Stock getSingle(@PathVariable Long id) {
@@ -72,6 +88,11 @@ public class StockController implements DataFetcher {
         return null;
     }
 
+    /**
+     * Updates the stock info with new price data
+     * @param updatedStock the new stock price data
+     * @param id the id of the stock to update
+     */
     @PutMapping("/stocks/{id}")
     public void update(@RequestBody Stock updatedStock, @PathVariable Long id) {
         for (Stock stock : stocks) {
@@ -88,6 +109,10 @@ public class StockController implements DataFetcher {
         }
     }
 
+    /**
+     * Deletes a stock from display on the webpage, so you don't follow it anymore
+     * @param id the long id to identify the stock to delete
+     */
     @DeleteMapping("/stocks/{id}")
     public void delete(@PathVariable Long id) {
         for (Stock stock : stocks) {
@@ -99,6 +124,11 @@ public class StockController implements DataFetcher {
         }
     }
 
+    /**
+     * Gets the candle data and puts it into a ticker format to be displayed
+     * @param ticker the stock information
+     * @return data the candle data in 2d array
+     */
     @GetMapping("/stocks/candles/{ticker}")
     public double[][] getCandles(@PathVariable String ticker) {
         StockCandle candles;
