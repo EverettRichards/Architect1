@@ -11,6 +11,8 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
+import edu.sdccd.cisc191.common.entities.Stock;
+
 @SpringBootApplication
 public class Client {
 
@@ -24,7 +26,7 @@ public class Client {
         // } catch(MalformedURLException e) {
         //     System.err.println(e);
         // }
-
+        Stock myTest = new Stock("AAPL");
 
         // Test a get request
         /*String testTicker = "AAPL";

@@ -16,6 +16,7 @@ import java.io.IOException;
  * 
  */
 public class Requests {
+    public static final String token = "bsq5ig8fkcbcavsjbrrg";
     enum Protocol {
         GET,
         POST,
