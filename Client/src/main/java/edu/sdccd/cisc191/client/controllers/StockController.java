@@ -1,7 +1,7 @@
 package edu.sdccd.cisc191.client.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import edu.sdccd.cisc191.client.common.Stock;
+import edu.sdccd.cisc191.common.entities.Stock;
 import edu.sdccd.cisc191.client.models.DataFetcher;
 import edu.sdccd.cisc191.common.entities.StockCandle;
 
@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping(DataFetcher.apiEndpointURL)
 @RestController
 public class StockController implements DataFetcher {
-    String[] myTickers = {"AAPL","MSFT","NVDA","AMZN","COST","TSM","META","TSLA"};
+    String[] myTickers = {"AAPL","DIS","BAC","UAA","CCL","KO","WMT","T","GOOGL","MSFT","V","NVDA","AMZN","COST","AMD","TSM","META","TSLA"};
     //Dummy Data to initialize UIStock objects
     public ArrayList<Stock> stocks = new ArrayList<>() {
         {
@@ -54,7 +54,7 @@ public class StockController implements DataFetcher {
     @PostMapping("/stocks")
     public void create(@RequestBody Stock stock) {
         Stock newStock = new Stock(
-            stock.getId(), stock.getTicker(), stock.getName(),
+            stock.getTicker(), stock.getName(),
             stock.getDescription(), stock.getSector(), stock.getPrice(),
             stock.getDividend()
         );

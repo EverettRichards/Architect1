@@ -4,14 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.net.MalformedURLException;
 
+import edu.sdccd.cisc191.common.entities.Stock;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
-
-import edu.sdccd.cisc191.common.entities.Stock;
 
 @SpringBootApplication
 public class Client {
