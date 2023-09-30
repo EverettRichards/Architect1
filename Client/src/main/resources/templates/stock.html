@@ -40,7 +40,7 @@
       <p th:text="${stock.getSector()}">Sector: </p>
       <p th:text="${stock.getPrice()}"></p>
       <p th:text="${stock.getDividend()}"></p>
-      <a class="text-blue-500 hover:text-blue-700" th:attr="onclick=|remove(event, '${stock.getId()}')|" href="#">Remove</a>
+      <a class="text-blue-500 hover:text-blue-700" th:attr="onclick=|remove(event, '${stock.getId()}', '/dashboard')|" href="#">Remove</a>
     </div>
   </div>
   </section>
