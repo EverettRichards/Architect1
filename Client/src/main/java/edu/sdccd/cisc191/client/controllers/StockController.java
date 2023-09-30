@@ -32,23 +32,10 @@ public class StockController implements DataFetcher {
             for (String ticker : myTickers) {
                 try {
                     add(new Stock(ticker));
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException(e);
-                } catch (JsonProcessingException e) {
+                } catch (MalformedURLException | JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
             }
-            /*add(new Stock(1L, "AAPL", "Apple", "Apple is expensive!", "Technology", 400.12, 0.5));
-            add(new Stock(2L, "MCST", "Microsoft", "Microsoft is also expensive but not quite as expensive as Apple.", "Technology", 240.15, 0.25));
-            add(new Stock(3L, "APCX", "AppTech Payments Corp.", "AppTech is a Fintech company.", "Financial Technology", 2.25, 0.15));
-            add(new Stock(4L, "MVCN", "Marvelous Random Name", "Now I'm really just making stuff up", "BS", 3.33, 0.67));
-            add(new Stock(5L, "AAA", "AAA", "We use this whenever our car sucks.", "Auto", 40.56, 0.04));
-            add(new Stock(6L, "SBRU", "Subaru", "Great cars!", "Auto", 300.45, 0.06));
-            add(new Stock(7L, "FDSC", "Federal Screw Works", "Let us do the screwing for you.", "Screws", 249.35, 0.06));
-            add(new Stock(8L, "BOIL", "PROSHARES ULTRA BLOOMBERG NA", "dksjlafsdkfjalsdfjas", "Financial", 345.67, 0.96));
-            add(new Stock(9L, "MHUA", "MEIHUA INTERNATIONAL MEDICAL", "ksdkfjdajsdfasldfasdkfjd", "Medical", 888.99, 0.2));
-            add(new Stock(10L, "XPNGF", "XPENG INC - CLASS A SHARES", "dkjsfkdaljfskdjaflsdfjaslkdfajsd", "Financial", 789.45, 0.5));
-        */
         }
 
     };

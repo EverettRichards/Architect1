@@ -38,28 +38,35 @@ public class Stock {
         this.stockSector = sector;
     }
 
-    public Stock(String newTicker) throws MalformedURLException, JsonProcessingException {
-        // This constructor takes a Ticker and gets all the relevant info
-        id = ++lastId;
-        // Get the JSON data with basic info about the stock, such as company name/description
-        String jsonInput = Requests.get("https://finnhub.io/api/v1/stock/profile2?symbol="+newTicker+"&token="+Requests.token);
+    public void Update() throws JsonProcessingException, MalformedURLException {
+        // Get the JSON data from Finnhub with basic company info such as name, sector, etc.
+        String jsonInput = Requests.get("https://finnhub.io/api/v1/stock/profile2?symbol="
+                + ticker + "&token=" + Requests.token);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(jsonInput);
 
         // Update core attributes accordingly
-        ticker = newTicker;
         name = rootNode.get("name").asText();
         description = "A company called "+name;
         stockSector = rootNode.get("finnhubIndustry").asText();
 
         // Get the JSON data with FINANCIAL info such as price
-        String jsonInput2 = Requests.get("https://finnhub.io/api/v1/quote?symbol="+newTicker+"&token="+Requests.token);
+        String jsonInput2 = Requests.get("https://finnhub.io/api/v1/quote?symbol="
+                + ticker + "&token=" + Requests.token);
         ObjectMapper mapper2 = new ObjectMapper();
         JsonNode rootNode2 = mapper2.readTree(jsonInput2);
 
         // Update core attributes accordingly
-        ticker = newTicker;
         sharePrice = rootNode2.get("c").asDouble();
+    }
+
+    public Stock(String newTicker) throws MalformedURLException, JsonProcessingException {
+        // Internally assign the new Ticker value
+        ticker = newTicker;
+        // Increment and set the stock's unique ID as a long
+        id = ++lastId;
+        // Get live, up-to-date information about the stock
+        Update();
     }
 
     public String getTicker() {
