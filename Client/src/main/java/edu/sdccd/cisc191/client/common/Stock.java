@@ -1,34 +1,29 @@
 package edu.sdccd.cisc191.client.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Stock {
-    String ticker;
+    //@JsonProperty("id")
+    private Long id;
 
-    String name;
+    private String ticker;
+    private String name;
+    private String description;
+    private double sharePrice;
+    private double dividendYield;
+    private String stockSector;
 
-    String description;
-
-    double sharePrice;
-
-    double dividendYield;
-
-    String stockSector;
-
-    public Stock(){}
-
-
-    public Stock(String newTicker) {
-        setTicker(newTicker);
-
-    }
-
-    public Stock(String newTicker, String newName, String newDescription,
-                 String newSector, double newPrice, double newDividend){
-        setTicker(newTicker);
-        setName(newName);
-        setDescription(newDescription);
-        setDividend(newDividend);
-        setSector(newSector);
-        setPrice(newPrice);
+    public Stock(long id, String ticker, String newName, String description,
+                 String sector, double price, double dividend){
+        this.id = id;
+        this.ticker = ticker;
+        this.name = newName;
+        this.description = description;
+        this.sharePrice = price;
+        this.dividendYield = dividend;
+        this.stockSector = sector;
     }
 
     public String getTicker() {
@@ -77,5 +72,9 @@ public class Stock {
 
     public void setSector(String name) {
         this.stockSector = name;
+    }
+
+    public Long getId() {
+        return this.id;
     }
 }

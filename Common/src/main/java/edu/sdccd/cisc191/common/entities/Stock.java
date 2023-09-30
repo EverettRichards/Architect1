@@ -2,15 +2,10 @@ package edu.sdccd.cisc191.common.entities;
 
 public class Stock {
     String ticker;
-
     String name;
-
     String description;
-
     double sharePrice;
-
     double dividendYield;
-
     String stockSector;
 
     public Stock(){}
@@ -23,12 +18,12 @@ public class Stock {
 
     public Stock(String newTicker, String newName, String newDescription,
                  String newSector, double newPrice, double newDividend){
-        setTicker(newTicker);
-        setName(newName);
-        setDescription(newDescription);
-        setDividend(newDividend);
-        setSector(newSector);
-        setPrice(newPrice);
+        this.setTicker(newTicker);
+        this.setName(newName);
+        this.setDescription(newDescription);
+        this.setDividend(newDividend);
+        this.setSector(newSector);
+        this.setPrice(newPrice);
     }
 
     public String getTicker() {
