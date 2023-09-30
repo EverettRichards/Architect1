@@ -2,10 +2,7 @@ package edu.sdccd.cisc191.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.sdccd.cisc191.client.models.Requests;
-
 import java.net.MalformedURLException;
-import java.nio.charset.MalformedInputException;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class Client {
 
-    public static void main(String[] args) throws JsonProcessingException {
+    public static void main(String[] args) throws JsonProcessingException, MalformedURLException {
         SpringApplication.run(Client.class, args);
 
         // try {
@@ -28,18 +25,14 @@ public class Client {
         //     System.err.println(e);
         // }
 
-        /*
+
         // Test a get request
-        String testTicker = "AAPL";
-        String testOutput = ClientController.getRequest("https://finnhub.io/api/v1/stock/candle?symbol="+testTicker+"&resolution=60&from=1693493346&to=1693752546&token=bsq5ig8fkcbcavsjbrrg");
+        /*String testTicker = "AAPL";
         //System.out.println(testOutput);
-        StockCandle candles = new StockCandle(testTicker,testOutput);
+        StockCandle candles = new StockCandle(testTicker);
         double[][] data = candles.getStockInfo();
         System.out.println(candles.toString());
-        candles.printConciseContents();
-            }
-        }*/
-
+        candles.printConciseContents();*/
     }
 
     @Bean

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.net.MalformedURLException;
+
 public class StockCandle {
     private String ticker;
 
@@ -34,7 +36,9 @@ public class StockCandle {
         return newArray;
     }
 
-    private static void refreshData(String jsonInput) throws JsonProcessingException {
+    private static final String token = "bsq5ig8fkcbcavsjbrrg";
+    private static void refreshData(String newTicker) throws JsonProcessingException, MalformedURLException {
+        String jsonInput = Requests.get("https://finnhub.io/api/v1/stock/candle?symbol="+newTicker+"&resolution=60&from=1693493346&to=1693752546&token="+token);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(jsonInput);
 
@@ -64,8 +68,8 @@ public class StockCandle {
         refreshData(candleExample);
     }*/
 
-    public StockCandle(String newTicker, String jsonInput) throws JsonProcessingException {
-        refreshData(jsonInput);
+    public StockCandle(String newTicker) throws JsonProcessingException, MalformedURLException {
+        refreshData(newTicker);
         setTicker(newTicker);
     }
 

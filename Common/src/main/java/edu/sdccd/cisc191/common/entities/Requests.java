@@ -1,4 +1,4 @@
-package edu.sdccd.cisc191.client.models;
+package edu.sdccd.cisc191.common.entities;
 
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
