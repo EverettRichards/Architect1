@@ -26,7 +26,6 @@ public class StockCandle {
         int columns = inputArray[0].length;
 
         double[][] newArray = new double[columns][rows];
-
         for (int i=0;i<rows;i++){
             for (int j=0;j<columns;j++){
                 newArray[j][i] = inputArray[i][j];
@@ -37,8 +36,17 @@ public class StockCandle {
     }
 
     private static final String token = "bsq5ig8fkcbcavsjbrrg";
-    private static void refreshData(String newTicker) throws JsonProcessingException, MalformedURLException {
-        String jsonInput = Requests.get("https://finnhub.io/api/v1/stock/candle?symbol="+newTicker+"&resolution=60&from=1693493346&to=1693752546&token="+token);
+
+    public static void refreshData(String newTicker) throws MalformedURLException, JsonProcessingException {
+        refreshData(newTicker,"60",1693493346L,1693752546L);
+    }
+    private static void refreshData(String newTicker, String resolution, long time1, long time2)
+            throws JsonProcessingException, MalformedURLException {
+        String URL = "https://finnhub.io/api/v1/stock/candle?symbol="+newTicker
+                +"&resolution="+resolution
+                +"&from="+time1+"&to="+time2
+                +"&token="+token;
+        String jsonInput = Requests.get(URL);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(jsonInput);
 
@@ -73,6 +81,11 @@ public class StockCandle {
         setTicker(newTicker);
     }
 
+    public StockCandle(String newTicker, String resolution, long time1, long time2) throws MalformedURLException, JsonProcessingException {
+        refreshData(newTicker,resolution,time1,time2);
+        setTicker(newTicker);
+    }
+
     public double[][] getStockInfo(){
         return stockInfo;
     }
@@ -80,7 +93,7 @@ public class StockCandle {
     public String toString(){
         String outputString = "";
         for (double[] row : stockInfo){
-            outputString += String.format("At time %f, %s ranged from %.2f to %.2f, opening at %.2f and closing at %.2f.",row[4],ticker,row[2],row[1],row[3],row[0]);
+            outputString += String.format("@t=%.0f, %s low=%.2f, high=%.2f, open=%.2f, close=%.2f.",row[4],ticker,row[2],row[1],row[3],row[0]);
             outputString += "\n";
         }
         return outputString;
