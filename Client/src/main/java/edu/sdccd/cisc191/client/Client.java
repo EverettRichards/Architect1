@@ -1,6 +1,12 @@
 package edu.sdccd.cisc191.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import edu.sdccd.cisc191.client.models.Requests;
+
+import java.net.MalformedURLException;
+import java.nio.charset.MalformedInputException;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +19,14 @@ public class Client {
 
     public static void main(String[] args) throws JsonProcessingException {
         SpringApplication.run(Client.class, args);
+
+        // try {
+        //     String result = Requests.get("https://example.com");
+        //     System.out.println(result);
+
+        // } catch(MalformedURLException e) {
+        //     System.err.println(e);
+        // }
 
         /*
         // Test a get request
