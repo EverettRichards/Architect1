@@ -87,12 +87,13 @@ public class StockController implements DataFetcher {
         }
     }
 
-    @DeleteMapping("stocks/{id}")
+    @DeleteMapping("/stocks/{id}")
     public void delete(@PathVariable Long id) {
         for (Stock stock : stocks) {
             if (stock.getId().equals(id)) {
                 stocks.remove(stock);
                 System.out.println("Successfully deleted stock.");
+                return;
             }
         }
     }

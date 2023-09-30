@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>CISC 191 Architect 1 | Dashboard</title>
+  <script th:src="@{/js/stockManager.js}" defer></script>
 </head>
 <body>
 <header>
@@ -30,7 +31,7 @@
             <td th:text="${stock.getName()}"></td>
             <td th:text="${stock.getPrice()}"></td>
             <td><a th:href="@{/dashboard/stock/{id}(id = ${stock.getId()})}">Details</a></td>
-            <td><a th:href="@{/remove/stock/{id}(id = ${stock.getId()})}">Remove</a></td>
+            <td><a th:attr="onclick=|remove(event, '${stock.getId()}')|" href="#">Remove</a></td>
             <td th:text="${stock.getId()}"></td>
           </tr>
           </tbody>
