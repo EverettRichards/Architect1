@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;*/
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +24,7 @@ import java.util.List;
 public class StockController implements DataFetcher {
 
     //Dummy Data to initialize UIStock objects
-    public ArrayList<Stock> stocks = new ArrayList<Stock>() {
+    public ArrayList<Stock> stocks = new ArrayList<>() {
         {
             add(new Stock(1L, "AAPL", "Apple", "Apple is expensive!", "Technology", 400.12, 0.5));
             add(new Stock(2L, "MCST", "Microsoft", "Microsoft is also expensive but not quite as expensive as Apple.", "Technology", 240.15, 0.25));
@@ -41,7 +41,7 @@ public class StockController implements DataFetcher {
 
     //Convert the above dummy data into a List so we can perform CRUD
     //operations on them.
-    public static final String stockRepositoryAddress = "stockrepo.txt";
+//    public static final String stockRepositoryAddress = "stockrepo.txt";
 
     //CRUD Get all stocks
     @GetMapping("/stocks")
@@ -62,13 +62,13 @@ public class StockController implements DataFetcher {
 
     //CRUD Get a single stock
     @GetMapping("/stocks/{id}")
-    public String getSingle(@PathVariable Long id) {
+    public Stock getSingle(@PathVariable Long id) {
         for (Stock stock : stocks) {
             if (stock.getId().equals(id)) {
-                return stock.toString();
+                return stock;
             }
         }
-        return "Stock not found.";
+        return null;
     }
 
     @PutMapping("/stocks/{id}")

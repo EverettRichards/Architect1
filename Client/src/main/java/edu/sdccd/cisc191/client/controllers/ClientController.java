@@ -6,7 +6,10 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,29 +24,50 @@ public class ClientController {
     String resourceURL = "http://localhost:8080/api";
 
     public static String toJson(Object jsonObject) throws JsonProcessingException {
-        String json = new ObjectMapper().writeValueAsString(jsonObject);
-        return json;
+        return new ObjectMapper().writeValueAsString(jsonObject);
     }
 
     @GetMapping("/")
     public String index() {
+        return "index";
+    }
 
+    @GetMapping("/dashboard")
+    public String dashboard(Model model) {
         //restTemplate.getForObject
         ResponseEntity<List<Stock>> response = restTemplate.exchange(
                 resourceURL + "/stocks",
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<Stock>>() {}
+                new ParameterizedTypeReference<>() {}
         );
 
         List<Stock> stocks = response.getBody();
 
-        try {
-            System.out.println(toJson(stocks));
-        } catch(JsonProcessingException e) {
-            System.err.println(e);
-        }
+        model.addAttribute("stocks", stocks);
 
-        return "index";
+//        try {
+//            System.out.println(toJson(stocks));
+//        } catch(JsonProcessingException e) {
+//            System.err.println(e);
+//        }
+
+        return "dashboard";
+    }
+
+    @GetMapping("/dashboard/stock/{id}")
+    public String stockDetails(@PathVariable("id") Long id, Model model) {
+        ResponseEntity<Stock> response = restTemplate.exchange(
+                resourceURL + "/stocks/" + id,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
+        );
+
+        Stock stock = response.getBody();
+
+        System.out.println(stock);
+        model.addAttribute("stock", stock);
+        return "stock";
     }
 }

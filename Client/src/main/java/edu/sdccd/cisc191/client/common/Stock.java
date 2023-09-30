@@ -1,7 +1,7 @@
 package edu.sdccd.cisc191.client.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+//import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Stock {
@@ -15,6 +15,9 @@ public class Stock {
     private double dividendYield;
     private String stockSector;
 
+    public Stock () {
+
+    }
     public Stock(long id, String ticker, String newName, String description,
                  String sector, double price, double dividend){
         this.id = id;
