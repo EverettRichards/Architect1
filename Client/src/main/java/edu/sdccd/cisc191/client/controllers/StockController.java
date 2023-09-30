@@ -111,7 +111,7 @@ public class StockController implements DataFetcher {
         }
 
         double[][] data = candles.getStockInfo();
-        System.out.println(candles.toString());
+        //System.out.println(candles.toString());
         return data;
     }
 }
