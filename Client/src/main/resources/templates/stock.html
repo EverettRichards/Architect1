@@ -2,14 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script th:src="@{/js/stockManager.js}" defer></script>
   <title>CISC 191 Architect 1 | Dashboard | Stock Details</title>
 </head>
-<body>
-<header>
-  <h1>Welcome to your dashboard.</h1>
-</header>
+<body class="bg-zinc-950">
+<div>
+  <header class="absolute inset-x-0 top-0 z-50">
+    <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+      <div class="flex lg:flex-1">
+        <a th:href="@{/}" class="-m-1.5 p-1.5">
+          <span class="sr-only">Your Company</span>
+          <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="">
+        </a>
+      </div>
+    </nav>
+  </header>
 
-<section id="stocks">
+  <div class="pt-20">
+    <header>
+      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-slate-400">Dashboard</h1>
+      </div>
+    </header>
+
+<div class="text-slate-50 mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
   <h2 th:text="${stock.ticker}"></h2>
   <div>
     <h3 th:text="${stock.getName()}"></h3>
@@ -17,8 +34,10 @@
     <p th:text="${stock.getSector()}">Sector: </p>
     <p th:text="${stock.getPrice()}"></p>
     <p th:text="${stock.getDividend()}"></p>
-    <a th:href="@{/remove/stock/{id}(id = ${stock.getId()})}">Remove</a>
+    <a class="text-blue-500 hover:text-blue-700" th:attr="onclick=|remove(event, '${stock.getId()}')|" href="#">Remove</a>
   </div>
-</section>
+</div>
+  </div>
+</div>
 </body>
 </html>
