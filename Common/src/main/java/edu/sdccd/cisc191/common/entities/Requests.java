@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Map;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -61,7 +62,7 @@ public class Requests {
     }
 
     public static String get(String urlToRead) throws MalformedURLException {
-        return request(Protocol.GET, urlToRead, null, null);
+        return request(Protocol.GET, urlToRead, Collections.<String, String>emptyMap(), new String());
     }
 
     public static String post(String urlToRead, Map<String, String> headers, String body) throws MalformedURLException {

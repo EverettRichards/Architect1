@@ -7,6 +7,12 @@
 <body>
 <header>
   <h1>Welcome to your dashboard.</h1>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.1/dist/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+  
+  <script th:src="@{/js/chartjs-chart-financial.js}" defer></script>
+  <script th:src="@{/js/candleChart.js}" defer></script>
 </header>
 
 <section id="stocks">
@@ -20,5 +26,16 @@
     <a th:href="@{/remove/stock/{id}(id = ${stock.getId()})}">Remove</a>
   </div>
 </section>
+
+<section>
+  <div class="chart">
+    <canvas id="chart"></canvas>
+  </div>
+</section>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+    const TICKER = /*[[${stock.ticker}]]*/ null;
+  /*]]>*/
+</script>
 </body>
 </html>

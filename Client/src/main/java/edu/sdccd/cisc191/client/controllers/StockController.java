@@ -2,6 +2,7 @@ package edu.sdccd.cisc191.client.controllers;
 
 import edu.sdccd.cisc191.client.common.Stock;
 import edu.sdccd.cisc191.client.models.DataFetcher;
+import edu.sdccd.cisc191.common.entities.StockCandle;
 
 //import org.springframework.stereotype.Controller;
 /*import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import org.springframework.validation.annotation.Validated;*/
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.bind.annotation.PostMapping;
 
+import java.net.MalformedURLException;
 //import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,5 +98,21 @@ public class StockController implements DataFetcher {
                 return;
             }
         }
+    }
+
+    @GetMapping("/stocks/candles/{ticker}")
+    public double[][] getCandles(@PathVariable String ticker) {
+        StockCandle candles;
+
+        try {
+            candles = new StockCandle(ticker);
+        } catch(Exception e) {
+            System.err.println(e);
+            return null;
+        }
+
+        double[][] data = candles.getStockInfo();
+        System.out.println(candles.toString());
+        return data;
     }
 }
