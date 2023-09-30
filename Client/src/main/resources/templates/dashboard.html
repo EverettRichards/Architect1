@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CISC 191 Architect 1 | Dashboard</title>
+</head>
+<body>
+<header>
+  <h1>Welcome to your dashboard.</h1>
+</header>
+
+<section id="stocks">
+  <h2>View your stock list:</h2>
+  <div>
+    <div th:switch="${stocks}">
+      <h2 th:case="null">No stocks yet!</h2>
+      <div th:case="*">
+        <h2>Stocks</h2>
+        <table>
+          <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Name</th>
+            <th>Price</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="stock : ${stocks}">
+            <td th:text="${stock.getTicker()}"></td>
+            <td th:text="${stock.getName()}"></td>
+            <td th:text="${stock.getPrice()}"></td>
+            <td><a th:href="@{/dashboard/stock/{id}(id = ${stock.getId()})}">Details</a></td>
+            <td><a th:href="@{/remove/stock/{id}(id = ${stock.getId()})}">Remove</a></td>
+            <td th:text="${stock.getId()}"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

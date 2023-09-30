@@ -7,7 +7,6 @@ public interface DataFetcher {
 
     List getAll();
 
-    String getSingle(Long id);
 
     void delete(Long id);
 
