@@ -22,7 +22,6 @@ public class Requests {
         UPDATE,
     }
 
-    // boody has yet to be implemeneted
     public static String request(Protocol method, String urlToRead, Map<String, String> headers, String body) throws MalformedURLException {
         StringBuilder result = new StringBuilder();
         try {
@@ -38,6 +37,7 @@ public class Requests {
                 }
             }
 
+            // if body is not null or empty
             if(!(body.length() == 0)) {
                 conn.setDoOutput(true);
                 OutputStream outStream = conn.getOutputStream();
