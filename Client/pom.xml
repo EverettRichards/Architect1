@@ -45,6 +45,12 @@
             <artifactId>spring-boot-devtools</artifactId>
             <!-- <optional>true</optional> -->
         </dependency>
+        <dependency>
+            <groupId>edu.sdccd.cisc191.template</groupId>
+            <artifactId>Server</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
