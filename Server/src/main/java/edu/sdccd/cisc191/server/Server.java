@@ -18,10 +18,10 @@ public class Server {
     public CommandLineRunner demo(StockRepository repository) {
         return (args) -> {
             // save a few customers
-            repository.save(new Stock("AAPL"));
+            /*repository.save(new Stock("AAPL"));
             repository.save(new Stock("TSLA"));
             repository.save(new Stock("NVDA"));
-            repository.save(new Stock("AMZN"));
+            repository.save(new Stock("AMZN"));*/
         };
     }
 }
