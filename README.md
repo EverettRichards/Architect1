@@ -3,7 +3,7 @@ Intermediate Java Programming Final Project Template
 ## Prerequisites
 1. Maven
 2. Git
-3. JDK 1.8
+3. JDK 20.0.2
 ## Building
 mvn clean install
 ## Running
