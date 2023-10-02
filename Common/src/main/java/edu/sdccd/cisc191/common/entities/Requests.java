@@ -12,9 +12,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 
-/* Native Java implementation of the Requests library
- * 
+/**
+ * Native Java implementation of the Requests library
  */
+
 public class Requests {
     public static final String token = "bsq5ig8fkcbcavsjbrrg";
     enum Protocol {
