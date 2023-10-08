@@ -24,6 +24,10 @@ public class Stock {
     private double dividendYield;   //the yield of any dividends the company issues
     private String stockSector;     //the sector or market that the company operates in
 
+    private long lastRefreshTime;
+
+    private long secondsBeforeRefreshNeeded = 60; // number of seconds before a cached stock will be forced to refresh
+
     public static long lastId = 0L;
 
     /**
@@ -44,12 +48,37 @@ public class Stock {
         this.stockSector = sector;
     }
 
+    /**
+     * Most comprehensive constructor available. Allows for full override of all
+     * core attributes of a stock, including "id" and "lastRefreshTime".
+     * This constructor is used to read a stock from memory.
+     */
+    public Stock(long newId, long lastRefresh, String ticker, String newName, String description,
+                 String sector, double price, double dividend) throws MalformedURLException, JsonProcessingException {
+        this(ticker,newName,description,sector,price,dividend);
+        this.id = newId;
+        this.lastRefreshTime = lastRefresh;
+        long currentTime = System.currentTimeMillis();
+
+        // If too much time has passed since the last refresh, update the stock.
+        if (currentTime - lastRefresh > secondsBeforeRefreshNeeded*1000){
+            System.out.println("This stock has not been updated for too long. Force update.");
+            Update();
+            // Soon, will add functionality to update the persistent form of the stock
+        }
+    }
+
+    /**
+     * Updates a stock with real-time information from the Finnhub API
+     */
     public void Update() throws JsonProcessingException, MalformedURLException {
         // Get the JSON data from Finnhub with basic company info such as name, sector, etc.
         String jsonInput = Requests.get("https://finnhub.io/api/v1/stock/profile2?symbol="
                 + ticker + "&token=" + Requests.token);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(jsonInput);
+
+        lastRefreshTime = System.currentTimeMillis();
 
         // Update core attributes accordingly
         name = rootNode.get("name").asText();
@@ -130,6 +159,12 @@ public class Stock {
     public double getPrice() {
         return sharePrice;
     }
+
+    /**
+     * Gets the time stamp (in ms) of the last time this stock was updated with real-time data
+     * @return lastRefreshTime the time stamp of the last time the stock was refreshed
+     */
+    public long getLastRefresh() { return lastRefreshTime; }
 
     /**
      * Sets the share price of the stock
