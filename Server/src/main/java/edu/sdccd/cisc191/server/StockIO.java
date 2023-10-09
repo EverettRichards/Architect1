@@ -6,12 +6,14 @@ import java.util.Scanner;
 
 import javax.xml.parsers.*;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import edu.sdccd.cisc191.common.entities.Stock;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 
 public class StockIO {
-    public static void main(String[] args) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException {
+    /*public static void main(String[] args) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException {
         Stock myStock = new Stock("AAPL");
         // System.out.println(myStock.getTicker());
 
@@ -22,10 +24,27 @@ public class StockIO {
         outputStock.setDividend(4.51);
 
         saveStock("output2.xml",outputStock);
+    }*/
+
+    private static long secondsBeforeRefreshNeeded = 60; // number of seconds before a cached stock will be forced to refresh
+    private static final String dataDirectory = "Server/data/";
+
+    public static String getStockFilePointer(String ticker){
+        return dataDirectory + ticker + ".xml";
+    }
+
+    public static String escapeXml(String input){
+        return StringEscapeUtils.escapeXml11(input);
     }
 
     public static void saveStock(String reference, Stock stock) throws FileNotFoundException {
         String toXML = stockToXML(stock);
+        createFile(reference,toXML);
+    }
+
+    public static void saveStock(Stock stock) throws FileNotFoundException {
+        String toXML = stockToXML(stock);
+        String reference = getStockFilePointer(stock.getTicker());
         createFile(reference,toXML);
     }
 
@@ -36,10 +55,10 @@ public class StockIO {
         output += "<stock version=\"2.0\">\n";
         output += "\t<id>" + stock.getId() + "</id>\n";
         output += "\t<lastRefresh>" + stock.getLastRefresh() + "</lastRefresh>\n";
-        output += "\t<ticker>" + stock.getTicker() + "</ticker>\n";
-        output += "\t<name>" + stock.getName() + "</name>\n";
-        output += "\t<description>" + stock.getDescription() + "</description>\n";
-        output += "\t<stockSector>" + stock.getSector() + "</stockSector>\n";
+        output += "\t<ticker>" + escapeXml(stock.getTicker()) + "</ticker>\n";
+        output += "\t<name>" + escapeXml(stock.getName()) + "</name>\n";
+        output += "\t<description>" + escapeXml(stock.getDescription()) + "</description>\n";
+        output += "\t<stockSector>" + escapeXml(stock.getSector()) + "</stockSector>\n";
         output += "\t<sharePrice val=\"" + stock.getPrice() + "\"/>\n";
         output += "\t<dividendYield val=\"" + stock.getDividend() + "\"/>\n";
         output += "</stock>";
@@ -64,6 +83,39 @@ public class StockIO {
         return "";
     }
 
+    /*
+    * loadStock takes a String ticker (i.e. "AAPL")
+    * and returns a Stock object using the saved data, if it exists
+    * OR creates a new Stock object with API data, if one does not
+    * exist in storage.
+     */
+    public static Stock loadStock(String ticker) throws ParserConfigurationException, SAXException, IOException {
+        Stock outputStock;
+        try{ // Attempt to recall the stock from memory, unless too much time has passed.
+            outputStock = xmlToStock(getStockFilePointer(ticker));
+            System.out.println("Stock creation successful based on stored stock.");
+
+            // If too much time has passed since the last refresh, update the stock
+            // before passing it on to the Server method that called it.
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - outputStock.getLastRefresh() > secondsBeforeRefreshNeeded*1000){
+                System.out.println("This stock has not been updated for too long. Force update.");
+                outputStock.Update();
+            }
+        }
+        catch(Exception e){
+            outputStock = new Stock(ticker); // Create a new Stock object, initialized with API data
+            System.out.println("Exception occurred. New Stock object being created.");
+            // Now, save the brand new stock so that it can be used later.
+            saveStock(outputStock);
+        }
+
+        return outputStock;
+    }
+
+    /*
+    *
+     */
     public static Stock xmlToStock(String reference) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilder docReader = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document xmldoc = docReader.parse(new File(reference));

@@ -26,8 +26,6 @@ public class Stock {
 
     private long lastRefreshTime;
 
-    private long secondsBeforeRefreshNeeded = 60; // number of seconds before a cached stock will be forced to refresh
-
     public static long lastId = 0L;
 
     /**
@@ -58,14 +56,6 @@ public class Stock {
         this(ticker,newName,description,sector,price,dividend);
         this.id = newId;
         this.lastRefreshTime = lastRefresh;
-        long currentTime = System.currentTimeMillis();
-
-        // If too much time has passed since the last refresh, update the stock.
-        if (currentTime - lastRefresh > secondsBeforeRefreshNeeded*1000){
-            System.out.println("This stock has not been updated for too long. Force update.");
-            Update();
-            // Soon, will add functionality to update the persistent form of the stock
-        }
     }
 
     /**
