@@ -23,6 +23,8 @@ public class Server {
         String[] myTickers = {"AAPL","DIS","BAC","UAA","CCL","KO","WMT","T","GOOGL","MSFT","V","NVDA","AMZN","COST","AMD","TSM","META","TSLA"};
         for (String ticker : myTickers){
             Stock myStock = StockIO.loadStock(ticker);
+            myStock.setPrice(myStock.getPrice()+20);
+            StockIO.saveStock(myStock);
         }
     }
 
