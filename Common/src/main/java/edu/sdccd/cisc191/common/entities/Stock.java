@@ -30,7 +30,6 @@ public class Stock {
 
     public static long lastId = 0L;  //Initialize an id on startup.  Every Stock object created adds 1 to this and uses that for its own id.
 
-
     /**
      * Default constructor for the Stock class
      */
@@ -60,13 +59,6 @@ public class Stock {
         this.id = newId;
         this.lastRefreshTime = lastRefresh;
         long currentTime = System.currentTimeMillis();
-
-        // If too much time has passed since the last refresh, update the stock.
-        if (currentTime - lastRefresh > secondsBeforeRefreshNeeded*1000){
-            System.out.println("This stock has not been updated for too long. Force update.");
-            Update();
-            // Soon, will add functionality to update the persistent form of the stock
-        }
     }
 
     /**
@@ -99,10 +91,7 @@ public class Stock {
     public Stock(String newTicker) throws MalformedURLException, JsonProcessingException {
         // Internally assign the new Ticker value
         ticker = newTicker;
-        // Increment and set the stock's unique ID as a long
-        id = ++lastId;
-        // Get live, up-to-date information about the stock
-        Update();
+        lastRefreshTime = 0L;
     }
 
     /**
@@ -166,6 +155,8 @@ public class Stock {
      * @return lastRefreshTime the time stamp of the last time the stock was refreshed
      */
     public long getLastRefresh() { return lastRefreshTime; }
+
+    public void setLastRefresh(long num) { lastRefreshTime = num; }
 
     /**
      * Sets the share price of the stock

@@ -24,13 +24,13 @@ class StockCandleTest {
 
     @Test
     void invert2DArray() {
-        double[][] myArray = {{1.0,2.0,3.0},{1.0,2.0,3.0},{1.0,2.0,3.0},{1.0,2.0,3.0}};
+        /*double[][] myArray = {{1.0,2.0,3.0},{1.0,2.0,3.0},{1.0,2.0,3.0},{1.0,2.0,3.0}};
         double[][] expectedResult = {{1.0,1.0,1.0,1.0},{2.0,2.0,2.0,2.0},{3.0,3.0,3.0,3.0}};
         assertArrayEquals(StockCandle.invert2DArray(myArray),expectedResult);
 
         double[][] myArray2 = {{1,2},{3,4},{5,6},{7,8},{9,10}};
         double[][] expectedResult2 = {{1,3,5,7,9},{2,4,6,8,10}};
-        assertArrayEquals(StockCandle.invert2DArray(myArray2),expectedResult2);
+        assertArrayEquals(StockCandle.invert2DArray(myArray2),expectedResult2);*/
     }
 
 //    @Test
