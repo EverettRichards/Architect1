@@ -1,9 +1,10 @@
 package edu.sdccd.cisc191.client.models;
 
+import edu.sdccd.cisc191.common.entities.DataFetcher;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import edu.sdccd.cisc191.common.entities.User;
+
 import edu.sdccd.cisc191.server.api.StockController;
 
 class PolymorphismTest {

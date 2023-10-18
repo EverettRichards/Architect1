@@ -58,12 +58,6 @@ public class ClientController {
 
         model.addAttribute("stocks", stocks);
 
-//        try {
-//            System.out.println(toJson(stocks));
-//        } catch(JsonProcessingException e) {
-//            System.err.println(e);
-//        }
-
         return "dashboard";
     }
 
