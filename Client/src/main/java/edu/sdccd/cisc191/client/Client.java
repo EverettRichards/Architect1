@@ -25,7 +25,7 @@ public class Client {
         // } catch(MalformedURLException e) {
         //     System.err.println(e);
         // }
-        Stock myTest = new Stock("AAPL");
+        //Stock myTest = new Stock("AAPL");
 
         // Test a get request
         /*String testTicker = "AAPL";
