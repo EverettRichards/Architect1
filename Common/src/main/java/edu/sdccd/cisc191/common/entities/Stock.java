@@ -67,7 +67,7 @@ public class Stock {
     public void Update() throws JsonProcessingException, MalformedURLException {
         // Get the JSON data from Finnhub with basic company info such as name, sector, etc.
         String jsonInput = Requests.get("https://finnhub.io/api/v1/stock/profile2?symbol="
-                + ticker + "&token=" + Requests.token);
+                + ticker + "&token=" + DataFetcher.finnhubKey);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(jsonInput);
 
@@ -80,7 +80,7 @@ public class Stock {
 
         // Get the JSON data with FINANCIAL info such as price
         String jsonInput2 = Requests.get("https://finnhub.io/api/v1/quote?symbol="
-                + ticker + "&token=" + Requests.token);
+                + ticker + "&token=" + DataFetcher.finnhubKey);
         ObjectMapper mapper2 = new ObjectMapper();
         JsonNode rootNode2 = mapper2.readTree(jsonInput2);
 

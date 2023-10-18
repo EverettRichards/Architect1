@@ -5,6 +5,7 @@ package edu.sdccd.cisc191.server;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.sdccd.cisc191.common.entities.DataFetcher;
 import edu.sdccd.cisc191.common.entities.Requests;
 import edu.sdccd.cisc191.common.entities.Stock;
@@ -26,6 +27,7 @@ public class FinnhubNetworking {
         // Get the JSON data from Finnhub with basic company info such as name, sector, etc.
         String jsonInput = Requests.get("https://finnhub.io/api/v1/stock/profile2?symbol="
                 + stock.getTicker() + "&token=" + token);
+      
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(jsonInput);
 
@@ -39,6 +41,7 @@ public class FinnhubNetworking {
         // Get the JSON data with FINANCIAL info such as price
         String jsonInput2 = Requests.get("https://finnhub.io/api/v1/quote?symbol="
                 + stock.getTicker() + "&token=" + token);
+      
         ObjectMapper mapper2 = new ObjectMapper();
         JsonNode rootNode2 = mapper2.readTree(jsonInput2);
 
@@ -164,7 +167,7 @@ public class FinnhubNetworking {
         String URL = "https://finnhub.io/api/v1/stock/candle?symbol="+newTicker
                 +"&resolution="+resolution
                 +"&from="+time1+"&to="+time2
-                +"&token="+token;
+                +"&token="+DataFetcher.finnhubKey;
         String jsonInput = Requests.get(URL);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(jsonInput);
