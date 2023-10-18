@@ -26,20 +26,6 @@ public class StockCandle {
         return ticker;
     }
 
-    /*public static void main(String[] args) throws JsonProcessingException {
-        refreshData(candleExample);
-    }*/
-
-    /*public StockCandle(String newTicker) throws JsonProcessingException, MalformedURLException {
-        refreshData(newTicker);
-        setTicker(newTicker);
-    }
-
-    public StockCandle(String newTicker, String resolution, long time1, long time2) throws MalformedURLException, JsonProcessingException {
-        refreshData(newTicker,resolution,time1,time2);
-        setTicker(newTicker);
-    }*/
-
     public StockCandle(String newTicker, double[][] array){
         setTicker(newTicker);
         setStockInfo(array);

@@ -8,6 +8,7 @@ import edu.sdccd.cisc191.common.entities.StockCandle;
 /*import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;*/
+import edu.sdccd.cisc191.server.FinnhubNetworking;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.bind.annotation.PostMapping;
 
@@ -129,7 +130,7 @@ public class StockController {
         StockCandle candles;
 
         try {
-            candles = new StockCandle(ticker);
+            candles = FinnhubNetworking.newStockCandle(ticker);
         } catch(Exception e) {
             System.err.println(e);
             return null;
