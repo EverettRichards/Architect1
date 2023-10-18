@@ -1,6 +1,7 @@
 package edu.sdccd.cisc191.client.controllers;
 
 import edu.sdccd.cisc191.common.entities.Stock;
+import edu.sdccd.cisc191.common.entities.DataFetcher;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -8,13 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ import java.util.List;
 public class ClientController {
 
     RestTemplate restTemplate = new RestTemplate();
-    String resourceURL = "http://localhost:8080/api";
+    String resourceURL = DataFetcher.backendEndpointURL + DataFetcher.apiEndpointURL;
 
     public static String toJson(Object jsonObject) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(jsonObject);
