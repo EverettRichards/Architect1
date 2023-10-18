@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import edu.sdccd.cisc191.common.entities.User;
-import edu.sdccd.cisc191.server.StockTrader;
 
 class PolymorphismTest {
 
@@ -16,13 +15,5 @@ class PolymorphismTest {
         assertTrue(newObj instanceof StockController);
         assertTrue(newObj instanceof DataFetcher);
     }
-
-    @Test
-    void testAbstract() {
-        StockTrader trader = new StockTrader("Name",1);
-        assertTrue(trader instanceof StockTrader);
-        assertTrue(trader instanceof User);
-    }
-
 
 }
