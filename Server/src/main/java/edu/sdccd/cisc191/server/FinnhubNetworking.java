@@ -19,12 +19,15 @@ import java.time.temporal.TemporalAdjusters;
 
 public class FinnhubNetworking {
 
+    private static final String token = DataFetcher.finnhubKey;
+
     private long secondsBeforeRefreshNeeded = 60; // number of seconds before a cached stock will be forced to refresh
 
     public void UpdateStock(Stock stock) throws JsonProcessingException, MalformedURLException {
         // Get the JSON data from Finnhub with basic company info such as name, sector, etc.
         String jsonInput = Requests.get("https://finnhub.io/api/v1/stock/profile2?symbol="
-                + stock.getTicker() + "&token=" + DataFetcher.finnhubKey);
+                + stock.getTicker() + "&token=" + token);
+      
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(jsonInput);
 
@@ -37,7 +40,8 @@ public class FinnhubNetworking {
 
         // Get the JSON data with FINANCIAL info such as price
         String jsonInput2 = Requests.get("https://finnhub.io/api/v1/quote?symbol="
-                + stock.getTicker() + "&token=" + DataFetcher.finnhubKey);
+                + stock.getTicker() + "&token=" + token);
+      
         ObjectMapper mapper2 = new ObjectMapper();
         JsonNode rootNode2 = mapper2.readTree(jsonInput2);
 
@@ -140,6 +144,13 @@ public class FinnhubNetworking {
         StockCandle candle = new StockCandle();
         UpdateCandle(candle,newTicker,resolution,time1,time2);
         return candle;
+    }
+
+    public static StockCandle newStockCandle(String newTicker) throws MalformedURLException, JsonProcessingException {
+        long[] timeRange = getTimeRange("day");
+        long time1 = timeRange[0];
+        long time2 = timeRange[1];
+        return newStockCandle(newTicker,getFrequency("day"),time1,time2);
     }
 
     public static void UpdateCandle(StockCandle candle, String newTicker, String duration) throws MalformedURLException, JsonProcessingException {
