@@ -1,8 +1,7 @@
-package edu.sdccd.cisc191.client.controllers;
+package edu.sdccd.cisc191.server.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.sdccd.cisc191.common.entities.Stock;
-import edu.sdccd.cisc191.client.models.DataFetcher;
 import edu.sdccd.cisc191.common.entities.StockCandle;
 
 //import org.springframework.stereotype.Controller;
@@ -25,9 +24,9 @@ import java.util.List;
 /**
  * StockController a class to generate the data to display on the client webpage
  */
-@RequestMapping(DataFetcher.apiEndpointURL)
+@RequestMapping("/api")
 @RestController
-public class StockController implements DataFetcher {
+public class StockController {
     String[] myTickers = {"AAPL","DIS","BAC","UAA","CCL","KO","WMT","T","GOOGL","MSFT","V","NVDA","AMZN","COST","AMD","TSM","META","TSLA"};
     //Dummy Data to initialize UIStock objects
     public ArrayList<Stock> stocks = new ArrayList<>() {
@@ -42,10 +41,6 @@ public class StockController implements DataFetcher {
         }
 
     };
-
-    //Convert the above dummy data into a List so we can perform CRUD
-    //operations on them.
-//    public static final String stockRepositoryAddress = "stockrepo.txt";
 
     /**
      * Lists all the stocks to display on the webpage
