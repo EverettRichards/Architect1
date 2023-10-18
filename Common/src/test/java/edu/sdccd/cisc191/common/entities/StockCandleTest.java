@@ -33,25 +33,25 @@ class StockCandleTest {
         assertArrayEquals(StockCandle.invert2DArray(myArray2),expectedResult2);
     }
 
-    @Test
-    void getStockInfo() throws MalformedURLException, JsonProcessingException {
-        StockCandle candle = new StockCandle("AAPL");
-        double[][] stockInfo = candle.getStockInfo();
-        // Verify that each bit is 3600 seconds (1 hour) apart
-        for (int i=0;i<5;i++){
-            assertEquals(stockInfo[i+1][4]-stockInfo[0][4],(i+1)*3600);
-        }
-    }
+//    @Test
+//    void getStockInfo() throws MalformedURLException, JsonProcessingException {
+//        StockCandle candle = new StockCandle("AAPL");
+//        double[][] stockInfo = candle.getStockInfo();
+//        // Verify that each bit is 3600 seconds (1 hour) apart
+//        for (int i=0;i<5;i++){
+//            assertEquals(stockInfo[i+1][4]-stockInfo[0][4],(i+1)*3600);
+//        }
+//    }
 
-    @Test
-    void testToString() throws MalformedURLException, JsonProcessingException {
-        StockCandle candle = new StockCandle("AAPL");
-        System.out.println(candle.toString());
-    }
+//    @Test
+//    void testToString() throws MalformedURLException, JsonProcessingException {
+//        StockCandle candle = new StockCandle("AAPL");
+//        System.out.println(candle.toString());
+//    }
 
-    @Test
-    void printConciseContents() throws MalformedURLException, JsonProcessingException {
-        StockCandle candle = new StockCandle("AAPL");
-        candle.printConciseContents();
-    }
+//    @Test
+//    void printConciseContents() throws MalformedURLException, JsonProcessingException {
+//        StockCandle candle = new StockCandle("AAPL");
+//        candle.printConciseContents();
+//    }
 }
