@@ -47,15 +47,22 @@ public class ClientController {
      */
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        //restTemplate.getForObject
-        ResponseEntity<List<Stock>> response = restTemplate.exchange(
-                resourceURL + "/stocks",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<>() {}
-        );
+        //Declare a variable for stocks to pass in to template
+        List<Stock> stocks;
 
-        List<Stock> stocks = response.getBody();
+        //restTemplate.getForObject
+        try {
+            ResponseEntity<List<Stock>> response = restTemplate.exchange(
+                    resourceURL + "/stocks",
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<>() {}
+            );
+
+            stocks = response.getBody();
+        } catch (Exception e) {
+            stocks = null;
+        }
 
         model.addAttribute("stocks", stocks);
 
@@ -70,16 +77,21 @@ public class ClientController {
      */
     @GetMapping("/dashboard/stock/{id}")
     public String stockDetails(@PathVariable("id") Long id, Model model) {
-        ResponseEntity<Stock> response = restTemplate.exchange(
-                resourceURL + "/stocks/" + id,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<>() {}
-        );
+        //Stock variable for passing into template
+        Stock stock;
 
-        Stock stock = response.getBody();
+        try {
+            ResponseEntity<Stock> response = restTemplate.exchange(
+                    resourceURL + "/stocks/" + id,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<>() {}
+            );
+            stock = response.getBody();
+        } catch (Exception e) {
+            stock = null;
+        }
 
-        System.out.println(stock);
         model.addAttribute("stock", stock);
         return "stock";
     }
