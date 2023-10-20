@@ -12,6 +12,10 @@ import java.util.Scanner;
 import java.io.FileNotFoundException;
 
 public class DataMethods {
+
+    public static final String stockDirectory = "stock_repository"; // Directory of where to store STOCK.json files
+    public static final String stockCandleDirectory = "stock_candle_repository"; // Directory of where to store STOCKCANDLE.json files
+
     public static double[][] invert2DArray(double[][] inputArray){
         int rows = inputArray.length;
         int columns = inputArray[0].length;
@@ -79,6 +83,25 @@ public class DataMethods {
         }
 
         return encodeJson(root3);
+    }
+
+    public static String annotateCandles(String json, String ticker, String duration, long time1, long time2) throws JsonProcessingException {
+        JsonNode root = decodeJson(json);
+
+        ObjectMapper map = new ObjectMapper();
+        ObjectNode newNode = map.createObjectNode();
+
+
+
+        newNode.put("ticker",ticker);
+        newNode.put("last_updated",System.currentTimeMillis());
+        newNode.put("json_version",ServerStockCandle.stockCandleJsonVersion);
+        newNode.put("candle_count",1);
+        newNode.put("duration",duration);
+        newNode.put("time1",time1);
+        newNode.put("time2",time2);
+
+        return encodeJson(newNode);
     }
 
     public static void createFile(String path, String filename, String content) throws FileNotFoundException{

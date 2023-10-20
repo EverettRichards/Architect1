@@ -74,13 +74,12 @@ public class StockCandleBuilder {
         return frequency;
     }
 
-    public static StockCandle newStockCandle(String newTicker, String resolution, long time1, long time2) throws MalformedURLException, JsonProcessingException {
-        StockCandle candle = new StockCandle();
-        FinnhubNetworking.UpdateCandle(candle,newTicker,resolution,time1,time2);
+    public static ServerStockCandle newStockCandle(String newTicker, String resolution, long time1, long time2) throws MalformedURLException, JsonProcessingException {
+        ServerStockCandle candle = new ServerStockCandle(newTicker,"day");
         return candle;
     }
 
-    public static StockCandle newStockCandle(String newTicker) throws MalformedURLException, JsonProcessingException {
+    public static ServerStockCandle newStockCandle(String newTicker) throws MalformedURLException, JsonProcessingException {
         long[] timeRange = getTimeRange("day");
         long time1 = timeRange[0];
         long time2 = timeRange[1];
@@ -90,7 +89,7 @@ public class StockCandleBuilder {
     public static void UpdateCandle(StockCandle candle, String newTicker, String duration) throws MalformedURLException, JsonProcessingException {
         long[] timeRange = getTimeRange(duration);
         String frequency = getFrequency(duration);
-        FinnhubNetworking.UpdateCandle(candle, newTicker,frequency, timeRange[0],timeRange[1]);
+        //FinnhubNetworking.UpdateCandle(candle, newTicker,frequency, timeRange[0],timeRange[1]);
     }
     public static void UpdateCandle(StockCandle candle, String newTicker) throws MalformedURLException, JsonProcessingException {
         UpdateCandle(candle, newTicker,"5year");

@@ -46,7 +46,7 @@ public class ServerStock extends Stock {
 
     // Opens the corresponding JSON file to see if it's good for using.
     private void updateFromFile() throws IOException {
-        String contents = DataMethods.readFile("data",getTicker()+".json");
+        String contents = DataMethods.readFile(DataMethods.stockDirectory,getTicker()+".json");
         JsonNode root = DataMethods.decodeJson(contents);
 
         if (root.get("json_version").asInt() != stockJsonVersion) {
@@ -66,9 +66,6 @@ public class ServerStock extends Stock {
     // Updates an existing Stock object using the best method available (stored file or API).
     // Also used to initialize a brand new Stock object.
     public void updateFromBestMethod() throws MalformedURLException, JsonProcessingException, FileNotFoundException {
-        String ticker = getTicker();
-        JsonNode root;
-
         try {
             // Attempt to instantiate the Stock using data from a JSON file on the server.
             updateFromFile();
@@ -112,6 +109,6 @@ public class ServerStock extends Stock {
     public void saveAsJsonFile() throws JsonProcessingException, FileNotFoundException {
         System.out.println("Saved a stock!!");
         String json = toJson();
-        DataMethods.createFile("data",getTicker()+".json",json);
+        DataMethods.createFile(DataMethods.stockDirectory,getTicker()+".json",json);
     }
 }
