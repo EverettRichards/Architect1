@@ -88,11 +88,12 @@ public class StockBuilder {
         return stock;
     }
 
-    // Returns a String containing the attributes of a Stock object.
+    // Returns a String containing the attributes of a Stock object in JSON format.
     public static String stockToJson(Stock stock) throws JsonProcessingException {
         ObjectMapper map = new ObjectMapper();
         ObjectNode parent = map.createObjectNode();
 
+        // Put the stock's attributes into the JSON object
         parent.put("ticker",stock.getTicker());
         parent.put("name",stock.getName());
         parent.put("sector",stock.getSector());
@@ -102,6 +103,7 @@ public class StockBuilder {
         parent.put("last_updated",stock.getLastRefresh());
         parent.put("json_version",stockJsonVersion);
 
+        // Return the JSON-formatted String
         return DataMethods.encodeJson(parent);
     }
 

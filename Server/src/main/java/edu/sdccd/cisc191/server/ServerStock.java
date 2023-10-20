@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ServerStock extends Stock {
-    public static final int stockJsonVersion = 1;
+    public static final int stockJsonVersion = 1; // The internal version of the Stock.java JSON files.
+    // If you make any changes to the expected/actual format of JSON stock files, please add 1 to this value.
+
 
     // Update the attributes of the Stock using a JSON data structure. Used for instantiation
     // once valid JSON is found either from the API or the server.
