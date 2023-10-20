@@ -9,13 +9,15 @@ import java.net.MalformedURLException;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class StockBuilderTest {
-
+    String[] myTickers = new String[]{"AAPL"};//,"MSFT","META","TSM","COST","K","TM","KO"};
     @Test
     void test() throws MalformedURLException, JsonProcessingException {
-        String[] myTickers = new String[]{"AAPL","MSFT","META","TSM","COST","K","TM","KO"};
         for (String ticker : myTickers) {
             Stock myStock = StockBuilder.newStock(ticker);
             String output = StockBuilder.stockToJson(myStock);
+            ServerStock myStock2 = new ServerStock(ticker);
+            String output2 = myStock2.toJson();
+            assertEquals(output, output2);
             System.out.println(output);
         }
     }

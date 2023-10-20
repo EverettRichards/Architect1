@@ -26,16 +26,17 @@ public class Stock {
 
     private long lastRefreshTime;
 
-    private long secondsBeforeRefreshNeeded = 60; // number of seconds before a cached stock will be forced to refresh
-
     public static long lastId = 0L;  //Initialize an id on startup.  Every Stock object created adds 1 to this and uses that for its own id.
 
     /**
-     * Default constructor for the Stock class
+     * Default constructor for the Stock class. Creates an empty Stock object.
      */
     public Stock () {
     }
 
+    /*
+     * Creates a Stock object using each applicable piece of data.
+     */
     public Stock(String ticker, String newName, String description,
                  String sector, double price, double dividend){
         id = ++lastId;
