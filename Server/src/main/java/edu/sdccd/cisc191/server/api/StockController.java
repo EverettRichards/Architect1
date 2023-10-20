@@ -8,7 +8,11 @@ import edu.sdccd.cisc191.common.entities.StockCandle;
 /*import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;*/
+
 import edu.sdccd.cisc191.server.FinnhubNetworking;
+import edu.sdccd.cisc191.server.StockCandleBuilder;
+import edu.sdccd.cisc191.server.StockBuilder;
+
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.bind.annotation.PostMapping;
 
@@ -34,7 +38,7 @@ public class StockController {
         {
             for (String ticker : myTickers) {
                 try {
-                    add(new Stock(ticker));
+                    add(StockBuilder.newStock(ticker));
                 } catch (MalformedURLException | JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
@@ -130,7 +134,7 @@ public class StockController {
         StockCandle candles;
 
         try {
-            candles = FinnhubNetworking.newStockCandle(ticker);
+            candles = StockCandleBuilder.newStockCandle(ticker);
         } catch(Exception e) {
             System.err.println(e);
             return null;

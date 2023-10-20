@@ -61,34 +61,7 @@ public class Stock {
         long currentTime = System.currentTimeMillis();
     }
 
-    /**
-     * Updates a stock with real-time information from the Finnhub API
-     */
-    public void Update() throws JsonProcessingException, MalformedURLException {
-        // Get the JSON data from Finnhub with basic company info such as name, sector, etc.
-        String jsonInput = Requests.get("https://finnhub.io/api/v1/stock/profile2?symbol="
-                + ticker + "&token=" + DataFetcher.finnhubKey);
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.readTree(jsonInput);
-
-        lastRefreshTime = System.currentTimeMillis();
-
-        // Update core attributes accordingly
-        name = rootNode.get("name").asText();
-        stockSector = rootNode.get("finnhubIndustry").asText();
-        description = String.format("%s is a company in the %s sector.",name,stockSector);
-
-        // Get the JSON data with FINANCIAL info such as price
-        String jsonInput2 = Requests.get("https://finnhub.io/api/v1/quote?symbol="
-                + ticker + "&token=" + DataFetcher.finnhubKey);
-        ObjectMapper mapper2 = new ObjectMapper();
-        JsonNode rootNode2 = mapper2.readTree(jsonInput2);
-
-        // Update core attributes accordingly
-        sharePrice = rootNode2.get("c").asDouble();
-    }
-
-    public Stock(String newTicker) throws MalformedURLException, JsonProcessingException {
+    public Stock(String newTicker) {
         // Internally assign the new Ticker value
         ticker = newTicker;
         lastRefreshTime = 0L;
