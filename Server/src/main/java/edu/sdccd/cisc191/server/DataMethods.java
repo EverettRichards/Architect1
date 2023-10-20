@@ -53,7 +53,8 @@ public class DataMethods {
         root3.set("sector",root1.get("finnhubIndustry"));
         root3.set("description",root1.get("name"));
         root3.set("price",root2.get("c"));
-        root3.put("last_updated",Long.toString(System.currentTimeMillis()));
+        root3.put("last_updated",System.currentTimeMillis());
+        root3.put("stock_version",StockBuilder.stockJsonVersion);
 
         return encodeJson(root3);
     }
