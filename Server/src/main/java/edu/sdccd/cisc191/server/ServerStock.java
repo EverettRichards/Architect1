@@ -38,7 +38,7 @@ public class ServerStock extends Stock {
     // Call the API to get the latest information. Then, save the new data to the server.
     private void updateFromAPI() throws MalformedURLException, JsonProcessingException, FileNotFoundException {
         String ticker = getTicker();
-        String finnhubResult = FinnhubNetworking.getJsonFromFinnhub(ticker);
+        String finnhubResult = Finnhub.getJsonFromFinnhub(ticker);
         JsonNode root = DataMethods.decodeJson(finnhubResult);
         updateFromJsonNode(root,true);
         saveAsJsonFile();
@@ -53,7 +53,7 @@ public class ServerStock extends Stock {
             // Stock has an old version. Don't use it.
             System.out.println("Updating old-versioned stock.");
             updateFromAPI();
-        } else if (System.currentTimeMillis() - root.get("last_updated").asLong() >= (1000L*FinnhubNetworking.secondsBeforeRefreshNeeded)) {
+        } else if (System.currentTimeMillis() - root.get("last_updated").asLong() >= (1000L*Finnhub.secondsBeforeRefreshNeeded)) {
             // Stock hasn't been updated recently. Don't use it.
             System.out.println("Updating outdated stock.");
             updateFromAPI();
