@@ -97,7 +97,7 @@ public class ServerStockCandle extends StockCandle {
     // Call the API to get the latest information. Then, save the new data to the server.
     private void updateFromAPI() throws MalformedURLException, JsonProcessingException, FileNotFoundException {
         String ticker = getTicker();
-        String finnhubResult = FinnhubNetworking.getCandleFromFinnhub(ticker,duration,time1,time2);
+        String finnhubResult = Finnhub.getCandleFromFinnhub(ticker,duration,time1,time2);
         JsonNode root = DataMethods.decodeJson(finnhubResult);
         // ERROR HAPPENS here (below)
         updateFromJsonNode(root,true);
