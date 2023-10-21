@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class StockBuilder {
-    public static final int stockJsonVersion = 1;
+    /*public static final int stockJsonVersion = 1;
 
     private static void updateStockFromJsonNode(Stock stock, JsonNode root, Boolean updateTimeStamp){
         stock.setName(root.get("name").asText());
@@ -112,5 +112,5 @@ public class StockBuilder {
         System.out.println("Saved a stock!!");
         String json = stockToJson(stock);
         DataMethods.createFile("data",stock.getTicker()+".json",json);
-    }
+    }*/
 }
