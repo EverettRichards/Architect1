@@ -1,71 +1,49 @@
 package edu.sdccd.cisc191.common.entities;
 
-/**
- * User is a program that creates the account and information about a new user of the web program
- */
-public abstract class User {
-    public static int currentID = 0;            //the current id that is used for access
-    private String username;                    //the users selected account name
-    private int userid; // Unique numerical identifier for each user, regardless of status as admin/broker/customer
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-    private int authorizationLevel; // 0 = customer, 1 = broker, 2 = admin
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
-    /**
-     * Get the username that is listed by this account
-     * @return username the name of the user
-     */
-    public String getUsername() {
-        return username;
+@Entity
+@Table(name = "users")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
+public class User implements java.io.Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id ; // Unique numerical identifier for each user, regardless of status as admin/broker/customer
+
+    @Column
+    private String name;                    //the users selected account name
+
+    @Column
+    private String passwordHash;
+
+    @Column
+    private Role role;
+
+    public static enum Role {
+        Regular,
+        Admin,
     }
 
-    /**
-     * Constructor for creating a new user using the name and authorization id
-     * @param name the username that was added
-     * @param authLevel the authorizationLevel granted for accessing the program features
-     */
-    public User(String name, int authLevel){ // constructor for the abstract class
-        username = name;
-        authorizationLevel = authLevel;
-        userid = ++currentID;
+    public User(String name) {
+        this.name = name;
     }
 
-    /**
-     * Sets the username to the string passed in
-     * @param name username to be added
-     */
-    public void setUsername(String name) {
-        username = name;
-    }
-
-    /**
-     * Gets the UserID
-     * @return userid the id that is currently being used
-     */
-    public int getUserID() {
-        return userid;
-    }
-
-    /**
-     * Sets the UserID
-     * @param id the userid that will be added
-     */
-    public void setUserID(int id) {
-        userid = id;
-    }
-
-    /**
-     * Gets the authorizationLevel for the user
-     * @return authorizationLevel the current access level
-     */
-    public int getAuthorizationLevel() {
-        return authorizationLevel;
-    }
-
-    /**
-     * Sets the authorizationLevel for the user
-     * @param level set authorization level for access control
-     */
-    public void setAuthorizationLevel(int level) {
-        authorizationLevel = level;
+    @Override
+    public String toString() {
+        return "User{"
+                    + "id=" + this.id + ","
+                    + "name='" + this.name + "'"
+                + "}";
     }
 }

@@ -5,9 +5,16 @@ spring:
     password: honors
     driverClassName: org.h2.Driver
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create-drop
+      # ddl-auto: create-drop
+      ddl-auto: update
+    console:
+      enabled: true
+      # default path: h2-console
+      path: /h2-ui
 
 server:
   port : 8081
