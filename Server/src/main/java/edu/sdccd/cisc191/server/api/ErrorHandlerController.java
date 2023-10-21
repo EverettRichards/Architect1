@@ -30,5 +30,4 @@ public class ErrorHandlerController extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleAccessDenied(Exception ex, WebRequest request) {
         return new ResponseEntity<Object>(ex, new HttpHeaders(), HttpStatus.FORBIDDEN);
     }
-    
 }

@@ -30,9 +30,19 @@ public class AccountController {
     }
     
     @PostMapping("/add")
-    public void add(User user) {
+    public void add(User user) throws DatabaseError {
         // System.out.println(user.getName());
         userService.createUser(user);
+    }
+
+    @PostMapping("/update/{id}")
+    public void update(@PathVariable Long id, User newUserData) throws UserNotFound {
+        // System.out.println(user.getName());
+        Optional<User> oldUser = userService.getUserById(id);
+        if(oldUser.isEmpty()) {
+            throw new UserNotFound();
+        }
+        userService.updateUser(oldUser.get(), newUserData);
     }
 
     @DeleteMapping("/{id}")

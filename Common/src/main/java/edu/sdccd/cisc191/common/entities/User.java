@@ -21,8 +21,11 @@ public class User implements java.io.Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id ; // Unique numerical identifier for each user, regardless of status as admin/broker/customer
 
-    @Column
+    @Column(unique = true)
     private String name;                    //the users selected account name
+
+    @Column
+    private String nickname;
 
     @Column
     private String passwordHash;
