@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.sdccd.cisc191.common.entities.User;
 import edu.sdccd.cisc191.server.errors.DatabaseError;
+import edu.sdccd.cisc191.server.errors.UserExists;
 import edu.sdccd.cisc191.server.errors.UserNotFound;
 import edu.sdccd.cisc191.server.services.UserService;
 
@@ -30,7 +31,7 @@ public class AccountController {
     }
     
     @PostMapping("/add")
-    public void add(User user) throws DatabaseError {
+    public void add(User user) throws UserExists {
         // System.out.println(user.getName());
         userService.createUser(user);
     }
