@@ -39,7 +39,7 @@ public class AccountController {
     @PostMapping("/update/{id}")
     public void update(@PathVariable Long id, User newUserData) throws UserNotFound {
         // System.out.println(user.getName());
-        Optional<User> oldUser = userService.getUserById(id);
+        Optional<User> oldUser = userService.getUser(id);
         if(oldUser.isEmpty()) {
             throw new UserNotFound();
         }
@@ -48,7 +48,7 @@ public class AccountController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) throws DatabaseError {
-        Optional<User> user = userService.getUserById(id);
+        Optional<User> user = userService.getUser(id);
         if(user.isEmpty()) {
             throw new UserNotFound();
         }

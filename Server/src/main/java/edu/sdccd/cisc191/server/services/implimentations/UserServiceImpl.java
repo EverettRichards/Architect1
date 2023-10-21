@@ -36,21 +36,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    @Override
     public void updateUser(User user, User modified) throws DatabaseError {
         try {
-            userRepository.updateUser(user.getName(), user.getPasswordHash(), user.getId());
+            userRepository.updateUser(user.getName(), user.getNickname(), user.getPasswordHash(), user.getId());
         } catch(Exception e) {
             throw new DatabaseError(e.toString());
         }
     }
 
+
+    @Override
+    public Optional<User> getUser(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public Optional<User> getUser(String username) {
+        return userRepository.findByName(username);
+    }
+
     @Override
     public boolean userExists(Long id) {
-        return !this.getUserById(id).isEmpty();
+        return !this.getUser(id).isEmpty();
+    }
+
+    @Override
+    public boolean userExists(String username) {
+        return !this.getUser(username).isEmpty();
     }
 }

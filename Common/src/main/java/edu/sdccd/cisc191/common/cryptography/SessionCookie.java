@@ -20,6 +20,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import edu.sdccd.cisc191.common.entities.User;
 
 public class SessionCookie {
+    // Note: every program restart will invalidate all existing session token
+
     private class secrets {
         public static Algorithm generate() {
             KeyPairGenerator generator;

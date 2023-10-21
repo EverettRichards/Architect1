@@ -8,12 +8,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "users")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class User implements java.io.Serializable {
@@ -27,7 +31,7 @@ public class User implements java.io.Serializable {
     @Column
     private String nickname;
 
-    @Column
+    @Column(length = 512)
     private String passwordHash;
 
     @Column
@@ -36,5 +40,12 @@ public class User implements java.io.Serializable {
     public static enum Role {
         Regular,
         Admin,
+    }
+
+    public User(String name, String nickname, String passwordHash, Role role) {
+        this.name = name;
+        this.nickname = nickname;
+        this.passwordHash = passwordHash;
+        this.role = role;
     }
 }
