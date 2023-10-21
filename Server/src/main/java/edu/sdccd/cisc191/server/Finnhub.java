@@ -14,7 +14,7 @@ import edu.sdccd.cisc191.common.entities.StockCandle;
 
 import java.net.MalformedURLException;
 
-public class FinnhubNetworking {
+public class Finnhub {
 
     private static final String token = DataFetcher.finnhubKey;
 

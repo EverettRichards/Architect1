@@ -2,9 +2,6 @@ package edu.sdccd.cisc191.common.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.sdccd.cisc191.common.entities.Requests;
 
 import java.net.MalformedURLException;
 //import com.fasterxml.jackson.annotation.JsonProperty;

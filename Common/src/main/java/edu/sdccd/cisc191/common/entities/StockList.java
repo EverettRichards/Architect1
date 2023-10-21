@@ -5,7 +5,7 @@ package edu.sdccd.cisc191.common.entities;
  */
 public class StockList {
     private Stock[] stocks;         //the stocks that will make up the list of stocks
-    private User owner;             //the user that will be tracking a set of stocks on the webpage
+    // private User owner;             //the user that will be tracking a set of stocks on the webpage
 
     public static void main(String[] args) {
         System.out.println("Test");

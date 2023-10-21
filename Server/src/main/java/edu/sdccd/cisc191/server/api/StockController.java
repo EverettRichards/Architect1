@@ -9,7 +9,7 @@ import edu.sdccd.cisc191.common.entities.StockCandle;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;*/
 
-import edu.sdccd.cisc191.server.FinnhubNetworking;
+import edu.sdccd.cisc191.server.Finnhub;
 import edu.sdccd.cisc191.server.ServerStock;
 import edu.sdccd.cisc191.server.StockCandleBuilder;
 import edu.sdccd.cisc191.server.StockBuilder;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.bind.annotation.PostMapping;
 
 import java.net.MalformedURLException;
-//import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +29,8 @@ import java.util.List;
 /**
  * StockController a class to generate the data to display on the client webpage
  */
-@RequestMapping("/api")
 @RestController
+@RequestMapping("/api")
 public class StockController {
     String[] myTickers = {"AAPL","DIS","BAC","UAA","CCL","KO","WMT","T","GOOGL","MSFT","V","NVDA","AMZN","COST","AMD","TSM","META","TSLA"};
     //Dummy Data to initialize UIStock objects
