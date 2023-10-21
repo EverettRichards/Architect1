@@ -67,7 +67,7 @@ public class StockController {
         Stock newStock = new Stock(
             stock.getTicker(), stock.getName(),
             stock.getDescription(), stock.getSector(), stock.getPrice(),
-            stock.getDividend()
+            stock.getDividend(), stock.getId()
         );
         this.stocks.add(newStock);
     }
@@ -79,9 +79,9 @@ public class StockController {
      */
     //CRUD Get a single stock
     @GetMapping("/stocks/{id}")
-    public Stock getSingle(@PathVariable Long id) {
+    public Stock getSingle(@PathVariable long id) {
         for (Stock stock : stocks) {
-            if (stock.getId().equals(id)) {
+            if (stock.getId() == id) {
                 return stock;
             }
         }
@@ -94,9 +94,9 @@ public class StockController {
      * @param id the id of the stock to update
      */
     @PutMapping("/stocks/{id}")
-    public void update(@RequestBody Stock updatedStock, @PathVariable Long id) {
+    public void update(@RequestBody Stock updatedStock, @PathVariable long id) {
         for (Stock stock : stocks) {
-            if (stock.getId().equals(id)) {
+            if (stock.getId() == id) {
                 stock.setTicker(updatedStock.getTicker());
                 stock.setName(updatedStock.getName());
                 stock.setDescription(updatedStock.getDescription());
@@ -114,9 +114,9 @@ public class StockController {
      * @param id the long id to identify the stock to delete
      */
     @DeleteMapping("/stocks/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable long id) {
         for (Stock stock : stocks) {
-            if (stock.getId().equals(id)) {
+            if (stock.getId() == id) {
                 stocks.remove(stock);
                 System.out.println("Successfully deleted stock.");
                 return;
@@ -140,7 +140,7 @@ public class StockController {
             return null;
         }
 
-        double[][] data = candles.getStockInfo();
+        double[][] data = new double[5][5];//candles.getStockInfo();
         //System.out.println(candles.toString());
         return data;
     }

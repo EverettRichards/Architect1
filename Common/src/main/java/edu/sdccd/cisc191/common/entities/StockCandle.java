@@ -12,6 +12,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
+import java.util.List;
 
 public class StockCandle {
 
@@ -32,6 +33,8 @@ public class StockCandle {
 
      */
 
+    protected long id;
+
     protected String ticker;
 
     protected long lastRefreshTime;
@@ -42,7 +45,28 @@ public class StockCandle {
 
     protected long time2; // End time (ms)
 
-    protected double[][] stockInfo;
+    //protected double[][] stockInfo;
+
+    protected List<Double> c; // Closing prices
+    protected List<Double> h; // High prices
+    protected List<Double> l; // Low prices
+    protected List<Double> o; // Open prices
+    protected List<Long> t; // Time stamps
+    protected List<Long> v; // Trade volume
+
+    public List<Double> getC() { return c; }
+    public List<Double> getH() { return h; }
+    public List<Double> getL() { return l; }
+    public List<Double> getO() { return o; }
+    public List<Long> getT() { return t; }
+    public List<Long> getV() { return v; }
+
+    public void setC(List<Double> val) { c = val; }
+    public void setH(List<Double> val) { h = val; }
+    public void setL(List<Double> val) { l = val; }
+    public void setO(List<Double> val) { o = val; }
+    public void setT(List<Long> val) { t = val; }
+    public void setV(List<Long> val) { v = val; }
 
     public void setTicker(String txt){
         ticker = txt;
@@ -76,37 +100,47 @@ public class StockCandle {
         return time2;
     }
 
+    public long getId() {return id;}
+
+    public void setId(long val) { id = val; }
+
     public void setLastRefresh(long stamp) { lastRefreshTime = stamp; }
 
     public long getLastRefresh() { return lastRefreshTime; }
 
-    public StockCandle(String newTicker, double[][] array){
+    public StockCandle(String newTicker, List<List<?>> values){
         setTicker(newTicker);
-        setStockInfo(array);
+        c = (List<Double>)values.get(0);
+        h = (List<Double>)values.get(1);
+        l = (List<Double>)values.get(2);
+        o = (List<Double>)values.get(3);
+        t = (List<Long>)values.get(4);
+        v = (List<Long>)values.get(5);
+        //setStockInfo(array);
     }
 
     public StockCandle(){
         // Blank constructor
     }
 
-    public double[][] getStockInfo(){
+    /*public double[][] getStockInfo(){
         return stockInfo;
     }
 
     public void setStockInfo(double[][] array){
         stockInfo = array;
-    }
+    }*/
 
-    public String toString(){
+    /*public String toString(){
         String outputString = "";
         for (double[] row : stockInfo){
             outputString += String.format("@t=%.0f, %s low=%.2f, high=%.2f, open=%.2f, close=%.2f.",row[4],ticker,row[2],row[1],row[3],row[0]);
             outputString += "\n";
         }
         return outputString;
-    }
+    }*/
 
-    public void printConciseContents(){
+    /*public void printConciseContents(){
         System.out.println(ticker+":");
         for (double[] row : stockInfo){
             String outputString = "{";
@@ -122,5 +156,5 @@ public class StockCandle {
             }
             System.out.println(outputString);
         }
-    }
+    }*/
 }

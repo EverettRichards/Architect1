@@ -1,5 +1,6 @@
 package edu.sdccd.cisc191.server;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,16 +18,46 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ServerStockCandle extends StockCandle {
-    public static final int stockCandleJsonVersion = 2; // The internal version of the Stock.java JSON files.
+    public static final int stockCandleJsonVersion = 11; // The internal version of the Stock.java JSON files.
     // If you make any changes to the expected/actual format of JSON stock files, please add 1 to this value.
 
+    public int jsonVersion; // JSON version for this specific object
 
     // Update the attributes of the Stock using a JSON data structure. Used for instantiation
     // once valid JSON is found either from the API or the server.
-    private void updateFromJsonNode(JsonNode root, Boolean updateTimeStamp){
+
+    private void updateFromJsonNode(JsonNode root, Boolean updateTimeStamp) throws JsonProcessingException {
+        String json = DataMethods.encodeJson(root);
+        ServerStockCandle newCandle = new ObjectMapper().readValue(json,ServerStockCandle.class);
+
+        this.c = newCandle.c;
+        this.h = newCandle.h;
+        this.l = newCandle.l;
+        this.o = newCandle.o;
+        this.t = newCandle.t;
+        this.v = newCandle.v;
+
+        this.ticker = newCandle.getTicker();
+        this.id = newCandle.getId();
+        this.lastRefreshTime = newCandle.getLastRefresh();
+        this.duration = newCandle.duration;
+        this.time1 = newCandle.time1;
+        this.time2 = newCandle.time2;
+        this.jsonVersion = stockCandleJsonVersion;
+
+        try {
+            this.id = DataMethods.getStockId(getTicker());
+        } catch (IOException e) {
+            setId(0L);
+        }
+    }
+
+    /*private void updateFromJsonNode(JsonNode root, Boolean updateTimeStamp){
         int count = root.get("candle_count").asInt();
         double[][] newStockInfo = new double[count][6];
         for (int i=0; i<count; i++){
@@ -41,6 +72,13 @@ public class ServerStockCandle extends StockCandle {
             dataArray[5] = subNode.get("v").asDouble();
             newStockInfo[i] = dataArray;
         }
+
+        try {
+            id = DataMethods.getStockId(getTicker());
+        } catch (IOException e) {
+            setId(0L);
+        }
+
         duration = root.get("duration").asText();
         time1 = root.get("time1").asLong();
         time2 = root.get("time2").asLong();
@@ -50,16 +88,18 @@ public class ServerStockCandle extends StockCandle {
         if (updateTimeStamp) {
             // Update this so we know when the stock info needs to be renewed
             setLastRefresh(System.currentTimeMillis());
+        } else {
+            setLastRefresh(root.get("last_updated").asLong());
         }
-    }
+    }*/
 
 
     // Call the API to get the latest information. Then, save the new data to the server.
     private void updateFromAPI() throws MalformedURLException, JsonProcessingException, FileNotFoundException {
         String ticker = getTicker();
-        String finnhubResult = Finnhub.getCandleFromFinnhub(ticker,duration,time1,time2);
-        //System.out.println(finnhubResult);
+        String finnhubResult = FinnhubNetworking.getCandleFromFinnhub(ticker,duration,time1,time2);
         JsonNode root = DataMethods.decodeJson(finnhubResult);
+        // ERROR HAPPENS here (below)
         updateFromJsonNode(root,true);
         saveAsJsonFile();
     }
@@ -69,16 +109,17 @@ public class ServerStockCandle extends StockCandle {
         String contents = DataMethods.readFile(DataMethods.stockCandleDirectory,getFileName());
         JsonNode root = DataMethods.decodeJson(contents);
 
-        if (root.get("json_version").asInt() != stockCandleJsonVersion) {
+        if (root.get("jsonVersion").asInt() != stockCandleJsonVersion) {
             // Stock has an old version. Don't use it.
             System.out.println("Updating old-versioned stock candle.");
             updateFromAPI();
-        } else if (System.currentTimeMillis() - root.get("last_updated").asLong() >= (1000L*getMaximumTimeBetweenRefreshes(duration))) {
+        } else if (System.currentTimeMillis() - root.get("lastRefresh").asLong() >= (1000L*getMaximumTimeBetweenRefreshes(duration))) {
             // Stock hasn't been updated recently. Don't use it.
             System.out.println("Updating outdated stock candle.");
             updateFromAPI();
         } else {
             // The stock is up-to-date. Load it WITHOUT an API call.
+            System.out.println("Updating stock candle from file.");
             updateFromJsonNode(root,false);
         }
     }
@@ -112,6 +153,10 @@ public class ServerStockCandle extends StockCandle {
         } catch(Exception e) {
             // Failed!
         }
+    }
+
+    public ServerStockCandle(){
+
     }
 
     // Given a duration (i.e. day, week, year), find the start/end time stamps that surround the interval
@@ -193,35 +238,8 @@ public class ServerStockCandle extends StockCandle {
         return maxTime;
     }
 
-    // Returns a String containing the attributes of a Stock object.
-    public String toJson() throws JsonProcessingException {
-        ObjectMapper map = new ObjectMapper();
-        ObjectNode parent = map.createObjectNode();
-
-        parent.put("ticker",getTicker());
-        parent.put("last_updated",getLastRefresh());
-        parent.put("json_version",stockCandleJsonVersion);
-        parent.put("candle_count", stockInfo.length);
-        parent.put("duration",duration);
-        parent.put("time1",time1);
-        parent.put("time2",time2);
-
-        int i = 0;
-        for (double[] row : stockInfo) {
-            ObjectMapper subMap = new ObjectMapper();
-            ObjectNode subNode = subMap.createObjectNode();
-
-            subNode.put("c",row[0]);
-            subNode.put("h",row[1]);
-            subNode.put("l",row[2]);
-            subNode.put("o",row[3]);
-            subNode.put("t",row[4]);
-            subNode.put("v",row[5]);
-
-            parent.set(String.valueOf(i++),subNode);
-        }
-
-        return DataMethods.encodeJson(parent);
+    public String toJson() throws JsonProcessingException, MalformedURLException {
+        return new ObjectMapper().writeValueAsString(this);
     }
 
     public String getFileName(){
@@ -229,7 +247,7 @@ public class ServerStockCandle extends StockCandle {
     }
 
     // Creates a file, TICKER.json, containing the JSON form of a provided Stock object
-    public void saveAsJsonFile() throws JsonProcessingException, FileNotFoundException {
+    public void saveAsJsonFile() throws JsonProcessingException, FileNotFoundException, MalformedURLException {
         System.out.println("Saved a stock candle!!");
         String json = toJson();
         DataMethods.createFile(DataMethods.stockCandleDirectory,getFileName(),json);
