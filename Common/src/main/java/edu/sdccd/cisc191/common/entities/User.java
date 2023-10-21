@@ -34,16 +34,4 @@ public class User implements java.io.Serializable {
         Regular,
         Admin,
     }
-
-    public User(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "User{"
-                    + "id=" + this.id + ","
-                    + "name='" + this.name + "'"
-                + "}";
-    }
 }

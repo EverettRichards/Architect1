@@ -3,9 +3,9 @@ package edu.sdccd.cisc191.server.errors;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;
 
-@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-public class DatabaseError extends RuntimeException {
-    public DatabaseError(String errorMessage) {
+@ResponseStatus(value = HttpStatus.FORBIDDEN)
+public class AccessDenied extends RuntimeException {
+    public AccessDenied(String errorMessage) {
         super(errorMessage);
     }
 }
