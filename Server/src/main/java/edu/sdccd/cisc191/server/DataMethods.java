@@ -13,8 +13,10 @@ import java.io.FileNotFoundException;
 
 public class DataMethods {
 
-    public static final String stockDirectory = "stock_repository"; // Directory of where to store STOCK.json files
-    public static final String stockCandleDirectory = "stock_candle_repository"; // Directory of where to store STOCKCANDLE.json files
+    public static final String stockDirectory = "server_storage\\stock_repository"; // Directory of where to store STOCK.json files
+    public static final String stockCandleDirectory = "server_storage\\stock_candle_repository"; // Directory of where to store STOCKCANDLE.json files
+
+    public static final String stockIdFileAddress = "server_storage\\stock_ids.json";
 
     public static double[][] invert2DArray(double[][] inputArray){
         int rows = inputArray.length;
@@ -93,44 +95,17 @@ public class DataMethods {
         ObjectMapper map = new ObjectMapper();
         ObjectNode newNode = map.createObjectNode();
 
-        double[][] initialData = new double[subKeys.length][];
-
-        int index = 0;
         for (String key : subKeys) {
-            JsonNode thisNode = root.get(key);
-            double[] list = new double[thisNode.size()];
-            for (int i = 0; i<list.length; i++){
-                list[i] = thisNode.get(i).asDouble();
-            }
-            initialData[index] = list;
-            index++;
+            newNode.set(key,root.get(key));
         }
 
-        double[][] formattedData = invert2DArray(initialData);
-
         newNode.put("ticker",ticker);
-        newNode.put("last_updated",System.currentTimeMillis());
+        newNode.put("lastRefresh",System.currentTimeMillis());
         newNode.put("json_version",ServerStockCandle.stockCandleJsonVersion);
-        newNode.put("candle_count",formattedData.length);
+        // I got an error when trying to set the count/length
         newNode.put("duration",duration);
         newNode.put("time1",time1);
         newNode.put("time2",time2);
-
-        int i = 0;
-        for (double[] row : formattedData) {
-            ObjectMapper subMap = new ObjectMapper();
-            ObjectNode subNode = subMap.createObjectNode();
-
-            subNode.put("c",row[0]);
-            subNode.put("h",row[1]);
-            subNode.put("l",row[2]);
-            subNode.put("o",row[3]);
-            subNode.put("t",row[4]);
-            subNode.put("v",row[5]);
-
-            newNode.set(String.valueOf(i++),subNode);
-        }
-
         return encodeJson(newNode);
     }
 
@@ -158,5 +133,32 @@ public class DataMethods {
         stream.close();
 
         return content;
+    }
+
+    public static long getStockId(String ticker) throws IOException {
+        String idJson = readFile(stockIdFileAddress);
+        long id = 0;
+        try {
+            JsonNode root = decodeJson(idJson);
+            id = root.get(ticker).asLong();
+        } catch (Exception e) {
+            id = assignStockId(ticker);
+        }
+        return id;
+    }
+
+    public static long assignStockId(String ticker) throws IOException {
+        String content = readFile(stockIdFileAddress);
+        ObjectNode root = (ObjectNode)decodeJson(content);
+
+        long lastId = root.get("last_id").asLong();
+        lastId++;
+        root.put(ticker,lastId);
+        root.put("last_id",lastId);
+
+        String output = encodeJson(root);
+        createFile(stockIdFileAddress,output);
+
+        return lastId;
     }
 }
