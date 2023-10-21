@@ -135,7 +135,7 @@ public class DataMethods {
     }
 
     public static void createFile(String path, String filename, String content) throws FileNotFoundException{
-        createFile(path + "\\" + filename, content);
+        createFile(path + "/" + filename, content);
     }
 
     public static void createFile(String reference, String content) throws FileNotFoundException {
@@ -145,7 +145,7 @@ public class DataMethods {
     }
 
     public static String readFile(String path, String filename) throws IOException {
-        return readFile(path + "\\" + filename);
+        return readFile(path + "/" + filename);
     }
 
     public static String readFile(String reference) throws IOException {
