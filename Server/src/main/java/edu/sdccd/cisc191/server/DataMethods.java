@@ -121,12 +121,12 @@ public class DataMethods {
             ObjectMapper subMap = new ObjectMapper();
             ObjectNode subNode = subMap.createObjectNode();
 
-            subNode.put("close",row[0]);
-            subNode.put("high",row[1]);
-            subNode.put("low",row[2]);
-            subNode.put("open",row[3]);
-            subNode.put("time",row[4]);
-            subNode.put("volume",row[5]);
+            subNode.put("c",row[0]);
+            subNode.put("h",row[1]);
+            subNode.put("l",row[2]);
+            subNode.put("o",row[3]);
+            subNode.put("t",row[4]);
+            subNode.put("v",row[5]);
 
             newNode.set(String.valueOf(i++),subNode);
         }

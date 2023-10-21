@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ServerStockCandle extends StockCandle {
-    public static final int stockCandleJsonVersion = 1; // The internal version of the Stock.java JSON files.
+    public static final int stockCandleJsonVersion = 2; // The internal version of the Stock.java JSON files.
     // If you make any changes to the expected/actual format of JSON stock files, please add 1 to this value.
 
 
@@ -33,12 +33,12 @@ public class ServerStockCandle extends StockCandle {
             String index = String.valueOf(i);
             JsonNode subNode = root.get(index);
             double[] dataArray = new double[6];
-            dataArray[0] = subNode.get("close").asDouble();
-            dataArray[1] = subNode.get("high").asDouble();
-            dataArray[2] = subNode.get("low").asDouble();
-            dataArray[3] = subNode.get("open").asDouble();
-            dataArray[4] = subNode.get("time").asDouble();
-            dataArray[5] = subNode.get("volume").asDouble();
+            dataArray[0] = subNode.get("c").asDouble();
+            dataArray[1] = subNode.get("h").asDouble();
+            dataArray[2] = subNode.get("l").asDouble();
+            dataArray[3] = subNode.get("o").asDouble();
+            dataArray[4] = subNode.get("t").asDouble();
+            dataArray[5] = subNode.get("v").asDouble();
             newStockInfo[i] = dataArray;
         }
         duration = root.get("duration").asText();
@@ -211,12 +211,12 @@ public class ServerStockCandle extends StockCandle {
             ObjectMapper subMap = new ObjectMapper();
             ObjectNode subNode = subMap.createObjectNode();
 
-            subNode.put("close",row[0]);
-            subNode.put("high",row[1]);
-            subNode.put("low",row[2]);
-            subNode.put("open",row[3]);
-            subNode.put("time",row[4]);
-            subNode.put("volume",row[5]);
+            subNode.put("c",row[0]);
+            subNode.put("h",row[1]);
+            subNode.put("l",row[2]);
+            subNode.put("o",row[3]);
+            subNode.put("t",row[4]);
+            subNode.put("v",row[5]);
 
             parent.set(String.valueOf(i++),subNode);
         }
