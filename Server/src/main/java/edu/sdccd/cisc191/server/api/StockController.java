@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;*/
 
 import edu.sdccd.cisc191.server.FinnhubNetworking;
+import edu.sdccd.cisc191.server.ServerStock;
 import edu.sdccd.cisc191.server.StockCandleBuilder;
 import edu.sdccd.cisc191.server.StockBuilder;
 
@@ -38,7 +39,7 @@ public class StockController {
         {
             for (String ticker : myTickers) {
                 try {
-                    add(StockBuilder.newStock(ticker));
+                    add(new ServerStock(ticker));
                 } catch (MalformedURLException | JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }

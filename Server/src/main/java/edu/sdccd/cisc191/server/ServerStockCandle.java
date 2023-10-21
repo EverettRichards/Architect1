@@ -28,14 +28,17 @@ public class ServerStockCandle extends StockCandle {
     // once valid JSON is found either from the API or the server.
     private void updateFromJsonNode(JsonNode root, Boolean updateTimeStamp){
         int count = root.get("candle_count").asInt();
-        double[][] newStockInfo = new double[count][5];
+        double[][] newStockInfo = new double[count][6];
         for (int i=0; i<count; i++){
             String index = String.valueOf(i);
             JsonNode subNode = root.get(index);
-            double[] dataArray = new double[5];
-            for (int j=0; j<5; i++){
-                dataArray[j] = subNode.get(j).asDouble();
-            }
+            double[] dataArray = new double[6];
+            dataArray[0] = subNode.get("close").asDouble();
+            dataArray[1] = subNode.get("high").asDouble();
+            dataArray[2] = subNode.get("low").asDouble();
+            dataArray[3] = subNode.get("open").asDouble();
+            dataArray[4] = subNode.get("time").asDouble();
+            dataArray[5] = subNode.get("volume").asDouble();
             newStockInfo[i] = dataArray;
         }
         duration = root.get("duration").asText();
@@ -55,6 +58,7 @@ public class ServerStockCandle extends StockCandle {
     private void updateFromAPI() throws MalformedURLException, JsonProcessingException, FileNotFoundException {
         String ticker = getTicker();
         String finnhubResult = FinnhubNetworking.getCandleFromFinnhub(ticker,duration,time1,time2);
+        //System.out.println(finnhubResult);
         JsonNode root = DataMethods.decodeJson(finnhubResult);
         updateFromJsonNode(root,true);
         saveAsJsonFile();
@@ -87,7 +91,7 @@ public class ServerStockCandle extends StockCandle {
             updateFromFile();
         } catch (IOException e) {
             // If there was no file to open, use the API and then create a file.
-            System.out.println("Candle file not found. Find from API.");
+            System.out.println("Candle file not found (Candle). Find from API.");
             updateFromAPI();
         }
     }
@@ -212,6 +216,7 @@ public class ServerStockCandle extends StockCandle {
             subNode.put("low",row[2]);
             subNode.put("open",row[3]);
             subNode.put("time",row[4]);
+            subNode.put("volume",row[5]);
 
             parent.set(String.valueOf(i++),subNode);
         }

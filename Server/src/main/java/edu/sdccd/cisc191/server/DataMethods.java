@@ -58,7 +58,7 @@ public class DataMethods {
         root3.set("description",root1.get("name"));
         root3.set("price",root2.get("c"));
         root3.put("last_updated",System.currentTimeMillis());
-        root3.put("stock_version",StockBuilder.stockJsonVersion);
+        root3.put("stock_version",ServerStock.stockJsonVersion);
 
         return encodeJson(root3);
     }
@@ -85,21 +85,51 @@ public class DataMethods {
         return encodeJson(root3);
     }
 
+
+    private static final String[] subKeys = {"c","h","l","o","t","v"}; // Close, High, Low, Open ... Time, Volume
     public static String annotateCandles(String json, String ticker, String duration, long time1, long time2) throws JsonProcessingException {
         JsonNode root = decodeJson(json);
 
         ObjectMapper map = new ObjectMapper();
         ObjectNode newNode = map.createObjectNode();
 
+        double[][] initialData = new double[subKeys.length][];
 
+        int index = 0;
+        for (String key : subKeys) {
+            JsonNode thisNode = root.get(key);
+            double[] list = new double[thisNode.size()];
+            for (int i = 0; i<list.length; i++){
+                list[i] = thisNode.get(i).asDouble();
+            }
+            initialData[index] = list;
+            index++;
+        }
+
+        double[][] formattedData = invert2DArray(initialData);
 
         newNode.put("ticker",ticker);
         newNode.put("last_updated",System.currentTimeMillis());
         newNode.put("json_version",ServerStockCandle.stockCandleJsonVersion);
-        newNode.put("candle_count",1);
+        newNode.put("candle_count",formattedData.length);
         newNode.put("duration",duration);
         newNode.put("time1",time1);
         newNode.put("time2",time2);
+
+        int i = 0;
+        for (double[] row : formattedData) {
+            ObjectMapper subMap = new ObjectMapper();
+            ObjectNode subNode = subMap.createObjectNode();
+
+            subNode.put("close",row[0]);
+            subNode.put("high",row[1]);
+            subNode.put("low",row[2]);
+            subNode.put("open",row[3]);
+            subNode.put("time",row[4]);
+            subNode.put("volume",row[5]);
+
+            newNode.set(String.valueOf(i++),subNode);
+        }
 
         return encodeJson(newNode);
     }

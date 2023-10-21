@@ -34,8 +34,6 @@ public class FinnhubNetworking {
     }
 
     // The static list of index attributes we want to request from FinnHub API
-    private static final String[] subKeys = {"c","h","l","o","t","v"};
-
     public static String getCandleFromFinnhub(String ticker, String duration, long time1, long time2) throws MalformedURLException, JsonProcessingException {
         String resolution = ServerStockCandle.getFrequency(duration);
         String URL = "https://finnhub.io/api/v1/stock/candle?symbol="+ticker

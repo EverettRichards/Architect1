@@ -71,7 +71,7 @@ public class ServerStock extends Stock {
             updateFromFile();
         } catch (IOException e) {
             // If there was no file to open, use the API and then create a file.
-            System.out.println("File not found. Find from API.");
+            System.out.println("File not found (Stock). Find from API.");
             updateFromAPI();
         }
     }
