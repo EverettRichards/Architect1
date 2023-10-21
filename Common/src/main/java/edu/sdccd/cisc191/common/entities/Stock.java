@@ -26,7 +26,7 @@ public class Stock {
 
     private long lastRefreshTime;
 
-    public static long lastId = 0L;  //Initialize an id on startup.  Every Stock object created adds 1 to this and uses that for its own id.
+    //public static long lastId = 0L;  //Initialize an id on startup.  Every Stock object created adds 1 to this and uses that for its own id.
 
     /**
      * Default constructor for the Stock class. Creates an empty Stock object.
@@ -38,8 +38,8 @@ public class Stock {
      * Creates a Stock object using each applicable piece of data.
      */
     public Stock(String ticker, String newName, String description,
-                 String sector, double price, double dividend){
-        id = ++lastId;
+                 String sector, double price, double dividend, long id){
+        //id = ++lastId;
         this.id = id;
         this.ticker = ticker;
         this.name = newName;
@@ -55,8 +55,8 @@ public class Stock {
      * This constructor is used to read a stock from memory.
      */
     public Stock(long newId, long lastRefresh, String ticker, String newName, String description,
-                 String sector, double price, double dividend) throws MalformedURLException, JsonProcessingException {
-        this(ticker,newName,description,sector,price,dividend);
+                 String sector, double price, double dividend, long stockId) throws MalformedURLException, JsonProcessingException {
+        this(ticker,newName,description,sector,price,dividend,stockId);
         this.id = newId;
         this.lastRefreshTime = lastRefresh;
         long currentTime = System.currentTimeMillis();
@@ -99,6 +99,12 @@ public class Stock {
     public void setName(String name) {
         this.name = name;
     }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(Long newId) { id = newId; }
 
     /**
      * The company description to provide basic info on stocks
@@ -172,9 +178,6 @@ public class Stock {
         this.stockSector = name;
     }
 
-    public Long getId() {
-        return this.id;
-    }
 
     /**
      * The custom toString for writing the stock info

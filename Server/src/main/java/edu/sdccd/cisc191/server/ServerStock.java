@@ -15,19 +15,24 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ServerStock extends Stock {
-    public static final int stockJsonVersion = 1; // The internal version of the Stock.java JSON files.
+    public static final int stockJsonVersion = 3; // The internal version of the Stock.java JSON files.
     // If you make any changes to the expected/actual format of JSON stock files, please add 1 to this value.
 
 
     // Update the attributes of the Stock using a JSON data structure. Used for instantiation
     // once valid JSON is found either from the API or the server.
-    private void updateFromJsonNode(JsonNode root, Boolean updateTimeStamp){
+    private void updateFromJsonNode(JsonNode root, Boolean updateTimeStamp) {
         setName(root.get("name").asText());
         setSector(root.get("sector").asText());
         setDescription(String.format("%s is a company in the %s sector.",getName(),getSector()));
         setPrice(root.get("price").asDouble());
         setLastRefresh(root.get("last_updated").asLong());
         setDividend(0);
+        try {
+            setId(DataMethods.getStockId(getTicker()));
+        } catch (IOException e) {
+            setId(0L);
+        }
 
         if (updateTimeStamp) {
             // Update this so we know when the stock info needs to be renewed
@@ -94,6 +99,7 @@ public class ServerStock extends Stock {
         ObjectNode parent = map.createObjectNode();
 
         parent.put("ticker",getTicker());
+        parent.put("id",getId());
         parent.put("name",getName());
         parent.put("sector",getSector());
         parent.put("description",getDescription());

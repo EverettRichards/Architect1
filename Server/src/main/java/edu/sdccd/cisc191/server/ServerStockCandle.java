@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ServerStockCandle extends StockCandle {
-    public static final int stockCandleJsonVersion = 2; // The internal version of the Stock.java JSON files.
+    public static final int stockCandleJsonVersion = 4; // The internal version of the Stock.java JSON files.
     // If you make any changes to the expected/actual format of JSON stock files, please add 1 to this value.
 
 
@@ -41,6 +41,13 @@ public class ServerStockCandle extends StockCandle {
             dataArray[5] = subNode.get("v").asDouble();
             newStockInfo[i] = dataArray;
         }
+
+        try {
+            id = DataMethods.getStockId(getTicker());
+        } catch (IOException e) {
+            setId(0L);
+        }
+
         duration = root.get("duration").asText();
         time1 = root.get("time1").asLong();
         time2 = root.get("time2").asLong();
@@ -199,6 +206,7 @@ public class ServerStockCandle extends StockCandle {
         ObjectNode parent = map.createObjectNode();
 
         parent.put("ticker",getTicker());
+        parent.put("id",getId());
         parent.put("last_updated",getLastRefresh());
         parent.put("json_version",stockCandleJsonVersion);
         parent.put("candle_count", stockInfo.length);

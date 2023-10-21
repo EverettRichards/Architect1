@@ -13,8 +13,10 @@ import java.io.FileNotFoundException;
 
 public class DataMethods {
 
-    public static final String stockDirectory = "stock_repository"; // Directory of where to store STOCK.json files
-    public static final String stockCandleDirectory = "stock_candle_repository"; // Directory of where to store STOCKCANDLE.json files
+    public static final String stockDirectory = "server_storage\\stock_repository"; // Directory of where to store STOCK.json files
+    public static final String stockCandleDirectory = "server_storage\\stock_candle_repository"; // Directory of where to store STOCKCANDLE.json files
+
+    public static final String stockIdFileAddress = "server_storage\\stock_ids.json";
 
     public static double[][] invert2DArray(double[][] inputArray){
         int rows = inputArray.length;
@@ -158,5 +160,32 @@ public class DataMethods {
         stream.close();
 
         return content;
+    }
+
+    public static long getStockId(String ticker) throws IOException {
+        String idJson = readFile(stockIdFileAddress);
+        long id = 0;
+        try {
+            JsonNode root = decodeJson(idJson);
+            id = root.get(ticker).asLong();
+        } catch (Exception e) {
+            id = assignStockId(ticker);
+        }
+        return id;
+    }
+
+    public static long assignStockId(String ticker) throws IOException {
+        String content = readFile(stockIdFileAddress);
+        ObjectNode root = (ObjectNode)decodeJson(content);
+
+        long lastId = root.get("last_id").asLong();
+        lastId++;
+        root.put(ticker,lastId);
+        root.put("last_id",lastId);
+
+        String output = encodeJson(root);
+        createFile(stockIdFileAddress,output);
+
+        return lastId;
     }
 }

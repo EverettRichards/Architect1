@@ -10,7 +10,7 @@ import java.net.MalformedURLException;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class StockBuilderTest {
-    String[] myTickers = new String[]{"AAPL","COST","KO"};//,"MSFT","META","TSM","COST","K","TM","KO"};
+    String[] myTickers = new String[]{"TSLA","AAPL","KO","MSFT","COST"};//,"MSFT","META","TSM","COST","K","TM","KO"};
     @Test
     void test() throws MalformedURLException, JsonProcessingException {
         for (String ticker : myTickers) {

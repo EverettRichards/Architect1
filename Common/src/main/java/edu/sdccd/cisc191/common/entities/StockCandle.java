@@ -32,6 +32,8 @@ public class StockCandle {
 
      */
 
+    protected long id;
+
     protected String ticker;
 
     protected long lastRefreshTime;
@@ -75,6 +77,10 @@ public class StockCandle {
     public long getTime2(){
         return time2;
     }
+
+    public long getId() {return id;}
+
+    public void setId(long val) { id = val; }
 
     public void setLastRefresh(long stamp) { lastRefreshTime = stamp; }
 
