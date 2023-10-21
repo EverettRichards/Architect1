@@ -95,44 +95,17 @@ public class DataMethods {
         ObjectMapper map = new ObjectMapper();
         ObjectNode newNode = map.createObjectNode();
 
-        double[][] initialData = new double[subKeys.length][];
-
-        int index = 0;
         for (String key : subKeys) {
-            JsonNode thisNode = root.get(key);
-            double[] list = new double[thisNode.size()];
-            for (int i = 0; i<list.length; i++){
-                list[i] = thisNode.get(i).asDouble();
-            }
-            initialData[index] = list;
-            index++;
+            newNode.set(key,root.get(key));
         }
 
-        double[][] formattedData = invert2DArray(initialData);
-
         newNode.put("ticker",ticker);
-        newNode.put("last_updated",System.currentTimeMillis());
+        newNode.put("lastRefresh",System.currentTimeMillis());
         newNode.put("json_version",ServerStockCandle.stockCandleJsonVersion);
-        newNode.put("candle_count",formattedData.length);
+        // I got an error when trying to set the count/length
         newNode.put("duration",duration);
         newNode.put("time1",time1);
         newNode.put("time2",time2);
-
-        int i = 0;
-        for (double[] row : formattedData) {
-            ObjectMapper subMap = new ObjectMapper();
-            ObjectNode subNode = subMap.createObjectNode();
-
-            subNode.put("c",row[0]);
-            subNode.put("h",row[1]);
-            subNode.put("l",row[2]);
-            subNode.put("o",row[3]);
-            subNode.put("t",row[4]);
-            subNode.put("v",row[5]);
-
-            newNode.set(String.valueOf(i++),subNode);
-        }
-
         return encodeJson(newNode);
     }
 
