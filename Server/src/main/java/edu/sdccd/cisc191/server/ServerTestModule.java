@@ -2,15 +2,11 @@ package edu.sdccd.cisc191.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.sdccd.cisc191.common.entities.Stock;
-import edu.sdccd.cisc191.common.entities.StockCandle;
 import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-public class StockBuilderTest {
+public class ServerTestModule {
     String[] myTickers = new String[]{"TSLA","AAPL","KO","MSFT","COST"};//,"MSFT","META","TSM","COST","K","TM","KO"};
     /*@Test
     void testInstantiation() throws MalformedURLException, JsonProcessingException {
@@ -27,15 +23,18 @@ public class StockBuilderTest {
 
     @Test
     void testJsonMethods() throws MalformedURLException, JsonProcessingException {
-        ServerStockCandle candle1 = new ServerStockCandle("AAPL","day");
-        String output = new ObjectMapper().writeValueAsString(candle1);
-        System.out.println(output);
-        ServerStockCandle candle = new ObjectMapper().readValue(output,ServerStockCandle.class);
+        for (String ticker : myTickers) {
+            ServerStock myStock = new ServerStock(ticker);
+            ServerStockCandle candle1 = new ServerStockCandle(ticker, "day");
+            String output = new ObjectMapper().writeValueAsString(candle1);
+            System.out.println(output);
+            ServerStockCandle candle = new ObjectMapper().readValue(output, ServerStockCandle.class);
+        }
     }
 
     /*@Test
     void test2() throws MalformedURLException, JsonProcessingException {
-        ServerStockCandle candle = StockCandleBuilder.newStockCandle("AAPL");
+        ServerStockCandle candle = null;
         System.out.println(candle.toJson());
     }*/
 }
