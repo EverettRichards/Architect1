@@ -1,16 +1,12 @@
 package edu.sdccd.cisc191.server;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import edu.sdccd.cisc191.common.entities.StockCandle;
-
-import java.net.MalformedURLException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 
-public class StockCandleBuilder {
-    // getTimeRange returns the start/end time stamps used when searching for a given stock candle chart
+public class TimeMethods {
+    // Given a duration (i.e. day, week, year), find the start/end time stamps that surround the interval
     public static long[] getTimeRange(String duration){ // duration can be day, week, month, 6month, year
 
         ZoneId estZoneId = ZoneId.of("America/New_York");
@@ -74,24 +70,17 @@ public class StockCandleBuilder {
         return frequency;
     }
 
-    public static ServerStockCandle newStockCandle(String newTicker, String resolution, long time1, long time2) throws MalformedURLException, JsonProcessingException {
-        ServerStockCandle candle = new ServerStockCandle(newTicker,"day");
-        return candle;
-    }
-
-    public static ServerStockCandle newStockCandle(String newTicker) throws MalformedURLException, JsonProcessingException {
-        long[] timeRange = getTimeRange("day");
-        long time1 = timeRange[0];
-        long time2 = timeRange[1];
-        return newStockCandle(newTicker,getFrequency("day"),time1,time2);
-    }
-
-    public static void UpdateCandle(StockCandle candle, String newTicker, String duration) throws MalformedURLException, JsonProcessingException {
-        long[] timeRange = getTimeRange(duration);
-        String frequency = getFrequency(duration);
-        //FinnhubNetworking.UpdateCandle(candle, newTicker,frequency, timeRange[0],timeRange[1]);
-    }
-    public static void UpdateCandle(StockCandle candle, String newTicker) throws MalformedURLException, JsonProcessingException {
-        UpdateCandle(candle, newTicker,"5year");
+    // Get the maximum allowed amount of time between refreshes.
+    public static int getMaximumTimeBetweenRefreshes(String duration){
+        int maxTime = switch (duration) {
+            case "day" -> 60; // 1 minute
+            case "week" -> 60*5; // 5 minutes
+            case "month" -> 60*60; // 1 hour
+            case "6month" -> 60*60*24; // 1 day
+            case "year" -> 60*60*24; // 1 day
+            case "5year" -> 60*60*24; // 1 day
+            default -> 60;
+        };
+        return maxTime;
     }
 }

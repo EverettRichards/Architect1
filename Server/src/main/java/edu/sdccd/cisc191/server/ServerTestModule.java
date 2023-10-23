@@ -2,15 +2,11 @@ package edu.sdccd.cisc191.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.sdccd.cisc191.common.entities.Stock;
-import edu.sdccd.cisc191.common.entities.StockCandle;
 import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-public class StockBuilderTest {
+public class ServerTestModule {
     String[] myTickers = new String[]{"TSLA","AAPL","KO","MSFT","COST"};//,"MSFT","META","TSM","COST","K","TM","KO"};
     /*@Test
     void testInstantiation() throws MalformedURLException, JsonProcessingException {
@@ -38,7 +34,7 @@ public class StockBuilderTest {
 
     /*@Test
     void test2() throws MalformedURLException, JsonProcessingException {
-        ServerStockCandle candle = StockCandleBuilder.newStockCandle("AAPL");
+        ServerStockCandle candle = null;
         System.out.println(candle.toJson());
     }*/
 }

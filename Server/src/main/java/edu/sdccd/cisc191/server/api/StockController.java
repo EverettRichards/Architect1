@@ -9,10 +9,7 @@ import edu.sdccd.cisc191.common.entities.StockCandle;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;*/
 
-import edu.sdccd.cisc191.server.Finnhub;
-import edu.sdccd.cisc191.server.ServerStock;
-import edu.sdccd.cisc191.server.StockCandleBuilder;
-import edu.sdccd.cisc191.server.StockBuilder;
+import edu.sdccd.cisc191.server.*;
 
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.bind.annotation.PostMapping;
@@ -134,7 +131,7 @@ public class StockController {
         StockCandle candles;
 
         try {
-            candles = StockCandleBuilder.newStockCandle(ticker);
+            candles = new ServerStockCandle(ticker,"day");
         } catch(Exception e) {
             System.err.println(e);
             return null;
