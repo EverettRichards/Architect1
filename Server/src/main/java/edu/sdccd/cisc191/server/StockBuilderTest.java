@@ -27,10 +27,13 @@ public class StockBuilderTest {
 
     @Test
     void testJsonMethods() throws MalformedURLException, JsonProcessingException {
-        ServerStockCandle candle1 = new ServerStockCandle("AAPL","day");
-        String output = new ObjectMapper().writeValueAsString(candle1);
-        System.out.println(output);
-        ServerStockCandle candle = new ObjectMapper().readValue(output,ServerStockCandle.class);
+        for (String ticker : myTickers) {
+            ServerStock myStock = new ServerStock(ticker);
+            ServerStockCandle candle1 = new ServerStockCandle(ticker, "day");
+            String output = new ObjectMapper().writeValueAsString(candle1);
+            System.out.println(output);
+            ServerStockCandle candle = new ObjectMapper().readValue(output, ServerStockCandle.class);
+        }
     }
 
     /*@Test
