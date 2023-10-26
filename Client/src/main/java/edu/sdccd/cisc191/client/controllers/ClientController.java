@@ -15,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
 /**
@@ -38,6 +37,16 @@ public class ClientController {
     @GetMapping("/")
     public String index() {
         return "index";
+    }
+
+    @GetMapping("/sign-up")
+    public String signUp() {
+        return "signup";
+    }
+
+    @GetMapping("/sign-in")
+    public String signIn() {
+        return "signin";
     }
 
     /**
