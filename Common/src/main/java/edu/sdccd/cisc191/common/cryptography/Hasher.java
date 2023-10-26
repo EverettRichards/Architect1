@@ -48,7 +48,7 @@ public class Hasher {
 
     public static boolean isCorrectPassword(User user, String password) {
         String[] passwordHash = user.getPasswordHash().split(":");
-        byte[] digestedPassword = passwordHash[0].getBytes();
+        byte[] digestedPassword = hexStringToBytes(passwordHash[0]);
         String saltBase64String = passwordHash[1];
         byte[] salt = fromBase64String(saltBase64String);
 

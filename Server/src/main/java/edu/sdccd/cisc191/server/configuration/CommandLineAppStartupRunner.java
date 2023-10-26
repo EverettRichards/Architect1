@@ -17,7 +17,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
     public void run(String...args) throws Exception {
         if(!userService.userExists("admin")) {
             String passwordHash = Hasher.hashNewPassword("admin");
-            User admin = new User("admin", "admin", passwordHash, User.Role.Admin);
+            User admin = new User("admin@example.com", "admin", "admin", passwordHash, User.Role.Admin);
             userService.createUser(admin);
         }
     }

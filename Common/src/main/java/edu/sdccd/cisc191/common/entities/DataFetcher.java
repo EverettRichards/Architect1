@@ -9,19 +9,15 @@ import java.util.List;
  */
 public interface DataFetcher {
 
-    String backendEndpointURL = "http://localhost:8081";
+    final static String backendEndpointURL = "http://localhost:8081";
 
-    String frontendEndpointURL = "http://localhost:8080";
+    final static String frontendEndpointURL = "http://localhost:8080";
 
-    String apiEndpointURL = "/api";
+    final static String apiEndpointURL = "/api";
 
-    String finnhubBaseURL = "https://finnhub.io/api/v1";
+    final static String userEndpointURL = "/api/user";
 
-    String finnhubKey = "bsq5ig8fkcbcavsjbrrg";
+    final static String finnhubBaseURL = "https://finnhub.io/api/v1";
 
-    List getAll();
-
-
-    void delete(Long id);
-
+    final static String finnhubKey = "bsq5ig8fkcbcavsjbrrg";
 }

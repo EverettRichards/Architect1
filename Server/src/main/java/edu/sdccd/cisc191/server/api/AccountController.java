@@ -1,6 +1,7 @@
 package edu.sdccd.cisc191.server.api;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,7 @@ import edu.sdccd.cisc191.server.errors.UserNotFound;
 import edu.sdccd.cisc191.server.services.UserService;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/user")
@@ -31,7 +33,7 @@ public class AccountController {
     }
     
     @PostMapping("/add")
-    public void add(User user) throws UserExists {
+    public void add(@RequestBody User user) throws UserExists {
         // System.out.println(user.getName());
         userService.createUser(user);
     }
@@ -54,5 +56,28 @@ public class AccountController {
         }
 
         userService.deleteUser(user.get());
+    }
+
+    @GetMapping("/{id}")
+    public User getById(@PathVariable Long id) throws DatabaseError {
+        Optional<User> user = userService.getUser(id);
+        if(user.isEmpty()) {
+            throw new UserNotFound();
+        }
+        return user.get();
+    }
+
+    @GetMapping("/name/{name}")
+    public User getByName(@PathVariable String name) throws DatabaseError {
+        Optional<User> user = userService.getUser(name);
+        if(user.isEmpty()) {
+            throw new UserNotFound();
+        }
+        return user.get();
+    }
+
+    @GetMapping("/all")
+    public List<User> getAll() {
+        return userService.getAllUsers();
     }
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,15 +26,22 @@ public class User implements java.io.Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id ; // Unique numerical identifier for each user, regardless of status as admin/broker/customer
 
+    @NotNull
+    @Column
+    private String email;
+
+    @NotNull
     @Column(unique = true)
     private String name;                    //the users selected account name
 
+    @NotNull
     @Column
-    private String nickname;
+    private String nickname; // can be empty
 
     @Column(length = 512)
     private String passwordHash;
 
+    @NotNull
     @Column
     private Role role;
 
@@ -42,7 +50,8 @@ public class User implements java.io.Serializable {
         Admin,
     }
 
-    public User(String name, String nickname, String passwordHash, Role role) {
+    public User(String email, String name, String nickname, String passwordHash, Role role) {
+        this.email = email;
         this.name = name;
         this.nickname = nickname;
         this.passwordHash = passwordHash;

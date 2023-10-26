@@ -11,8 +11,8 @@ import edu.sdccd.cisc191.common.entities.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
-    @Query(value = "update users u set u.name = ?1, u.nickname = ?2, u.password = ?3 where u.id = ?4", nativeQuery = true)
-    void updateUser(String name, String nickname, String password, Long id);
+    @Query(value = "update users u set u.email = ?1, u.name = ?2, u.nickname = ?3, u.password = ?4 where u.id = ?5", nativeQuery = true)
+    void updateUser(String email, String name, String nickname, String password, Long id);
 
     @Query(value = "SELECT * FROM users WHERE name = ?1", nativeQuery = true)
     Optional<User> findByName(String username);

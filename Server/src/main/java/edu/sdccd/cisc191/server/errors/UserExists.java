@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;
 
 @ResponseStatus(value = HttpStatus.FORBIDDEN)
-public class UserExists extends RuntimeException {
+public class UserExists extends BackendExpection {
     public UserExists(String errorMessage) {
         super(errorMessage);
     }

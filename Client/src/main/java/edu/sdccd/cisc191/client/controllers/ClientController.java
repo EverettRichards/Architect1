@@ -104,4 +104,9 @@ public class ClientController {
         model.addAttribute("stock", stock);
         return "stock";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 }

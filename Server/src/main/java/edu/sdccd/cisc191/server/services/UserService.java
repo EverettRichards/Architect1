@@ -6,6 +6,7 @@ import edu.sdccd.cisc191.common.entities.User;
 import edu.sdccd.cisc191.server.errors.DatabaseError;
 
 import java.util.Optional;
+import java.util.List;
 
 @Service
 public interface UserService {
@@ -16,4 +17,5 @@ public interface UserService {
     Optional<User> getUser(String username);
     boolean userExists(Long id);
     boolean userExists(String username);
+    List<User> getAllUsers();
 }

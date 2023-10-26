@@ -1,3 +1,7 @@
+function boardcastMessage(message) { //only here for testing reasons
+    alert(message);
+}
+
 (function() {
     let loginButton = document.getElementById("login-button");
     let loginForm = document.getElementById("login-form");
@@ -36,11 +40,15 @@
             window.location.href = response.url;
         }
 
-        let reply = await response.json();
-        if(reply.status == "error") {
-            boardcastMessage(reply.message, "error");
-            return;
-        }
+        let message = await response.text();
+        boardcastMessage(message);
+
+        // let reply = await response.json();
+
+        // if(response.status != 200) {
+        //     boardcastMessage(reply.message, "error");
+        //     return;
+        // }
     }
 
     loginForm.onsubmit = login;
@@ -62,18 +70,23 @@
             },
             body: JSON.stringify({
                 "email": formData.get("email"),
+                "nickname": formData.get("nickname"),
                 "username": formData.get("username"),
                 "password": formData.get("password"),
             }),
         });
 
-        let reply = await response.json();
-        if(reply.status == "success") {
-            document.getElementById("switch-to-login").click();
-            boardcastMessage("User registered successfully", "success");
-        } else {
-            boardcastMessage(reply.message, "error");
-        }
+
+        let message = await response.text();
+        boardcastMessage(message);
+
+        // let reply = await response.json();
+        // if(reply.status == "success") {
+        //     document.getElementById("switch-to-login").click();
+        //     boardcastMessage("User registered successfully", "success");
+        // } else {
+        //     boardcastMessage(reply.message, "error");
+        // }
     }
 
     registerForm.onsubmit = register;
