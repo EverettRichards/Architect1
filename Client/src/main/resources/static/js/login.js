@@ -36,9 +36,9 @@ function boardcastMessage(message) { //only here for testing reasons
         });
 
         // in case follow didn't work
-        if (response.redirected) {
-            window.location.href = response.url;
-        }
+        // if (response.redirected) {
+        //     window.location.href = response.url;
+        // }
 
         let message = await response.text();
         boardcastMessage(message);

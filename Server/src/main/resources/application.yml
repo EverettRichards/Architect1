@@ -17,6 +17,6 @@ spring:
       path: /h2-ui
 
 server:
-  port : 8081
-  # error:
-  #   include-stacktrace: never
+  error:
+    include-stacktrace: never
+  port: 8081

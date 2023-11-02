@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.sdccd.cisc191.client.errors.FrontendException;
 import edu.sdccd.cisc191.client.errors.InvalidPayloadException;
 import edu.sdccd.cisc191.client.errors.UsernameTakenException;
+import edu.sdccd.cisc191.client.models.LoginForm;
+import edu.sdccd.cisc191.client.models.RegisterForm;
 import edu.sdccd.cisc191.common.cryptography.Hasher;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
 import edu.sdccd.cisc191.common.entities.User;
@@ -33,28 +36,10 @@ public class BridgeController implements DataFetcher {
     private RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody Map<String, String> payload) throws FrontendException {
-        String email;
-        String username;
-        String nickname;
-        String password;
+    public ResponseEntity<String> register(@RequestBody RegisterForm form) throws FrontendException {
+        String passwordHash = Hasher.hashNewPassword(form.getPassword());
 
-        try {
-            email = payload.get("email");
-            username = payload.get("username");
-            nickname = payload.get("nickname");
-            password = payload.get("password");
-        } catch(ClassCastException | NullPointerException e) {
-            throw new InvalidPayloadException();
-        }
-
-        if(email.isEmpty() || username.isEmpty() || password.isEmpty()) {
-            throw new InvalidPayloadException();
-        }
-
-        String passwordHash = Hasher.hashNewPassword(password);
-
-        User newUser = new User(email, username, nickname, passwordHash, User.Role.Regular);
+        User newUser = new User(form.getEmail(), form.getUsername(), form.getNickname(), passwordHash, User.Role.Regular);
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(
@@ -64,7 +49,6 @@ public class BridgeController implements DataFetcher {
                 new ParameterizedTypeReference<>() {}
             );
 
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             System.out.println(response.getStatusCode());
 
             if(response.getStatusCode().is4xxClientError()) {
@@ -73,24 +57,18 @@ public class BridgeController implements DataFetcher {
         } catch(ClassCastException e) {
             System.err.println(e.toString());
             throw new InvalidPayloadException();
+        } catch(RestClientException e) {
+            return new ResponseEntity<String>(e.getMessage(), null, HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<String>("Account created successfully", null, HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> payload) throws InvalidPayloadException {
-        String username;
-        String password;
-
-        try {
-            username = payload.get("username");
-            password = payload.get("password");
-        } catch(ClassCastException | NullPointerException e) {
-            throw new InvalidPayloadException();
-        }
-
-        if(username.isEmpty() || password.isEmpty()) {
+    public ResponseEntity<String> login(@RequestBody LoginForm form) throws InvalidPayloadException {
+        System.out.println(form.toString());
+        System.out.println(form.getPassword().isEmpty());
+        if(form.getUsername().isEmpty() || form.getPassword().isEmpty()) {
             throw new InvalidPayloadException();
         }
 
@@ -98,25 +76,25 @@ public class BridgeController implements DataFetcher {
 
         try {
             response = restTemplate.exchange(
-                baseURL + "/name/" + username,
+                baseURL + "/name/" + form.getUsername(),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {}
             );
-
-            System.out.println(response.getStatusCode());
             
-            if(response.getStatusCode().equals(200)) {
+            if(response.getStatusCode().equals(HttpStatus.OK)) {
                 return new ResponseEntity<String>("Invalid username or password", null, 0);
             }
         } catch(ClassCastException e) {
             System.err.println(e.toString());
             throw new InvalidPayloadException();
+        } catch(RestClientException e) {
+            return new ResponseEntity<String>(e.getMessage(), null, HttpStatus.FORBIDDEN);
         }
 
         try {
             User user = new ObjectMapper().readValue(response.getBody(), User.class);
-            if(Hasher.isCorrectPassword(user, password)) {
+            if(Hasher.isCorrectPassword(user, form.getPassword())) {
                 return new ResponseEntity<String>("logged in", null, HttpStatus.OK);
             }
         } catch(JsonProcessingException e) {
