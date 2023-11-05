@@ -1,6 +1,7 @@
 package edu.sdccd.cisc191.client.controllers;
 
 import edu.sdccd.cisc191.common.entities.Stock;
+//import edu.sdccd.cisc191.common.entities.User;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
 
 import org.springframework.core.ParameterizedTypeReference;
@@ -12,8 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.core.JsonProcessingException;
+//import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -26,28 +27,16 @@ public class ClientController {
     RestTemplate restTemplate = new RestTemplate();
     String resourceURL = DataFetcher.backendEndpointURL + DataFetcher.apiEndpointURL;
 
-    public static String toJson(Object jsonObject) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(jsonObject);
-    }
+//    public static String toJson(Object jsonObject) throws JsonProcessingException {
+//        return new ObjectMapper().writeValueAsString(jsonObject);
+//    }
 
     /**
      * Sets up to display the index
      * @return index the index page
      */
     @GetMapping("/")
-    public String index() {
-        return "index";
-    }
-
-    @GetMapping("/sign-up")
-    public String signUp() {
-        return "signup";
-    }
-
-    @GetMapping("/sign-in")
-    public String signIn() {
-        return "signin";
-    }
+    public String index() { return "index"; }
 
     /**
      * Sets up to display the dashboard
@@ -103,10 +92,5 @@ public class ClientController {
 
         model.addAttribute("stock", stock);
         return "stock";
-    }
-
-    @GetMapping("/login")
-    public String login() {
-        return "login";
     }
 }
