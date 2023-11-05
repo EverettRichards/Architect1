@@ -35,7 +35,6 @@ function broadcastMessage(message) { //only here for testing reasons
             // redirect: "follow",
         });
 
-        // // in case follow didn't work
         // if (response.redirected) {
         //     window.location.href = response.url;
         // }

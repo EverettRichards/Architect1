@@ -6,6 +6,10 @@ import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 
 public class TimeMethods {
+    public static long now(){
+        return System.currentTimeMillis();
+    }
+
     // Given a duration (i.e. day, week, year), find the start/end time stamps that surround the interval
     public static long[] getTimeRange(String duration){ // duration can be day, week, month, 6month, year
 
