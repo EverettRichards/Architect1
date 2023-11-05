@@ -1,4 +1,4 @@
-function boardcastMessage(message) { //only here for testing reasons
+function broadcastMessage(message) { //only here for testing reasons
     alert(message);
 }
 
@@ -32,16 +32,15 @@ function boardcastMessage(message) { //only here for testing reasons
                 "username": formData.get("username"),
                 "password": formData.get("password"),
             }),
-            redirect: "follow",
+            // redirect: "follow",
         });
 
-        // in case follow didn't work
         // if (response.redirected) {
         //     window.location.href = response.url;
         // }
 
         let message = await response.text();
-        boardcastMessage(message);
+        broadcastMessage(message);
 
         // let reply = await response.json();
 
@@ -51,7 +50,7 @@ function boardcastMessage(message) { //only here for testing reasons
         // }
     }
 
-    loginForm.onsubmit = login;
+    // loginForm.onsubmit = login;
 
     loginButton.addEventListener("click", login)
 
@@ -78,7 +77,7 @@ function boardcastMessage(message) { //only here for testing reasons
 
 
         let message = await response.text();
-        boardcastMessage(message);
+        broadcastMessage(message);
 
         // let reply = await response.json();
         // if(reply.status == "success") {

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{ layout :: common_header(~{::title}) }">
+  <title>CISC 191 Architect 1 | Dashboard</title>
+  <script th:src="@{/js/stockManager.js}" defer></script>
+
+</head>
+<body class="bg-zinc-950">
+<div>
+  <header th:replace="~{ layout :: site-nav }"></header>
+
+  <section class="pt-20">
+    <header>
+      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-slate-400">My Account</h1>
+      </div>
+    </header>
+    <main>
+      <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 text-gray-50">
+        <div>
+          <div class="px-4 sm:px-0">
+            <h3 class="text-base font-semibold leading-7 text-gray-200">Account Information</h3>
+            <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-200">View and edit your personal details.</p>
+          </div>
+          <div class="mt-6 border-t border-gray-100">
+            <dl class="divide-y divide-gray-100">
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-slate-400">Name</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-200 sm:mt-0">Test McTester</dd>
+                <a class="text-blue-500 hover:text-blue-700 justify-self-end" href="#">Edit</a>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-slate-400">Username</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-200 sm:mt-0">testie123</dd>
+                <a class="text-blue-500 hover:text-blue-700 justify-self-end" href="#">Edit</a>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-slate-400">Email address</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-200 sm:mt-0">tmac@test.com</dd>
+                <a class="text-blue-500 hover:text-blue-700 justify-self-end" href="#">Edit</a>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-slate-400">Nickname</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-200 sm:mt-0">TMac</dd>
+                <a class="text-blue-500 hover:text-blue-700 justify-self-end" href="#">Edit</a>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-slate-400">Password</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-200 sm:mt-0">***********</dd>
+                <a class="text-blue-500 hover:text-blue-700 justify-self-end" href="#">Edit</a>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </main>
+  </section>
+
+</div>
+</body>
+</html>
