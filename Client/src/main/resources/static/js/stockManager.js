@@ -1,4 +1,4 @@
-const baseURL = "/api/stocks/"
+const baseURL = "/dashboard/stocks/"
 async function remove(event, id, redirect) {
     event.preventDefault();
     let response = await fetch(baseURL + id, {

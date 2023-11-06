@@ -2,16 +2,14 @@ package edu.sdccd.cisc191.client.controllers;
 
 import java.util.Map;
 
+import edu.sdccd.cisc191.common.entities.StockCandle;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -104,4 +102,25 @@ public class BridgeController implements DataFetcher {
 
         return new ResponseEntity<String>("invalid username or password", null, HttpStatus.FORBIDDEN);
     }
+
+    /**
+     * Gets the candle data and puts it into a ticker format to be displayed
+     * @param ticker the stock information
+     * @return data the candle data in 2d array
+     */
+//    @GetMapping("/stocks/candles/{ticker}")
+//    public double[][] getCandles(@PathVariable String ticker) {
+//        StockCandle candles;
+//
+//        try {
+//            candles = new StockCandle(ticker);
+//        } catch(Exception e) {
+//            System.err.println(e);
+//            return null;
+//        }
+//
+//        double[][] data = candles.getStockInfo();
+//        //System.out.println(candles.toString());
+//        return data;
+//    }
 }

@@ -11,7 +11,7 @@ import java.net.MalformedURLException;
  * information about stocks being traded on the Exchange
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Stock {
+public class Stock implements Comparable<Stock> {
     //@JsonProperty("id")
     private Long id;
     private String ticker;          //the stock ticker or symbol listed on the exchange
@@ -183,5 +183,10 @@ public class Stock {
     public String toString() {
         return String.format("[%s] %s. Sect: %s. Desc: %s. $%.2f/share.",
                 ticker,name,stockSector,description,sharePrice);
+    }
+
+    @Override
+    public int compareTo(Stock compareStock) {
+        return this.getTicker().compareTo(compareStock.getTicker());
     }
 }
