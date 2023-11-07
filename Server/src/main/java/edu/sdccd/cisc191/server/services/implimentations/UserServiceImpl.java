@@ -43,9 +43,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user, User modified) throws DatabaseError {
+    public void updateUser(User user) throws DatabaseError {
         try {
-            userRepository.updateUser(user.getEmail(), user.getName(), user.getNickname(), user.getPasswordHash(), user.getId());
+            userRepository.save(user);
         } catch(Exception e) {
             throw new DatabaseError(e.toString());
         }

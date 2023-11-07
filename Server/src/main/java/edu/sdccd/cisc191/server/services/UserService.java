@@ -12,7 +12,7 @@ import java.util.List;
 public interface UserService {
     void createUser(User user) throws DatabaseError;
     void deleteUser(User user) throws DatabaseError;
-    void updateUser(User user, User modified) throws DatabaseError;
+    void updateUser(User user) throws DatabaseError;
     Optional<User> getUser(Long id);
     Optional<User> getUser(String username);
     boolean userExists(Long id);
