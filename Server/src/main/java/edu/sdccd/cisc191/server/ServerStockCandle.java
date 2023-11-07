@@ -109,6 +109,23 @@ public class ServerStockCandle extends StockCandle {
         }
     }
 
+    public ServerStockCandle(String ticker, long time1, long time2){
+        setTicker(ticker);
+
+        this.duration = "custom";
+
+        try {
+            // Attempt to update the freshly instantiated stock
+            updateFromBestMethod();
+        } catch(Exception e) {
+            // Failed!
+        }
+    }
+
+    public static ServerStockCandle fetchCandle(String ticker, long time1, long time2){
+        return new ServerStockCandle(ticker,time1,time2);
+    }
+
     public ServerStockCandle(){
 
     }
