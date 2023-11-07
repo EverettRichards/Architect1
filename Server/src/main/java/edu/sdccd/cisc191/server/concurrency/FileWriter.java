@@ -2,10 +2,12 @@ package edu.sdccd.cisc191.server.concurrency;
 
 import java.util.concurrent.BlockingQueue;
 
-public class FileWriter implements Runnable {
-    private BlockingQueue<WriterTask> writerQueue;
+import edu.sdccd.cisc191.server.ServerStockCandle;
 
-    public FileWriter(BlockingQueue<WriterTask> writerQueue) {
+public class FileWriter implements Runnable {
+    private BlockingQueue<ServerStockCandle> writerQueue;
+
+    public FileWriter(BlockingQueue<ServerStockCandle> writerQueue) {
         this.writerQueue = writerQueue;
     }
 
@@ -13,8 +15,12 @@ public class FileWriter implements Runnable {
     public void run() {
         try {
             while (true) {
-                WriterTask task = writerQueue.take();
-                something.saveCandleData(task);
+                ServerStockCandle serverStockCandle = writerQueue.take();
+                try {
+                    serverStockCandle.saveAsJsonFile();
+                } catch(Exception e) {
+                    System.out.println("Filed to write. Error: " + e);
+                }
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

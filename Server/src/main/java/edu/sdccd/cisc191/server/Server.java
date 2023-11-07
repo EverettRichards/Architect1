@@ -16,7 +16,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import edu.sdccd.cisc191.server.concurrency.FileWriter;
 import edu.sdccd.cisc191.server.concurrency.FinnhubTask;
 import edu.sdccd.cisc191.server.concurrency.FinnhubWorker;
-import edu.sdccd.cisc191.server.concurrency.WriterTask;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"edu.sdccd.cisc191"})
@@ -33,7 +32,7 @@ public class Server {
     public BlockingQueue<FinnhubTask> taskQueue() {
         int numWorkers = 30;
         BlockingQueue<FinnhubTask> taskQueue = new LinkedBlockingQueue<>();
-        BlockingQueue<WriterTask> writerQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<ServerStockCandle> writerQueue = new LinkedBlockingQueue<>();
         ExecutorService executor = Executors.newFixedThreadPool(numWorkers + 1); // writer
 
         // this spawns workers and this could should be ran as soon as the program starts

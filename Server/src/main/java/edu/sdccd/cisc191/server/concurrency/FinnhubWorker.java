@@ -9,9 +9,9 @@ import edu.sdccd.cisc191.server.ServerStockCandle;
 
 public class FinnhubWorker implements Runnable {
     private BlockingQueue<FinnhubTask> taskQueue;
-    private BlockingQueue<WriterTask> writerQueue;
+    private BlockingQueue<ServerStockCandle> writerQueue;
 
-    public FinnhubWorker(BlockingQueue<FinnhubTask> taskQueue, BlockingQueue<WriterTask> writerQueue) {
+    public FinnhubWorker(BlockingQueue<FinnhubTask> taskQueue, BlockingQueue<ServerStockCandle> writerQueue) {
         this.taskQueue = taskQueue;
         this.writerQueue = writerQueue;
     }
@@ -21,17 +21,12 @@ public class FinnhubWorker implements Runnable {
         try {
             while (true) {
                 FinnhubTask task = taskQueue.take();
-                String result = ServerStockCandle.fetchCandle(task).toJson();
-                WriterTask writerTask = new WriterTask(task.getTicker(), result);
+                ServerStockCandle candleData = ServerStockCandle.fetchCandle(task);
 
-                writerQueue.offer(writerTask);
+                writerQueue.offer(candleData);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
         }
     }
     
