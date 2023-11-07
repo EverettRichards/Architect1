@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.sdccd.cisc191.common.entities.StockCandle;
+import edu.sdccd.cisc191.server.concurrency.FinnhubTask;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
@@ -122,8 +123,8 @@ public class ServerStockCandle extends StockCandle {
         }
     }
 
-    public static ServerStockCandle fetchCandle(String ticker, long time1, long time2){
-        return new ServerStockCandle(ticker,time1,time2);
+    public static ServerStockCandle fetchCandle(FinnhubTask task){
+        return new ServerStockCandle(task.getTicker(),task.getStartTime().toEpochMilli(),task.getEndTime().toEpochMilli());
     }
 
     public ServerStockCandle(){
