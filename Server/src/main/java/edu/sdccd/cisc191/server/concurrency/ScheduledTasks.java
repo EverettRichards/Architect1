@@ -1,6 +1,6 @@
 package edu.sdccd.cisc191.server.concurrency;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.concurrent.BlockingQueue;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,13 @@ public class ScheduledTasks {
 
     private String[] tickers = {"AAPL","DIS","BAC","UAA","CCL","KO","WMT","T","GOOGL","MSFT","V","NVDA","AMZN","COST","AMD","TSM","META","TSLA"};
 
-    private LocalDateTime lastFetched = LocalDateTime.now();
+    private Instant lastFetched = Instant.now();
 
     // every 5 seconds or 5000 miliseconds
     @Scheduled(fixedRate = 5000)
     public void fetchNewCandleData() {
         for(String ticker : tickers) {
-            LocalDateTime now = LocalDateTime.now();
+            Instant now = Instant.now();
             FinnhubTask task = new FinnhubTask(ticker, lastFetched, now);
             taskQueue.offer(task);
             lastFetched = now;

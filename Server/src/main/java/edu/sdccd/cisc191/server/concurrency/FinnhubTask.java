@@ -1,6 +1,6 @@
 package edu.sdccd.cisc191.server.concurrency;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +9,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class FinnhubTask {
     private String ticker;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Instant startTime;
+    private Instant endTime;
 }
