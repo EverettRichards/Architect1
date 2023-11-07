@@ -26,7 +26,6 @@ public class AccountController {
     @Autowired(required = true)
     private UserService userService;
 
-
     @GetMapping("/sanitycheck")
     public String ineedsanity() {
         return "yes, heres ur sanity";
@@ -40,12 +39,12 @@ public class AccountController {
 
     @PostMapping("/update/{id}")
     public void update(@PathVariable Long id, User newUserData) throws UserNotFound {
-        // System.out.println(user.getName());
         Optional<User> oldUser = userService.getUser(id);
         if(oldUser.isEmpty()) {
             throw new UserNotFound();
         }
-        userService.updateUser(oldUser.get(), newUserData);
+        newUserData.setId(id);
+        userService.updateUser(newUserData);
     }
 
     @DeleteMapping("/{id}")

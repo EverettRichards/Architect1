@@ -33,14 +33,13 @@ public class FinnhubNetworking {
                 callsSinceRefresh = 0;
             }
             lastUpdateTime = TimeMethods.now();
-            return mainExecutor.submit(() -> {
-                String result = Requests.get(url);
-                return result;
-            }).get();
+            String result = Requests.get(url);
+            return result;
+
         } catch (InterruptedException e) {
             System.out.println("Critical error encountered with API concurrency.");
             return "ERROR";
-        } catch (ExecutionException e) {
+        } catch (MalformedURLException e) {
             return "ERROR";
         }
     }
