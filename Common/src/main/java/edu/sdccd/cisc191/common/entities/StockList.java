@@ -1,82 +1,92 @@
 package edu.sdccd.cisc191.common.entities;
 
+import java.util.Collections;
+import java.util.LinkedList;
+
 /**
  * StockList a program to create a list of stocks to be used to display on the webpage
  */
 public class StockList {
-    private Stock[] stocks;         //the stocks that will make up the list of stocks
-    // private User owner;             //the user that will be tracking a set of stocks on the webpage
+    private LinkedList<Stock> stocks; //the stocks that will make up the list of stocks
 
-    public static void main(String[] args) {
-        System.out.println("Test");
+    /**
+     * Constructor creates a new StockList
+     * no-args constructor, just initializes a new LinkedList<Stock>
+     * instance variable for stocks.
+     */
+    public StockList() {
+        this.stocks = new LinkedList<>();
     }
 
     /**
-     * Constructor that creates a new StockList based on the array of stocks passed in
-     * @param conveyedStocks the array of stocks to be added to the list
+     * Constructor creates a new StockList from data
+     * @param stocks - a linked list of stocks to initialize the stocks
+     * instance variable.
      */
-    public StockList(Stock[] conveyedStocks) {
-        stocks = new Stock[conveyedStocks.length];
-        for (int i=0;i<conveyedStocks.length;i++){
-            stocks[i] = conveyedStocks[i];
+    public StockList(LinkedList<Stock> stocks) {
+        this.stocks = stocks;
+        this.sort();
+    }
+
+    //Class Methods
+
+    /**
+     * getStocks
+     * no args
+     * returns stocks
+     */
+    public LinkedList<Stock> getStocks() {
+        return this.stocks;
+    }
+
+    /**
+     * addStock
+     * @param newStock
+     * Adds newStock to the linked list stocks and
+     * sorts list.
+     */
+    public int addStock(Stock newStock) {
+        boolean success = this.stocks.add(newStock);
+        if(success) {
+            this.sort();
+            return 0;
         }
+        return -1;
     }
 
     /**
-     * Gets the stock tickers
-     * @return outputString the stock info in a string format
+     * removeStock
+     * @param id
+     * Takes the variable id and uses it to
+     * find a stock in the stocks list.  If successful,
+     * the stock is removed from the linked list and returns 0.
+     * If unsuccessful, the method returns -1.
      */
-    public String getTickers(){
-        String outputString = "";
-        for (int i=0;i<stocks.length;i++){
-            outputString = outputString + stocks[i].getTicker();
-            if (i<stocks.length-1){
-                outputString = outputString + ",";
+    public int removeStock(Long id) {
+        for (Stock stock : stocks) {
+            if (stock.getId() == id) {
+                stocks.remove(stock);
+                return 0;
             }
         }
-        return outputString;
+        return -1;
     }
 
     /**
-     * Gets the list of stocks and returns them as a 2d array
-     * @return mainArray the stock list in the 2d array
+     * sort
+     * no-args
+     * Sorts the stocks linked list by ticker name alphabetically.
      */
-    public Object[][] getStocksAs2DArray(){
-        Object[][] mainArray = new Object[stocks.length][6];
-        int i = 0;
-        for (Stock thisStock : stocks) {
-            mainArray[i][0] = thisStock.getTicker();
-            mainArray[i][1] = thisStock.getName();
-            mainArray[i][2] = thisStock.getDescription();
-            mainArray[i][3] = thisStock.getSector();
-            mainArray[i][4] = thisStock.getPrice();
-            mainArray[i][5] = thisStock.getDividend();
-            i++;//increase index
-        }
-        return mainArray;
+    public void sort() {
+        Collections.sort(this.stocks);
     }
 
     /**
-     * Gets all the stock info that available and formats it into a String from
-     * concatenating the individual pieces that make up a stock listing
-     * @return outputString the stock info in string format
+     * length
+     * no-args
+     * Returns the number of items in the stocks linked list as an integer.
      */
-    public String getAllStockInfo(){
-        String outputString = "";
-        String formatString = "%s (%s). $%.2f/share. Div yield $%.2f (%.2f%%). Sector: %s. Description: %s.";
-        for (int i=0; i<stocks.length;i++){
-            Stock thisStock = stocks[i];
-            String thisLine = String.format(formatString,
-                    thisStock.getName(), thisStock.getTicker(),
-                    thisStock.getPrice(), thisStock.getDividend(),
-                    thisStock.getDividend() / thisStock.getPrice() * 100,
-                    thisStock.getSector(), thisStock.getDescription()
-                    );
-            outputString = outputString + thisLine;
-            if (i<stocks.length-1){
-                outputString = outputString + "\n";
-            }
-        }
-        return outputString;
+    public int length() {
+        return this.stocks.size();
     }
 }
