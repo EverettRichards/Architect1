@@ -22,7 +22,7 @@ public class ScheduledTasks {
     public void fetchNewCandleData() {
         for(String ticker : tickers) {
             Instant now = Instant.now();
-            FinnhubTask task = new FinnhubTask(ticker, lastFetched, now);
+            FinnhubTask task = new FinnhubTask(ticker, "day", lastFetched, now);
             taskQueue.offer(task);
             lastFetched = now;
         }

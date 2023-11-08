@@ -18,8 +18,9 @@ public class FileWriter implements Runnable {
                 ServerStockCandle serverStockCandle = writerQueue.take();
                 try {
                     serverStockCandle.saveAsJsonFile();
+                    writerQueue.remove(serverStockCandle);
                 } catch(Exception e) {
-                    System.out.println("Filed to write. Error: " + e);
+                    System.out.println("Failed to write. Error: " + e);
                 }
             }
         } catch (InterruptedException e) {

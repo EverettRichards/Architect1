@@ -110,10 +110,10 @@ public class ServerStockCandle extends StockCandle {
         }
     }
 
-    public ServerStockCandle(String ticker, long time1, long time2){
+    public ServerStockCandle(String ticker, String duration, long time1, long time2){
         setTicker(ticker);
 
-        this.duration = "custom";
+        this.duration = duration;
 
         try {
             // Attempt to update the freshly instantiated stock
@@ -124,7 +124,7 @@ public class ServerStockCandle extends StockCandle {
     }
 
     public static ServerStockCandle fetchCandle(FinnhubTask task){
-        return new ServerStockCandle(task.getTicker(),task.getStartTime().toEpochMilli(),task.getEndTime().toEpochMilli());
+        return new ServerStockCandle(task.getTicker(),task.getDuration(),task.getStartTime().toEpochMilli(),task.getEndTime().toEpochMilli());
     }
 
     public ServerStockCandle(){
