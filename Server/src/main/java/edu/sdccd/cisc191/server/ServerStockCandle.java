@@ -141,7 +141,7 @@ public class ServerStockCandle extends StockCandle {
 
     // Creates a file, TICKER.json, containing the JSON form of a provided Stock object
     public void saveAsJsonFile() throws JsonProcessingException, FileNotFoundException {
-        System.out.println("Saved a stock candle!!");
+        // System.out.println("Saved a stock candle!!");
         String json = toJson();
         DataMethods.createFile(DataMethods.stockCandleDirectory,getFileName(),json);
     }

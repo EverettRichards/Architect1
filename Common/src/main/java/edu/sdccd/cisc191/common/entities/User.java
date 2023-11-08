@@ -1,12 +1,18 @@
 package edu.sdccd.cisc191.common.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -45,6 +51,11 @@ public class User implements java.io.Serializable {
     @Column
     private Role role;
 
+    @ElementCollection
+    @CollectionTable(name = "followedTickers", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "tickers")
+    private List<String> followedTickers;
+
     public static enum Role {
         Regular,
         Admin,
@@ -56,5 +67,6 @@ public class User implements java.io.Serializable {
         this.nickname = nickname;
         this.passwordHash = passwordHash;
         this.role = role;
+        this.followedTickers = new ArrayList<>();
     }
 }

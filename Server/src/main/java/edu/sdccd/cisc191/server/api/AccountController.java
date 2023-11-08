@@ -17,6 +17,7 @@ import edu.sdccd.cisc191.server.errors.UserNotFound;
 import edu.sdccd.cisc191.server.services.UserService;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -37,7 +38,7 @@ public class AccountController {
         userService.createUser(user);
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public void update(@PathVariable Long id, User newUserData) throws UserNotFound {
         Optional<User> oldUser = userService.getUser(id);
         if(oldUser.isEmpty()) {
