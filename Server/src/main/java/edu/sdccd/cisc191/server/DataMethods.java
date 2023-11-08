@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.sdccd.cisc191.common.entities.DataFetcher;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -21,7 +22,7 @@ public class DataMethods {
     public static final String stockCandleDirectory = mainDirectory + "/stock_candle_repository"; // Directory of where to store STOCKCANDLE.json files
     public static final String stockIdFileAddress = mainDirectory + "/stock_ids.json";
     public static final String defaultTickersFileAddress = "Common/src/main/static_data/default_tickers.txt";
-    public static final String nasdaqTickersFileAddress = "Common/src/main/static_data/nasdaq_tickers.txt";
+    public static final String allTickersFileAddress = "Common/src/main/static_data/all_tickers.txt";
 
     public static void instantiateStockIdFile() {
         try {
@@ -194,18 +195,27 @@ public class DataMethods {
         return defaultTickers;
     }
 
-    private static String[] nasdaqTickers = new String[0];
+    /*public static String[] parseTickerJson(String input) throws JsonProcessingException {
+        JsonNode node = decodeJson(input);
+        String[] result = new String[node.size()];
+        for (int i = 0; i < node.size(); i++){
+            result[i] = node.get(i).get("symbol").asText();
+        }
+        return result;
+    }*/
 
-    public static String[] getNasdaqTickers(){
-        if (nasdaqTickers.length == 0) {
+    private static String[] allTickers = new String[0];
+
+    public static String[] getAllTickers(){
+        if (allTickers.length == 0) {
             try {
-                nasdaqTickers = Files.lines(Paths.get(DataMethods.nasdaqTickersFileAddress))
+                allTickers = Files.lines(Paths.get(DataMethods.allTickersFileAddress))
                         .collect(Collectors.toList())
                         .toArray(new String[0]);
             } catch (IOException e) {
-                nasdaqTickers = new String[]{"AAPL"};
+                allTickers = new String[]{"AAPL"};
             }
         }
-        return nasdaqTickers;
+        return allTickers;
     }
 }
