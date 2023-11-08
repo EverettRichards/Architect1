@@ -10,13 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import edu.sdccd.cisc191.common.entities.StockList;
 
 /**
- * StockController
- *
+ * StockController*
  * Handles the views for a user's dashboard of stock data
  * as well as the interactivity with the data.
  */
@@ -85,7 +83,7 @@ public class StockController implements DataFetcher {
     @GetMapping("/dashboard/delete_stock/{id}")
     @ResponseBody
     public void deleteStock(@PathVariable("id") Long id) {
-        this.stocks.remove(id);
+        this.stocks.removeStock(id);
     }
 
 }
