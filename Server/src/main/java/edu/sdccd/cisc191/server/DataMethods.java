@@ -13,10 +13,22 @@ import java.io.FileNotFoundException;
 
 public class DataMethods {
 
-    public static final String stockDirectory = "Server/server_storage/stock_repository"; // Directory of where to store STOCK.json files
-    public static final String stockCandleDirectory = "Server/server_storage/stock_candle_repository"; // Directory of where to store STOCKCANDLE.json files
+    public static final String mainDirectory = "Server/server_storage";
+    public static final String stockDirectory = mainDirectory + "/stock_repository"; // Directory of where to store STOCK.json files
+    public static final String stockCandleDirectory = mainDirectory + "/stock_candle_repository"; // Directory of where to store STOCKCANDLE.json files
+    public static final String stockIdFileAddress = mainDirectory + "/stock_ids.json";
 
-    public static final String stockIdFileAddress = "Server/server_storage/stock_ids.json";
+    public static void instantiateStockIdFile() {
+        try {
+            FileWriter writer = new FileWriter(stockIdFileAddress);
+            writer.write("" +
+                    "" +
+                    "{\"last_id\":1,\"AAPL\":1}");
+            writer.close();
+        } catch (Exception e) {
+
+        }
+    }
 
     public static double[][] invert2DArray(double[][] inputArray){
         int rows = inputArray.length;

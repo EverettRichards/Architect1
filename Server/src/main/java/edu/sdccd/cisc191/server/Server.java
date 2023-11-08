@@ -1,5 +1,6 @@
 package edu.sdccd.cisc191.server;
 
+import java.io.File;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,6 +18,8 @@ import edu.sdccd.cisc191.server.concurrency.FileWriter;
 import edu.sdccd.cisc191.server.concurrency.FinnhubTask;
 import edu.sdccd.cisc191.server.concurrency.FinnhubWorker;
 
+import edu.sdccd.cisc191.server.DataMethods;
+
 @SpringBootApplication
 @ComponentScan(basePackages = {"edu.sdccd.cisc191"})
 @EnableJpaRepositories("edu.sdccd.cisc191.server.repositories")
@@ -25,6 +28,9 @@ import edu.sdccd.cisc191.server.concurrency.FinnhubWorker;
 public class Server {
 
     public static void main(String[] args) {
+        new File(DataMethods.stockDirectory).mkdirs();
+        new File(DataMethods.stockCandleDirectory).mkdirs();
+        DataMethods.instantiateStockIdFile();
         SpringApplication.run(Server.class, args);
     }
 
