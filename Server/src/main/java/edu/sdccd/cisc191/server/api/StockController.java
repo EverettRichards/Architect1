@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class StockController {
-    String[] myTickers = {"AAPL","DIS","BAC","UAA","CCL","KO","WMT","T","GOOGL","MSFT","V","NVDA","AMZN","COST","AMD","TSM","META","TSLA"};
+    String[] myTickers = DataMethods.getDefaultTickers();
     //Dummy Data to initialize UIStock objects
     public ArrayList<Stock> stocks = new ArrayList<>() {
         {

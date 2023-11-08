@@ -6,10 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import java.io.FileNotFoundException;
+import java.util.stream.Collectors;
 
 public class DataMethods {
 
@@ -17,6 +20,8 @@ public class DataMethods {
     public static final String stockDirectory = mainDirectory + "/stock_repository"; // Directory of where to store STOCK.json files
     public static final String stockCandleDirectory = mainDirectory + "/stock_candle_repository"; // Directory of where to store STOCKCANDLE.json files
     public static final String stockIdFileAddress = mainDirectory + "/stock_ids.json";
+    public static final String defaultTickersFileAddress = "Common/src/main/static_data/default_tickers.txt";
+    public static final String nasdaqTickersFileAddress = "Common/src/main/static_data/nasdaq_tickers.txt";
 
     public static void instantiateStockIdFile() {
         try {
@@ -172,5 +177,35 @@ public class DataMethods {
         createFile(stockIdFileAddress,output);
 
         return lastId;
+    }
+
+    private static String[] defaultTickers = new String[0];
+
+    public static String[] getDefaultTickers(){
+        if (defaultTickers.length == 0) {
+            try {
+                defaultTickers = Files.lines(Paths.get(DataMethods.defaultTickersFileAddress))
+                        .collect(Collectors.toList())
+                        .toArray(new String[0]);
+            } catch (IOException e) {
+                defaultTickers = new String[]{"AAPL"};
+            }
+        }
+        return defaultTickers;
+    }
+
+    private static String[] nasdaqTickers = new String[0];
+
+    public static String[] getNasdaqTickers(){
+        if (nasdaqTickers.length == 0) {
+            try {
+                nasdaqTickers = Files.lines(Paths.get(DataMethods.nasdaqTickersFileAddress))
+                        .collect(Collectors.toList())
+                        .toArray(new String[0]);
+            } catch (IOException e) {
+                nasdaqTickers = new String[]{"AAPL"};
+            }
+        }
+        return nasdaqTickers;
     }
 }
