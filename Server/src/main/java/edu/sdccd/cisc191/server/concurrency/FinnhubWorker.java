@@ -24,6 +24,9 @@ public class FinnhubWorker implements Runnable {
                 ServerStockCandle candleData = ServerStockCandle.fetchCandle(task);
 
                 writerQueue.offer(candleData);
+
+                // there are 30 works and the API rate limit is 30 calls per second
+                Thread.sleep(1000);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
