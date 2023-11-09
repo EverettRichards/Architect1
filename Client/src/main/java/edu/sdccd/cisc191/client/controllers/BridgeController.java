@@ -31,6 +31,7 @@ import edu.sdccd.cisc191.common.entities.User;
 @RequestMapping("/api")
 public class BridgeController implements DataFetcher {
     private final String baseURL = backendEndpointURL + userEndpointURL;
+    private final String stockURL = backendEndpointURL + apiEndpointURL;
     private RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping("/register")
@@ -102,6 +103,24 @@ public class BridgeController implements DataFetcher {
 
 
         return new ResponseEntity<String>("invalid username or password", null, HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping("/stocks/candles/{ticker}")
+    public double[][] getCandles(@PathVariable String ticker) {
+        ResponseEntity<double[][]> response;
+        try {
+            response = restTemplate.exchange(
+                stockURL + "/stocks/candles/" + ticker,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
+            );
+        } catch(Exception e) {
+            System.err.println(e);
+            return null;
+        }
+
+        return response.getBody();
     }
 
     /**

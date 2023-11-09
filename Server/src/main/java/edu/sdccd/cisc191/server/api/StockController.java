@@ -54,6 +54,16 @@ public class StockController {
         return stocks;
     }
 
+    @GetMapping("/stock/{ticker}")
+    public Stock getAll(@PathVariable String ticker) {
+        ServerStock serverStock;
+        try {
+            return new ServerStock(ticker);
+        } catch (MalformedURLException | JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Creates a new stock to be added to the website
      * @param stock the new stock created
@@ -137,7 +147,7 @@ public class StockController {
             return null;
         }
 
-        double[][] data = new double[5][5];//candles.getStockInfo();
+        candles.getStockInfo();
         //System.out.println(candles.toString());
         return data;
     }
