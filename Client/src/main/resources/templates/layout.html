@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <head th:fragment="common_header(title)">
     <meta charset="UTF-8">
@@ -43,8 +44,8 @@
             </div>
 
             <div class="flex flex-1 justify-end">
-                <a th:href="@{/sign-in}" class="text-sm font-semibold leading-6 pl-5 text-gray-50 hover:text-emerald-200">Sign In</a>
-                <div class="relative">
+                <a sec:authorize="isAnonymous()" th:href="@{/sign-in}" class="text-sm font-semibold leading-6 pl-5 text-gray-50 hover:text-emerald-200">Sign In</a>
+                <div class="relative" sec:authorize="isAuthenticated()">
                     <button id="account-dropdown-toggle" type="button" class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 pl-5 text-gray-50 hover:text-emerald-200" aria-expanded="false">
                         <span class="sr-only">Account Menu</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -95,12 +96,9 @@
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 divide-x divide-gray-900/5 bg-gray-50">
-                                <a th:href="@{/sign-in}"  class="flex items-center justify-center gap-x-2.5 p-3 font-semibold text-gray-900 hover:bg-gray-100">
-<!--                                    <svg class="h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">-->
-<!--                                        <path fill-rule="evenodd" d="M2 10a8 8 0 1116 0 8 8 0 01-16 0zm6.39-2.908a.75.75 0 01.766.027l3.5 2.25a.75.75 0 010 1.262l-3.5 2.25A.75.75 0 018 12.25v-4.5a.75.75 0 01.39-.658z" clip-rule="evenodd" />-->
-<!--                                    </svg>-->
-                                    Sign Out
-                                </a>
+                                <form th:action="@{/sign-out}" method="post" class="flex items-center justify-center gap-x-2.5 p-3 font-semibold text-gray-900 hover:bg-gray-100" >
+                                    <input type="submit" class="cursor-pointer" value="Sign Out"/>
+                                </form>
                             </div>
                         </div>
                     </div>
