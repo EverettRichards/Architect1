@@ -147,7 +147,7 @@ public class StockController {
             return null;
         }
 
-        candles.getStockInfo();
+        double[][] data = candles.getStockInfo();
         //System.out.println(candles.toString());
         return data;
     }
