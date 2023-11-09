@@ -147,7 +147,15 @@ public class StockController {
             return null;
         }
 
-        double[][] data = candles.getStockInfo();
+        double[][] data;
+        do {
+            data = candles.getStockInfo();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } while (data == null);
         //System.out.println(candles.toString());
         return data;
     }

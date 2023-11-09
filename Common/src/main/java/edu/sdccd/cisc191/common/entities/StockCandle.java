@@ -124,6 +124,7 @@ public class StockCandle {
     }
 
     public double[][] getStockInfo(){
+        if (c == null) { return null; }
         double[][] stockInfo = new double[6][c.size()];
         List<?>[] parse = new List<?>[]{c,h,l,o,t,v};
         int i = 0;
