@@ -17,6 +17,8 @@ import edu.sdccd.cisc191.common.entities.StockList;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 
+import java.util.concurrent.*;
+
 /**
  * StockController*
  * Handles the views for a user's dashboard of stock data
@@ -103,25 +105,55 @@ public class StockController implements DataFetcher {
         List<ExtractedResult> topResults = FuzzySearch.extractTop(query, allTickers, 10);
 
         ArrayList<Stock> stockList = new ArrayList<>();
+
+        ExecutorService executor = Executors.newFixedThreadPool(topResults.size());
+        CompletionService<Stock> completionService = new ExecutorCompletionService<>(executor);
+
+        int totalStockOptions = 0;
+
         for(ExtractedResult result : topResults) {
             if(result.getScore() < 50) {
                 break;
             }
 
+            totalStockOptions += 1;
+
+            completionService.submit(() -> {
+                try {
+                    String ticker = result.getString();
+                    System.out.println(result.getScore());
+                    ResponseEntity<Stock> response = restTemplate.exchange(
+                            resourceURL + "/stock/" + ticker,
+                            HttpMethod.GET,
+                            null,
+                            new ParameterizedTypeReference<>() {}
+                    );
+                    System.out.println(response.getBody());
+                    return response.getBody();
+                } catch (Exception e) {
+                    System.err.println(e);
+                    return null;
+                }
+            });
+        }
+
+        int received = 0;
+        while(received < totalStockOptions) {
             try {
-                String ticker = result.getString();
-                System.out.println(result.getScore());
-                ResponseEntity<Stock> response = restTemplate.exchange(
-                        resourceURL + "/stock/" + ticker,
-                        HttpMethod.GET,
-                        null,
-                        new ParameterizedTypeReference<>() {}
-                );
-                System.out.println(response.getBody());
-                stockList.add(response.getBody());
+                stockList.add(completionService.take().get());
             } catch (Exception e) {
-                System.err.println(e);
+                System.err.println("Error: " + e);
             }
+
+            received++;
+        }
+
+        // shutdown threads
+        executor.shutdown();
+        try {
+            executor.awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            System.err.println("Error shutting down threads: " + e);
         }
 
         System.out.println(stockList);
