@@ -58,7 +58,7 @@ public class StockController {
      * @return data the candle data in 2d array
      */
     @GetMapping("/stocks/candles/{ticker}")
-    public double[][] getCandles(@PathVariable String ticker) {
+    public Number[][] getCandles(@PathVariable String ticker) {
         StockCandle candles;
 
         try {
@@ -70,7 +70,7 @@ public class StockController {
 
         System.out.println(candles.getC());
 
-        double[][] data = candles.getStockInfo();
+        Number[][] data = candles.getStockInfo();
 
         System.out.println(data[0]);
 
