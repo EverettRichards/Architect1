@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.sdccd.cisc191.common.entities.Stock;
+import edu.sdccd.cisc191.server.errors.BadTickerException;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
@@ -80,7 +81,8 @@ public class ServerStock extends Stock {
 
     // Creates a new stock using the best data. Like a constructor, but defined outside of Stock.java itself.
     // Will use an existing file OR the FinnHub API, depending on the availability and recency of a relevant file.
-    public ServerStock(String ticker) throws MalformedURLException, JsonProcessingException {
+    public ServerStock(String ticker) throws MalformedURLException, JsonProcessingException, BadTickerException {
+        ticker = DataMethods.validateTicker(ticker);
         setTicker(ticker);
         try {
             // Attempt to update the freshly instantiated stock

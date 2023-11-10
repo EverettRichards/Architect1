@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;*/
 
 import edu.sdccd.cisc191.server.*;
 
+import edu.sdccd.cisc191.server.errors.BadTickerException;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.bind.annotation.PostMapping;
 
@@ -45,6 +46,8 @@ public class StockController {
         try {
             return new ServerStock(ticker);
         } catch (MalformedURLException | JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (BadTickerException e) {
             throw new RuntimeException(e);
         }
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
+import edu.sdccd.cisc191.server.errors.BadTickerException;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -232,5 +233,13 @@ public class DataMethods {
         }
 
         return false;
+    }
+
+    public static String validateTicker(String ticker) throws BadTickerException {
+        ticker = ticker.toUpperCase();
+        if (!DataMethods.isValidTicker(ticker)){
+            throw new BadTickerException(ticker);
+        }
+        return ticker;
     }
 }
