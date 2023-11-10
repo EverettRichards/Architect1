@@ -58,11 +58,11 @@ public class StockController {
      * @return data the candle data in 2d array
      */
     @GetMapping("/stocks/candles/{ticker}")
-    public Number[][] getCandles(@PathVariable String ticker) {
+    public Number[][] getCandles(@PathVariable String ticker, @RequestParam String resolution) {
         StockCandle candles;
 
         try {
-            candles = new ServerStockCandle(ticker,"day");
+            candles = new ServerStockCandle(ticker, resolution);
         } catch(Exception e) {
             System.err.println(e);
             return null;

@@ -105,12 +105,12 @@ public class BridgeController implements DataFetcher {
     }
 
     @GetMapping("/stocks/candles/{ticker}")
-    public Number[][] getCandles(@PathVariable String ticker) {
+    public Number[][] getCandles(@PathVariable String ticker, @RequestParam String resolution) {
         ResponseEntity<Number[][]> response;
 
         try {
             response = restTemplate.exchange(
-                stockURL + "/stocks/candles/" + ticker,
+                stockURL + "/stocks/candles/" + ticker + "?resolution=" + resolution,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {}
