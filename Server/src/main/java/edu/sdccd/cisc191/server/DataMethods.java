@@ -219,4 +219,18 @@ public class DataMethods {
         }
         return allTickers;
     }
+
+    public static boolean isValidTicker(String ticker){
+        if (allTickers.length==0){
+            getAllTickers();
+        }
+
+        for (String thisTicker : allTickers){
+            if (thisTicker.equals(ticker)){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

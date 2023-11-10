@@ -6,6 +6,7 @@ import java.util.concurrent.BlockingQueue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.sdccd.cisc191.server.FinnhubNetworking;
 import edu.sdccd.cisc191.server.ServerStockCandle;
+import edu.sdccd.cisc191.server.errors.BadTickerException;
 
 public class FinnhubWorker implements Runnable {
     private BlockingQueue<FinnhubTask> taskQueue;
@@ -30,6 +31,8 @@ public class FinnhubWorker implements Runnable {
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+        } catch (BadTickerException e) {
+            throw new RuntimeException(e);
         }
     }
     

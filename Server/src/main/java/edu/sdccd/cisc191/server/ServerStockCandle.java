@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.sdccd.cisc191.common.entities.StockCandle;
 import edu.sdccd.cisc191.server.concurrency.FinnhubTask;
+import edu.sdccd.cisc191.server.errors.BadTickerException;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 
 import java.io.*;
+import java.util.Locale;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServerStockCandle extends StockCandle {
@@ -92,9 +94,18 @@ public class ServerStockCandle extends StockCandle {
         }
     }
 
+    private static String validateTicker(String ticker) throws BadTickerException {
+        ticker = ticker.toUpperCase();
+        if (!DataMethods.isValidTicker(ticker)){
+            throw new BadTickerException(ticker);
+        }
+        return ticker;
+    }
+
     // Creates a new stock using the best data. Like a constructor, but defined outside of Stock.java itself.
     // Will use an existing file OR the FinnHub API, depending on the availability and recency of a relevant file.
-    public ServerStockCandle(String ticker, String duration) throws MalformedURLException, JsonProcessingException {
+    public ServerStockCandle(String ticker, String duration) throws BadTickerException {
+        ticker = validateTicker(ticker);
         setTicker(ticker);
 
         long[] timeRange = TimeMethods.getTimeRange(duration);
@@ -111,7 +122,8 @@ public class ServerStockCandle extends StockCandle {
         }
     }
 
-    public ServerStockCandle(String ticker, String duration, long time1, long time2){
+    public ServerStockCandle(String ticker, String duration, long time1, long time2) throws BadTickerException {
+        ticker = validateTicker(ticker);
         setTicker(ticker);
 
         this.duration = duration;
@@ -124,8 +136,9 @@ public class ServerStockCandle extends StockCandle {
         }
     }
 
-    public static ServerStockCandle fetchCandle(FinnhubTask task){
-        return new ServerStockCandle(task.getTicker(),task.getDuration(),task.getStartTime().toEpochMilli(),task.getEndTime().toEpochMilli());
+    public static ServerStockCandle fetchCandle(FinnhubTask task) throws BadTickerException {
+        String ticker = validateTicker(task.getTicker());
+        return new ServerStockCandle(ticker,task.getDuration(),task.getStartTime().toEpochMilli(),task.getEndTime().toEpochMilli());
     }
 
     public ServerStockCandle(){

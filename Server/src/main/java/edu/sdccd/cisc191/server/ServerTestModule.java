@@ -2,6 +2,7 @@ package edu.sdccd.cisc191.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.sdccd.cisc191.server.errors.BadTickerException;
 import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
@@ -22,7 +23,7 @@ public class ServerTestModule {
     }*/
 
     @Test
-    void testJsonMethods() throws MalformedURLException, JsonProcessingException {
+    void testJsonMethods() throws MalformedURLException, JsonProcessingException, BadTickerException {
         for (String ticker : myTickers) {
             ServerStock myStock = new ServerStock(ticker);
             ServerStockCandle candle1 = new ServerStockCandle(ticker, "day");
