@@ -26,8 +26,8 @@ public class ScheduledTasks {
 
     private Instant lastFetched = Instant.now();
 
-    // every 5 seconds or 5000 miliseconds
-    @Scheduled(fixedRate = 5000)
+    // every 10 seconds or 10000 miliseconds
+    @Scheduled(fixedRate = 60000)
     public void fetchNewCandleData() {
         for(String ticker : tickers) {
             Instant now = Instant.now();

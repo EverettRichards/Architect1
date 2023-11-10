@@ -29,30 +29,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class StockController {
-    String[] myTickers = DataMethods.getDefaultTickers();
-    //Dummy Data to initialize UIStock objects
-    public ArrayList<Stock> stocks = new ArrayList<>() {
-        {
-            for (String ticker : myTickers) {
-                try {
-                    add(new ServerStock(ticker));
-                } catch (MalformedURLException | JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-    };
-
     /**
      * Lists all the stocks to display on the webpage
      * @return stocks the stocks that are being watched
      */
     //CRUD Get all stocks
-    @GetMapping("/stocks")
-    public List<Stock> getAll() {
-        return stocks;
-    }
+    // @GetMapping("/stocks")
+    // public List<Stock> getAll() {
+    //     return stocks;
+    // }
 
     @GetMapping("/stock/{ticker}")
     public Stock getAll(@PathVariable String ticker) {
@@ -61,73 +46,6 @@ public class StockController {
             return new ServerStock(ticker);
         } catch (MalformedURLException | JsonProcessingException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Creates a new stock to be added to the website
-     * @param stock the new stock created
-     */
-    //CRUD Create a new stock and add to stocks List
-    @PostMapping("/stocks")
-    public void create(@RequestBody Stock stock) {
-        Stock newStock = new Stock(
-            stock.getTicker(), stock.getName(),
-            stock.getDescription(), stock.getSector(), stock.getPrice(),
-            stock.getDividend(), stock.getId()
-        );
-        this.stocks.add(newStock);
-    }
-
-    /**
-     * Gets the information for a single stock
-     * @param id the Long id of the stock to get its information
-     * @return stock the stock with that id or null if no match
-     */
-    //CRUD Get a single stock
-    @GetMapping("/stocks/{id}")
-    public Stock getSingle(@PathVariable long id) {
-        for (Stock stock : stocks) {
-            if (stock.getId() == id) {
-                return stock;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Updates the stock info with new price data
-     * @param updatedStock the new stock price data
-     * @param id the id of the stock to update
-     */
-    @PutMapping("/stocks/{id}")
-    public void update(@RequestBody Stock updatedStock, @PathVariable long id) {
-        for (Stock stock : stocks) {
-            if (stock.getId() == id) {
-                stock.setTicker(updatedStock.getTicker());
-                stock.setName(updatedStock.getName());
-                stock.setDescription(updatedStock.getDescription());
-                stock.setSector(updatedStock.getSector());
-                stock.setPrice(updatedStock.getPrice());
-                stock.setDividend(updatedStock.getDividend());
-
-                System.out.println("Successfully updated stock.");
-            }
-        }
-    }
-
-    /**
-     * Deletes a stock from display on the webpage, so you don't follow it anymore
-     * @param id the long id to identify the stock to delete
-     */
-    @DeleteMapping("/stocks/{id}")
-    public void delete(@PathVariable long id) {
-        for (Stock stock : stocks) {
-            if (stock.getId() == id) {
-                stocks.remove(stock);
-                System.out.println("Successfully deleted stock.");
-                return;
-            }
         }
     }
 
@@ -147,15 +65,12 @@ public class StockController {
             return null;
         }
 
-        double[][] data;
-        do {
-            data = candles.getStockInfo();
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        } while (data == null);
+        System.out.println(candles.getC());
+
+        double[][] data = candles.getStockInfo();
+
+        System.out.println(data[0]);
+
         //System.out.println(candles.toString());
         return data;
     }

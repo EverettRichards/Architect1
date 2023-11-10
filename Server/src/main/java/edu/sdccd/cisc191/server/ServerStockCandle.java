@@ -66,15 +66,15 @@ public class ServerStockCandle extends StockCandle {
 
         if (root.get("jsonVersion").asInt() != stockCandleJsonVersion) {
             // Stock has an old version. Don't use it.
-            System.out.println("Updating old-versioned stock candle.");
+            // System.out.println("Updating old-versioned stock candle.");
             updateFromAPI();
         } else if (System.currentTimeMillis() - root.get("lastRefresh").asLong() >= (1000L*TimeMethods.getMaximumTimeBetweenRefreshes(duration))) {
             // Stock hasn't been updated recently. Don't use it.
-            System.out.println("Updating outdated stock candle.");
+            // System.out.println("Updating outdated stock candle.");
             updateFromAPI();
         } else {
             // The stock is up-to-date. Load it WITHOUT an API call.
-            System.out.println("Updating stock candle from file.");
+            // System.out.println("Updating stock candle from file.");
             updateFromJsonNode(root,false);
         }
     }
@@ -100,6 +100,7 @@ public class ServerStockCandle extends StockCandle {
         long[] timeRange = TimeMethods.getTimeRange(duration);
         time1 = timeRange[0];
         time2 = timeRange[1];
+        System.out.println(time1 + " " + time2);
         this.duration = duration;
 
         try {

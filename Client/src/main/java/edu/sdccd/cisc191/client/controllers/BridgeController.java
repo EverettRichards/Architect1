@@ -107,7 +107,9 @@ public class BridgeController implements DataFetcher {
 
     @GetMapping("/stocks/candles/{ticker}")
     public double[][] getCandles(@PathVariable String ticker) {
+        System.out.println("adsfadsf");
         ResponseEntity<double[][]> response;
+
         try {
             response = restTemplate.exchange(
                 stockURL + "/stocks/candles/" + ticker,
