@@ -68,13 +68,8 @@ public class StockController {
             return null;
         }
 
-        System.out.println(candles.getC());
-
         Number[][] data = candles.getStockInfo();
 
-        System.out.println(data[0]);
-
-        //System.out.println(candles.toString());
         return data;
     }
 }

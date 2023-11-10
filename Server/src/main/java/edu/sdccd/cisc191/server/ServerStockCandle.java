@@ -103,7 +103,7 @@ public class ServerStockCandle extends StockCandle {
         long[] timeRange = TimeMethods.getTimeRange(duration);
         time1 = timeRange[0];
         time2 = timeRange[1];
-        System.out.println(time1 + " " + time2);
+        // System.out.println(time1 + " " + time2);
         this.duration = duration;
 
         try {

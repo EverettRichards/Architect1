@@ -15,8 +15,6 @@
         barData.push({c, h, l, o, x: x.valueOf()});
     }
 
-    console.log(barData);
-
     var ctx = document.getElementById('chart').getContext('2d');
     ctx.canvas.width = 1000;
     ctx.canvas.height = 250;

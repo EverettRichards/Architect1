@@ -68,7 +68,6 @@ public class BridgeController implements DataFetcher {
         System.out.println(form.toString());
         System.out.println(form.getPassword().isEmpty());
         if(form.getUsername().isEmpty() || form.getPassword().isEmpty()) {
-            System.out.println("adsf;lkajsdf;lkjasdf;lkjasdfl;kjasdfl;kjasdfl;kjasdf;lkjasdf;lkjjadsfl;kjssdf;lkjasdf;lkjasdf;lkj");
             throw new InvalidPayloadException();
         }
 
@@ -107,7 +106,6 @@ public class BridgeController implements DataFetcher {
 
     @GetMapping("/stocks/candles/{ticker}")
     public Number[][] getCandles(@PathVariable String ticker) {
-        System.out.println("adsfadsf");
         ResponseEntity<Number[][]> response;
 
         try {

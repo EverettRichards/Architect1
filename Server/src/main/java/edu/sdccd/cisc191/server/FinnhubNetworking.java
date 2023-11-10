@@ -52,13 +52,13 @@ public class FinnhubNetworking {
 
     // The static list of index attributes we want to request from FinnHub API
     public static String getCandleFromFinnhub(String ticker, String duration, long time1, long time2) throws MalformedURLException, JsonProcessingException {
-        System.out.println(duration);
         String resolution = TimeMethods.getFrequency(duration);
+        long[] time = TimeMethods.getTimeRange(duration);
+        System.out.println(time[0] + " " + time[1]);
         String URL = "https://finnhub.io/api/v1/stock/candle?symbol=" + ticker
                 + "&resolution=" + resolution
-                // + "&from=" + time1 + "&to=" + time2
+                + "&from=" + time[0] + "&to=" + time[1]
                 + "&token=" + DataFetcher.finnhubKey;
-        System.out.println(URL);
         return DataMethods.annotateCandles(fetchData(URL), ticker, duration, time1, time2);
     }
 }

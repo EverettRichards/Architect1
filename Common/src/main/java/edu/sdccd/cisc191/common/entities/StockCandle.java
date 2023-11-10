@@ -125,16 +125,12 @@ public class StockCandle {
 
     public Number[][] getStockInfo(){
         if (c == null) { return null; }
-        Number[][] stockInfo = new Number[6][c.size()];
+        Number[][] stockInfo = new Number[c.size()][6];
         List<?>[] parse = new List<?>[]{c,h,l,o,t,v};
-        int i = 0;
-        for (List<?> sub : parse){
-            int j = 0;
-            for (Object num : sub){
-                stockInfo[i][j] = (Number) num;
-                j++;
+        for(int i = 0; i < c.size(); i++){
+            for(int j = 0; j < 6; j++){
+                stockInfo[i][j] = (Number)parse[j].get(i);
             }
-            i++;
         }
         return stockInfo;
     }
