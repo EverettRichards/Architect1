@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.sdccd.cisc191.common.entities.Stock;
-import edu.sdccd.cisc191.server.errors.BadTickerException;
+import edu.sdccd.cisc191.common.entities.Ticker;
+import edu.sdccd.cisc191.common.errors.BadTickerException;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
@@ -26,11 +27,6 @@ public class ServerStock extends Stock {
         setPrice(root.get("price").asDouble());
         setLastRefresh(root.get("last_updated").asLong());
         setDividend(0);
-        try {
-            setId(DataMethods.getStockId(getTicker()));
-        } catch (IOException e) {
-            setId(0L);
-        }
 
         if (updateTimeStamp) {
             // Update this so we know when the stock info needs to be renewed
@@ -42,15 +38,20 @@ public class ServerStock extends Stock {
     private void updateFromAPI() throws MalformedURLException, JsonProcessingException, FileNotFoundException {
         String ticker = getTicker();
         String finnhubResult = FinnhubNetworking.getJsonFromFinnhub(ticker);
-        JsonNode root = DataMethods.decodeJson(finnhubResult);
+        JsonNode root = new JsonObject(finnhubResult).getJsonNode();;
         updateFromJsonNode(root,true);
         saveAsJsonFile();
     }
 
     // Opens the corresponding JSON file to see if it's good for using.
     private void updateFromFile() throws IOException {
-        String contents = DataMethods.readFile(DataMethods.stockDirectory,getTicker()+".json");
-        JsonNode root = DataMethods.decodeJson(contents);
+        FileInputStream stream = new FileInputStream(ServerFilePointers.stockDirectory+"/"+getTicker()+".json");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        String contents = reader.readLine();
+        reader.close();
+        stream.close();
+
+        JsonNode root = new JsonObject(contents).getJsonNode();;
 
         if (root.get("json_version").asInt() != stockJsonVersion) {
             // Stock has an old version. Don't use it.
@@ -82,8 +83,8 @@ public class ServerStock extends Stock {
     // Creates a new stock using the best data. Like a constructor, but defined outside of Stock.java itself.
     // Will use an existing file OR the FinnHub API, depending on the availability and recency of a relevant file.
     public ServerStock(String ticker) throws MalformedURLException, JsonProcessingException, BadTickerException {
-        ticker = DataMethods.validateTicker(ticker);
-        setTicker(ticker);
+        Ticker ticker_object = new Ticker(ticker);
+        setTicker(ticker_object.getTicker());
         try {
             // Attempt to update the freshly instantiated stock
             updateFromBestMethod();
@@ -107,13 +108,13 @@ public class ServerStock extends Stock {
         parent.put("last_updated",getLastRefresh());
         parent.put("json_version",stockJsonVersion);
 
-        return DataMethods.encodeJson(parent);
+        return new JsonObject(parent).getString();
     }
 
     // Creates a file, TICKER.json, containing the JSON form of a provided Stock object
     public void saveAsJsonFile() throws JsonProcessingException, FileNotFoundException {
         System.out.println("Saved a stock!!");
         String json = toJson();
-        DataMethods.createFile(DataMethods.stockDirectory,getTicker()+".json",json);
+        new PrintWriter(ServerFilePointers.stockDirectory+"/"+getTicker()+".json").print(json);
     }
 }

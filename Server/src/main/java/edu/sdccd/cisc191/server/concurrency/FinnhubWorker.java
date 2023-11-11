@@ -1,12 +1,9 @@
 package edu.sdccd.cisc191.server.concurrency;
 
-import java.net.MalformedURLException;
 import java.util.concurrent.BlockingQueue;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import edu.sdccd.cisc191.server.FinnhubNetworking;
 import edu.sdccd.cisc191.server.ServerStockCandle;
-import edu.sdccd.cisc191.server.errors.BadTickerException;
+import edu.sdccd.cisc191.common.errors.BadTickerException;
 
 public class FinnhubWorker implements Runnable {
     private BlockingQueue<FinnhubTask> taskQueue;

@@ -11,13 +11,11 @@ import org.springframework.validation.annotation.Validated;*/
 
 import edu.sdccd.cisc191.server.*;
 
-import edu.sdccd.cisc191.server.errors.BadTickerException;
+import edu.sdccd.cisc191.common.errors.BadTickerException;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.bind.annotation.PostMapping;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /*
 * (String newTicker, String newName, String newDescription,

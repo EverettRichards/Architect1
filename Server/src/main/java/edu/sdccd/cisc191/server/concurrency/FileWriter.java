@@ -3,7 +3,6 @@ package edu.sdccd.cisc191.server.concurrency;
 import java.util.concurrent.BlockingQueue;
 
 import edu.sdccd.cisc191.server.ServerStockCandle;
-import edu.sdccd.cisc191.server.errors.BadTickerException;
 
 public class FileWriter implements Runnable {
     private BlockingQueue<ServerStockCandle> writerQueue;

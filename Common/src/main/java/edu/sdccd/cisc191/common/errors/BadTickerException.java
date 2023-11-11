@@ -1,4 +1,4 @@
-package edu.sdccd.cisc191.server.errors;
+package edu.sdccd.cisc191.common.errors;
 
 public class BadTickerException extends Exception{
     public BadTickerException(String errorMessage) {

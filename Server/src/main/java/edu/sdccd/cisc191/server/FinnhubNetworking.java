@@ -47,7 +47,9 @@ public class FinnhubNetworking {
                     + ticker + "&token=" + token);
         String stockPriceJson = fetchData("https://finnhub.io/api/v1/quote?symbol="
                     + ticker + "&token=" + token);
-        return DataMethods.mergeStockJson(companyInfoJson, stockPriceJson);
+        JsonObject obj1 = new JsonObject(companyInfoJson);
+        JsonObject obj2 = new JsonObject(stockPriceJson);
+        return obj1.merge(obj2).getString();
     }
 
     // The static list of index attributes we want to request from FinnHub API
@@ -59,6 +61,9 @@ public class FinnhubNetworking {
                 + "&resolution=" + resolution
                 + "&from=" + time[0] + "&to=" + time[1]
                 + "&token=" + DataFetcher.finnhubKey;
-        return DataMethods.annotateCandles(fetchData(URL), ticker, duration, time1, time2);
+        String result = fetchData(URL);
+        JsonObject output = new JsonObject(result);
+        output.annotateForCandles(ticker,duration,time1,time2);
+        return output.getString();
     }
 }
