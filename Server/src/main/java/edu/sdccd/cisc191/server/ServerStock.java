@@ -45,7 +45,7 @@ public class ServerStock extends Stock {
 
     // Opens the corresponding JSON file to see if it's good for using.
     private void updateFromFile() throws IOException {
-        FileInputStream stream = new FileInputStream(ServerFilePointers.stockDirectory+"/"+getTicker()+".json");
+        FileInputStream stream = new FileInputStream(Server.stockDirectory+"/"+getTicker()+".json");
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         String contents = reader.readLine();
         reader.close();
@@ -115,6 +115,6 @@ public class ServerStock extends Stock {
     public void saveAsJsonFile() throws JsonProcessingException, FileNotFoundException {
         System.out.println("Saved a stock!!");
         String json = toJson();
-        new PrintWriter(ServerFilePointers.stockDirectory+"/"+getTicker()+".json").print(json);
+        new PrintWriter(Server.stockDirectory+"/"+getTicker()+".json").print(json);
     }
 }

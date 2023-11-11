@@ -25,9 +25,13 @@ import edu.sdccd.cisc191.server.concurrency.FinnhubWorker;
 @EnableScheduling
 public class Server {
 
+    public static final String mainDirectory = "Server/server_storage";
+    public static final String stockDirectory = mainDirectory + "/stock_repository"; // Directory of where to store STOCK.json files
+    public static final String stockCandleDirectory = mainDirectory + "/stock_candle_repository"; // Directory of where to store STOCKCANDLE.json files
+
     public static void main(String[] args) {
-        new File(ServerFilePointers.stockDirectory).mkdirs();
-        new File(ServerFilePointers.stockCandleDirectory).mkdirs();
+        new File(stockDirectory).mkdirs();
+        new File(stockCandleDirectory).mkdirs();
         //ServerFilePointers.instantiateStockIdFile();
         SpringApplication.run(Server.class, args);
     }

@@ -57,7 +57,7 @@ public class ServerStockCandle extends StockCandle {
 
     // Opens the corresponding JSON file to see if it's good for using.
     private void updateFromFile() throws IOException {
-        FileInputStream stream = new FileInputStream(ServerFilePointers.stockCandleDirectory+"/"+getFileName());
+        FileInputStream stream = new FileInputStream(Server.stockCandleDirectory+"/"+getFileName());
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         String contents = reader.readLine();
         reader.close();
@@ -148,6 +148,6 @@ public class ServerStockCandle extends StockCandle {
     public void saveAsJsonFile() throws JsonProcessingException, FileNotFoundException {
         // System.out.println("Saved a stock candle!!");
         String json = toJson();
-        new PrintWriter(ServerFilePointers.stockCandleDirectory+"/"+getFileName()).print(json);
+        new PrintWriter(Server.stockCandleDirectory+"/"+getFileName()).print(json);
     }
 }
