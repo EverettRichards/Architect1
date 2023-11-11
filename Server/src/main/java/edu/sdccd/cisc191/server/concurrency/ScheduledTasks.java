@@ -1,13 +1,10 @@
 package edu.sdccd.cisc191.server.concurrency;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.concurrent.BlockingQueue;
-import java.util.stream.Collectors;
 
-import edu.sdccd.cisc191.server.DataMethods;
+import edu.sdccd.cisc191.common.entities.Ticker;
+import edu.sdccd.cisc191.common.entities.TickerReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -20,8 +17,10 @@ public class ScheduledTasks {
 
     private String[] tickers;
 
+    TickerReader tickerReader = new TickerReader();
+
     {
-        tickers = DataMethods.getDefaultTickers();
+        tickers = tickerReader.getDefaultTickers();
     }
 
     private Instant lastFetched = Instant.now();
