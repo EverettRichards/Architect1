@@ -6,18 +6,18 @@ function broadcastMessage(message) { //only here for testing reasons
     let loginButton = document.getElementById("login-button");
     let loginForm = document.getElementById("login-form");
 
-    let loginContainer = document.getElementById("login");
-    let registerContainer = document.getElementById("register");
-
-    document.getElementById("switch-to-register").addEventListener("click", function() {
-        loginContainer.style.display = "none";
-        registerContainer.style.display = "block";
-    });
-
-    document.getElementById("switch-to-login").addEventListener("click", function() {
-        loginContainer.style.display = "block";
-        registerContainer.style.display = "none";
-    });
+    // let loginContainer = document.getElementById("login");
+    // let registerContainer = document.getElementById("register");
+    //
+    // document.getElementById("switch-to-register").addEventListener("click", function() {
+    //     loginContainer.style.display = "none";
+    //     registerContainer.style.display = "block";
+    // });
+    //
+    // document.getElementById("switch-to-login").addEventListener("click", function() {
+    //     loginContainer.style.display = "block";
+    //     registerContainer.style.display = "none";
+    // });
 
     async function login(event) {
         event.preventDefault();
