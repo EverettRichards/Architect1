@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head th:replace="~{ layout :: common_header(~{::title}) }">
+<head>
+<div th:replace="~{ layout :: common_header(~{::title}) }">
   <title>CISC 191 Architect 1 | Dashboard | Stock Details</title>
+</div>
 
   <script th:src="@{/js/stockManager.js}" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0"></script>
@@ -58,6 +60,11 @@
       </div>
     </div>
       <div class="chart">
+        <div class="inline-flex">
+            <button id="day-button" onclick="changeResolution('day')" class="bg-gray-300 bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">Day</button>
+            <button id="week-button" onclick="changeResolution('week')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4">Week</button>
+            <button id="month-button" onclick="changeResolution('month')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">Month</button>
+          </div>
         <canvas id="chart"></canvas>
       </div>
       <script th:inline="javascript">

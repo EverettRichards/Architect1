@@ -7,10 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
 import edu.sdccd.cisc191.common.entities.Requests;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import java.net.MalformedURLException;
 
 public class FinnhubNetworking {
@@ -18,8 +14,6 @@ public class FinnhubNetworking {
     private static final String token = DataFetcher.finnhubKey;
 
     public static long secondsBeforeRefreshNeeded = 60; // number of seconds before a cached stock will be forced to refresh
-
-    private static ExecutorService mainExecutor = Executors.newFixedThreadPool(10);
 
     private static int callsSinceRefresh = 0;
     private static long lastUpdateTime = 0;
@@ -59,9 +53,11 @@ public class FinnhubNetworking {
     // The static list of index attributes we want to request from FinnHub API
     public static String getCandleFromFinnhub(String ticker, String duration, long time1, long time2) throws MalformedURLException, JsonProcessingException {
         String resolution = TimeMethods.getFrequency(duration);
+        long[] time = TimeMethods.getTimeRange(duration);
+        System.out.println(time[0] + " " + time[1]);
         String URL = "https://finnhub.io/api/v1/stock/candle?symbol=" + ticker
                 + "&resolution=" + resolution
-                + "&from=" + time1 + "&to=" + time2
+                + "&from=" + time[0] + "&to=" + time[1]
                 + "&token=" + DataFetcher.finnhubKey;
         return DataMethods.annotateCandles(fetchData(URL), ticker, duration, time1, time2);
     }

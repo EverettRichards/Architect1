@@ -31,6 +31,7 @@ import edu.sdccd.cisc191.common.entities.User;
 @RequestMapping("/api")
 public class BridgeController implements DataFetcher {
     private final String baseURL = backendEndpointURL + userEndpointURL;
+    private final String stockURL = backendEndpointURL + apiEndpointURL;
     private RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping("/register")
@@ -67,7 +68,6 @@ public class BridgeController implements DataFetcher {
         System.out.println(form.toString());
         System.out.println(form.getPassword().isEmpty());
         if(form.getUsername().isEmpty() || form.getPassword().isEmpty()) {
-            System.out.println("adsf;lkajsdf;lkjasdf;lkjasdfl;kjasdfl;kjasdfl;kjasdf;lkjasdf;lkjjadsfl;kjssdf;lkjasdf;lkjasdf;lkj");
             throw new InvalidPayloadException();
         }
 
@@ -102,6 +102,25 @@ public class BridgeController implements DataFetcher {
 
 
         return new ResponseEntity<String>("invalid username or password", null, HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping("/stocks/candles/{ticker}")
+    public Number[][] getCandles(@PathVariable String ticker, @RequestParam String resolution) {
+        ResponseEntity<Number[][]> response;
+
+        try {
+            response = restTemplate.exchange(
+                stockURL + "/stocks/candles/" + ticker + "?resolution=" + resolution,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
+            );
+        } catch(Exception e) {
+            System.err.println(e);
+            return null;
+        }
+        Number[][] body = response.getBody();
+        return body;
     }
 
     /**

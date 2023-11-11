@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
+import edu.sdccd.cisc191.server.errors.BadTickerException;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -108,6 +109,7 @@ public class DataMethods {
 
     private static final String[] subKeys = {"c","h","l","o","t","v"}; // Close, High, Low, Open ... Time, Volume
     public static String annotateCandles(String json, String ticker, String duration, long time1, long time2) throws JsonProcessingException {
+        System.out.println(json);
         JsonNode root = decodeJson(json);
 
         ObjectMapper map = new ObjectMapper();
@@ -217,5 +219,27 @@ public class DataMethods {
             }
         }
         return allTickers;
+    }
+
+    public static boolean isValidTicker(String ticker){
+        if (allTickers.length==0){
+            getAllTickers();
+        }
+
+        for (String thisTicker : allTickers){
+            if (thisTicker.equals(ticker)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static String validateTicker(String ticker) throws BadTickerException {
+        ticker = ticker.toUpperCase();
+        if (!DataMethods.isValidTicker(ticker)){
+            throw new BadTickerException(ticker);
+        }
+        return ticker;
     }
 }

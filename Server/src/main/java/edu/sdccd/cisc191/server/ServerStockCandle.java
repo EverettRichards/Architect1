@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.sdccd.cisc191.common.entities.StockCandle;
 import edu.sdccd.cisc191.server.concurrency.FinnhubTask;
+import edu.sdccd.cisc191.server.errors.BadTickerException;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 
 import java.io.*;
+import java.util.Locale;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServerStockCandle extends StockCandle {
@@ -66,15 +68,15 @@ public class ServerStockCandle extends StockCandle {
 
         if (root.get("jsonVersion").asInt() != stockCandleJsonVersion) {
             // Stock has an old version. Don't use it.
-            System.out.println("Updating old-versioned stock candle.");
+            // System.out.println("Updating old-versioned stock candle.");
             updateFromAPI();
         } else if (System.currentTimeMillis() - root.get("lastRefresh").asLong() >= (1000L*TimeMethods.getMaximumTimeBetweenRefreshes(duration))) {
             // Stock hasn't been updated recently. Don't use it.
-            System.out.println("Updating outdated stock candle.");
+            // System.out.println("Updating outdated stock candle.");
             updateFromAPI();
         } else {
             // The stock is up-to-date. Load it WITHOUT an API call.
-            System.out.println("Updating stock candle from file.");
+            // System.out.println("Updating stock candle from file.");
             updateFromJsonNode(root,false);
         }
     }
@@ -94,12 +96,14 @@ public class ServerStockCandle extends StockCandle {
 
     // Creates a new stock using the best data. Like a constructor, but defined outside of Stock.java itself.
     // Will use an existing file OR the FinnHub API, depending on the availability and recency of a relevant file.
-    public ServerStockCandle(String ticker, String duration) throws MalformedURLException, JsonProcessingException {
+    public ServerStockCandle(String ticker, String duration) throws BadTickerException {
+        ticker = DataMethods.validateTicker(ticker);
         setTicker(ticker);
 
         long[] timeRange = TimeMethods.getTimeRange(duration);
         time1 = timeRange[0];
         time2 = timeRange[1];
+        // System.out.println(time1 + " " + time2);
         this.duration = duration;
 
         try {
@@ -110,7 +114,8 @@ public class ServerStockCandle extends StockCandle {
         }
     }
 
-    public ServerStockCandle(String ticker, String duration, long time1, long time2){
+    public ServerStockCandle(String ticker, String duration, long time1, long time2) throws BadTickerException {
+        ticker = DataMethods.validateTicker(ticker);
         setTicker(ticker);
 
         this.duration = duration;
@@ -123,7 +128,7 @@ public class ServerStockCandle extends StockCandle {
         }
     }
 
-    public static ServerStockCandle fetchCandle(FinnhubTask task){
+    public static ServerStockCandle fetchCandle(FinnhubTask task) throws BadTickerException {
         return new ServerStockCandle(task.getTicker(),task.getDuration(),task.getStartTime().toEpochMilli(),task.getEndTime().toEpochMilli());
     }
 

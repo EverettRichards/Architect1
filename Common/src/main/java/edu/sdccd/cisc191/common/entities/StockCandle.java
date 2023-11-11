@@ -123,6 +123,18 @@ public class StockCandle {
         // Blank constructor
     }
 
+    public Number[][] getStockInfo(){
+        if (c == null) { return null; }
+        Number[][] stockInfo = new Number[c.size()][6];
+        List<?>[] parse = new List<?>[]{c,h,l,o,t,v};
+        for(int i = 0; i < c.size(); i++){
+            for(int j = 0; j < 6; j++){
+                stockInfo[i][j] = (Number)parse[j].get(i);
+            }
+        }
+        return stockInfo;
+    }
+
     /*public double[][] getStockInfo(){
         return stockInfo;
     }
