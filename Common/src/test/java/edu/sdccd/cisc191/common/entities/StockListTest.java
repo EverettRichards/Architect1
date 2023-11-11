@@ -22,13 +22,17 @@ class StockListTest {
     @Test
     void testNoArgsConstructor() {
         assertEquals(0, stockList.length());
-        assertEquals(0, stockList.addStock(stock));
+
+        stockList.add(stock);
         assertEquals(1, stockList.length());
-        assertEquals(0, stockList.addStock(stock2));
+
+        stockList.add(stock2);
         assertEquals(2, stockList.length());
-        assertEquals(0, stockList.removeStock(stock.getId()));
+
+        stockList.delete(stock);
         assertEquals(1, stockList.length());
-        assertEquals(0, stockList.removeStock(stock2.getId()));
+
+        stockList.delete(stock2);
         assertEquals(0, stockList.length());
     }
 
@@ -41,13 +45,17 @@ class StockListTest {
         StockList stockList2 = new StockList(stocksLinkedList);
 
         assertEquals(2, stockList2.length());
-        assertEquals(0, stockList2.removeStock(stock.getId()));
+
+        stockList2.delete(stock);
         assertEquals(1, stockList2.length());
-        assertEquals(0, stockList2.addStock(stock));
+
+        stockList2.add(stock);
         assertEquals(2, stockList2.length());
-        assertEquals(0, stockList2.removeStock(stock.getId()));
+
+        stockList2.delete(stock);
         assertEquals(1, stockList2.length());
-        assertEquals(0, stockList2.removeStock(stock2.getId()));
+
+        stockList2.delete(stock2);
         assertEquals(0, stockList2.length());
     }
 }

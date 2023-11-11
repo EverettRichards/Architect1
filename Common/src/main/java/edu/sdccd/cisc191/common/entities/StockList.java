@@ -1,13 +1,23 @@
 package edu.sdccd.cisc191.common.entities;
 
-import java.util.Collections;
 import java.util.LinkedList;
 
 /**
  * StockList a program to create a list of stocks to be used to display on the webpage
  */
 public class StockList {
-    private LinkedList<Stock> stocks; //the stocks that will make up the list of stocks
+
+    //Node for each item in list with pointer to next item.
+    private class Node {
+        Stock item;
+        Node next;
+    }
+
+    private Node head;  //Head of list
+    private int length;  //Length of list
+
+
+//    private LinkedList<Stock> stocks; //the stocks that will make up the list of stocks
 
     /**
      * Constructor creates a new StockList
@@ -15,7 +25,8 @@ public class StockList {
      * instance variable for stocks.
      */
     public StockList() {
-        this.stocks = new LinkedList<>();
+        this.head = null;
+        this.length = 0;
     }
 
     /**
@@ -24,8 +35,9 @@ public class StockList {
      * instance variable.
      */
     public StockList(LinkedList<Stock> stocks) {
-        this.stocks = stocks;
-        this.sort();
+        for (Stock stock : stocks) {
+            this.add(stock);
+        }
     }
 
     //Class Methods
@@ -33,53 +45,118 @@ public class StockList {
     /**
      * getStocks
      * no args
-     * returns stocks
+     * returns stocks as a Java LinkedList (for use in frontend)
      */
     public LinkedList<Stock> getStocks() {
-        return this.stocks;
+        LinkedList<Stock> stocks = new LinkedList<>();
+
+        if(head == null) {
+            return stocks;
+        }
+        //Traverse through linked list and add to stocks variable.
+        Node runner;
+        Node previous;
+        runner = head.next;
+        previous = head;
+
+        //Add the head to the stocks list
+        stocks.add(head.item);
+
+        while (runner != null) {
+            // Move along the list until either the runner hits the end or finds
+            //where to insert the newStock.
+            stocks.add(runner.item);
+            previous = runner;
+            runner = runner.next;
+        }
+
+        //Return stocks
+        return stocks;
     }
 
     /**
-     * addStock
+     * add
      * @param newStock
      * Adds newStock to the linked list stocks and
      * sorts list.
      */
-    public int addStock(Stock newStock) {
-        boolean success = this.stocks.add(newStock);
-        if(success) {
-            this.sort();
-            return 0;
+    public void add(Stock newStock) {
+
+        //Create a new node and add newStock as the item.
+        Node newNode = new Node();
+        newNode.item = newStock;
+
+        if (head == null) {
+            //If list is empty, insert at beginning.
+            head = newNode;
+        } else if (head.item.compareTo(newStock) >= 0) {
+            //If ticker symbol for head is greater than ticker symbol for newStock,
+            //Make newStock the head and push list up.
+            newNode.next = head;
+            head = newNode;
+        } else {
+            //If the newStock ticker is larger than the head's ticker, then traverse the
+            //list to place it in the correct location.
+            Node runner;
+            Node previous;
+            runner = head.next;
+            previous = head;
+
+            while (runner != null && runner.item.compareTo(newStock) < 0) {
+                // Move along the list until either the runner hits the end or finds
+                //where to insert the newStock.
+                previous = runner;
+                runner = runner.next;
+            }
+            //Insert newNode after traversal.
+            newNode.next = runner;
+            previous.next = newNode;
         }
-        return -1;
+
+        //Update length
+        this.length++;
     }
 
     /**
-     * removeStock
-     * @param id
+     * delete
+     * @param stockToRemove
      * Takes the variable id and uses it to
      * find a stock in the stocks list.  If successful,
      * the stock is removed from the linked list and returns 0.
      * If unsuccessful, the method returns -1.
      */
-    public int removeStock(Long id) {
-        for (Stock stock : stocks) {
-            if (stock.getId() == id) {
-                stocks.remove(stock);
-                return 0;
+    public boolean delete(Stock stockToRemove) {
+        //If the head is null, list is empty
+        if (head == null) {
+            return false;
+        } else if (head.item.equals(stockToRemove)) {
+            //If the stock to remove is the head, remove the head.
+            head = head.next;
+            this.length--;
+            return true;
+        } else {
+            Node runner;
+            Node previous;
+            runner = head.next;
+            previous = head;
+
+            //Traverse list.
+            while (runner != null && runner.item.compareTo(stockToRemove) < 0) {
+                previous = runner;
+                runner = runner.next;
+            }
+            if (runner != null && runner.item.equals(stockToRemove)) {
+                //If stockToRemove is found, remove it.
+                previous.next = runner.next;
+                this.length--;
+                return true;
+            } else {
+                //stockToRemove not found in list.
+                return false;
             }
         }
-        return -1;
     }
 
-    /**
-     * sort
-     * no-args
-     * Sorts the stocks linked list by ticker name alphabetically.
-     */
-    public void sort() {
-        Collections.sort(this.stocks);
-    }
 
     /**
      * length
@@ -87,6 +164,6 @@ public class StockList {
      * Returns the number of items in the stocks linked list as an integer.
      */
     public int length() {
-        return this.stocks.size();
+        return this.length;
     }
 }
