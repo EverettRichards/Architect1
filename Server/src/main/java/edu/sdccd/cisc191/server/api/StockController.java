@@ -40,7 +40,6 @@ public class StockController {
 
     @GetMapping("/stock/{ticker}")
     public Stock getAll(@PathVariable String ticker) {
-        ServerStock serverStock;
         try {
             return new ServerStock(ticker);
         } catch (MalformedURLException | JsonProcessingException e) {

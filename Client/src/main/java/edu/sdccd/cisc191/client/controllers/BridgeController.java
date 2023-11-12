@@ -5,6 +5,7 @@ import java.util.Map;
 import edu.sdccd.cisc191.common.entities.StockCandle;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -22,6 +23,7 @@ import edu.sdccd.cisc191.client.errors.UsernameTakenException;
 import edu.sdccd.cisc191.client.models.LoginForm;
 import edu.sdccd.cisc191.client.models.RegisterForm;
 import edu.sdccd.cisc191.common.cryptography.Hasher;
+import edu.sdccd.cisc191.common.cryptography.SessionCookie;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
 import edu.sdccd.cisc191.common.entities.User;
 
@@ -60,13 +62,17 @@ public class BridgeController implements DataFetcher {
             return new ResponseEntity<String>(e.getMessage(), null, HttpStatus.FORBIDDEN);
         }
 
-        return new ResponseEntity<String>("Account created successfully", null, HttpStatus.OK);
+        String cookie = SessionCookie.createToken(newUser);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE, "token=" + cookie);
+        headers.add(HttpHeaders.LOCATION, "/dashboard");
+
+        return new ResponseEntity<String>("Account created successfully", headers, HttpStatus.PERMANENT_REDIRECT);
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginForm form) throws InvalidPayloadException {
-        System.out.println(form.toString());
-        System.out.println(form.getPassword().isEmpty());
         if(form.getUsername().isEmpty() || form.getPassword().isEmpty()) {
             throw new InvalidPayloadException();
         }
@@ -84,8 +90,6 @@ public class BridgeController implements DataFetcher {
             if(response.getStatusCode() != HttpStatus.OK) {
                 return new ResponseEntity<String>("Invalid username or password", null, HttpStatus.UNAUTHORIZED);
             }
-
-            System.out.println(response.getBody());
         } catch(ClassCastException e) {
             System.err.println(e.toString());
             throw new InvalidPayloadException();
@@ -96,7 +100,12 @@ public class BridgeController implements DataFetcher {
         try {
             User user = new ObjectMapper().readValue(response.getBody(), User.class);
             if(Hasher.isCorrectPassword(user, form.getPassword())) {
-                return new ResponseEntity<String>("logged in", null, HttpStatus.OK);
+                String cookie = SessionCookie.createToken(user);
+                HttpHeaders headers = new HttpHeaders();
+                headers.add(HttpHeaders.SET_COOKIE, "token=" + cookie);
+                headers.add(HttpHeaders.LOCATION, "/dashboard");
+
+                return new ResponseEntity<String>("logged in", headers, HttpStatus.PERMANENT_REDIRECT);
             }
         } catch(JsonProcessingException e) {
             return new ResponseEntity<String>("User values are corrupted in database.", null, HttpStatus.INTERNAL_SERVER_ERROR);

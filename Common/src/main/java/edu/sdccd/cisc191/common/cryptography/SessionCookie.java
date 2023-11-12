@@ -17,6 +17,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import edu.sdccd.cisc191.common.entities.ID;
 import edu.sdccd.cisc191.common.entities.User;
 
 public class SessionCookie {
@@ -51,7 +52,7 @@ public class SessionCookie {
 
             return JWT.create()
                 .withIssuer("auth0")
-                .withPayload(user.getId().toString())
+                .withPayload(new ID(user.getId().toString()).toJson())
                 .withExpiresAt(now.plus(1, ChronoUnit.DAYS))
                 .sign(algorithm);
         } catch (JWTCreationException exception) {
@@ -61,7 +62,7 @@ public class SessionCookie {
         return null;
     }
 
-    public SessionCookie(String userToken) throws Exception {
+    public SessionCookie(String userToken) {
         this.token = userToken;
     }
 

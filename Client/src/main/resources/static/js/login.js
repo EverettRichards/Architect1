@@ -21,10 +21,16 @@ function broadcastMessage(message) { //only here for testing reasons
                 "username": formData.get("username"),
                 "password": formData.get("password"),
             }),
+            redirect: "follow",
         });
 
         let message = await response.text();
         broadcastMessage(message);
+
+        // in case follow didn't work
+        if (response.redirected) {
+            window.location.href = response.url;
+        }
     }
         
 })();

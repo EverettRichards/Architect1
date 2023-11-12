@@ -2,8 +2,11 @@ package edu.sdccd.cisc191.client.controllers;
 
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 //import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import edu.sdccd.cisc191.common.cryptography.SessionCookie;
 //import org.springframework.web.client.RestTemplate;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
 //import edu.sdccd.cisc191.common.entities.User;
@@ -17,7 +20,16 @@ public class UserController implements DataFetcher {
 //    private RestTemplate restTemplate = new RestTemplate();
 
     @GetMapping("/sign-in")
-    public String signIn() {
+    public String signIn(@CookieValue(value = "token", required = false) String sessionCookie) {
+        if(sessionCookie == null) {
+            return "signin";
+        }
+
+        SessionCookie cookie = new SessionCookie(sessionCookie);
+        if(cookie.isValid()) {
+            return "dashboard";
+        }
+
         return "signin";
     }
 
@@ -28,7 +40,15 @@ public class UserController implements DataFetcher {
 
     //GET Sign Up HTML template handler
     @GetMapping("/sign-up")
-    public String signUp() {
+    public String signUp(@CookieValue(value = "token", required = false) String sessionCookie) {
+        if(sessionCookie == null) {
+            return "signin";
+        }
+
+        SessionCookie cookie = new SessionCookie(sessionCookie);
+        if(cookie.isValid()) {
+            return "dashboard";
+        }
         return "signup";
     }
 
