@@ -135,10 +135,12 @@ public class ServerStockCandle extends StockCandle {
 
     }
 
+    // Convert the ServerStockCandle to a JSON-formatted String
     public String toJson() throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(this);
     }
 
+    // Determine an appropriate file name for the StockCandle
     private String getFileName(){
         return String.format("%s;%s.json",ticker,duration);
     }

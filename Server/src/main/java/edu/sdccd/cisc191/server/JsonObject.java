@@ -5,51 +5,48 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+/*
+This class is used for parsing and manipulating JSON data structures.
+
+Specifically, it replaces some static methods previously found in the deprecated DataMethods.java,
+but in a more memory-friendly manner.
+
+A JsonObject simply contains a JsonNode and corresponding String representation as attributes.
+ */
 public class JsonObject {
     private String string;
     private JsonNode jsonNode;
 
+    // Update string and jsonNode based on a provided JsonNode
     public void updateFromNode(JsonNode node) throws JsonProcessingException {
         ObjectMapper map = new ObjectMapper();
         String output = map.writeValueAsString(node);
         string = output;
     }
 
+
+    // Update string and jsonNode based on a provided String
     public void updateFromString(String input) throws JsonProcessingException {
         ObjectMapper map = new ObjectMapper();
         JsonNode root = map.readTree(input);
         jsonNode = root;
     }
 
+    // Constructor when provided a JsonNode
     public JsonObject(JsonNode node) throws JsonProcessingException {
         jsonNode = node;
         updateFromNode(node);
     }
 
+    // Constructor when provided a String
     public JsonObject(String input) throws JsonProcessingException {
         string = input;
         updateFromString(input);
     }
 
-    public void addObject(String key, String value){
-        ObjectNode node = (ObjectNode) jsonNode;
-        node.put(key,value);
-        jsonNode = node;
-    }
-
-    public void addObject(String key, long value){
-        ObjectNode node = (ObjectNode) jsonNode;
-        node.put(key,value);
-        jsonNode = node;
-    }
-
-    public void addObject(String key, double value){
-        ObjectNode node = (ObjectNode) jsonNode;
-        node.put(key,value);
-        jsonNode = node;
-    }
-
-    public JsonObject merge(JsonObject other) throws JsonProcessingException {
+    // Combines data from 2 JsonObjects to create one JsonObject with data needed
+    // from 2 different FinnHub endpoints.
+    public JsonObject mergeStockData(JsonObject other) throws JsonProcessingException {
         JsonNode jsonNode2 = other.getJsonNode();
 
         ObjectMapper map = new ObjectMapper();
@@ -65,7 +62,10 @@ public class JsonObject {
         return new JsonObject(root3);
     }
 
-    private static final String[] subKeys = {"c","h","l","o","t","v"}; // Close, High, Low, Open ... Time, Volume
+    // Final array of the 6 subkeys used for indexing StockCandle API outputs.
+    private final String[] subKeys = {"c","h","l","o","t","v"}; // Close, High, Low, Open ... Time, Volume
+
+    // Adds extra metadata to JSON data for StockCandles.
     public JsonObject annotateForCandles(String ticker, String duration, long time1, long time2) throws JsonProcessingException {
         ObjectMapper map = new ObjectMapper();
         ObjectNode newNode = map.createObjectNode();
@@ -83,10 +83,12 @@ public class JsonObject {
         return new JsonObject(newNode);
     }
 
+    // Returns the String representation of the JsonObject
     public String getString(){
         return string;
     }
 
+    // Returns the JsonNode representation of the JsonObject
     public JsonNode getJsonNode(){
         return jsonNode;
     }

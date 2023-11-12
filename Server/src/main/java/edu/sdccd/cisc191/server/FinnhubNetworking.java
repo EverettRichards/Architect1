@@ -9,6 +9,10 @@ import edu.sdccd.cisc191.common.entities.Requests;
 
 import java.net.MalformedURLException;
 
+/*
+This class contains 3 static methods for conducting API calls to FinnHub
+to generate stocks and stock candles on the server.
+ */
 public class FinnhubNetworking {
 
     private static final String token = DataFetcher.finnhubKey;
@@ -18,6 +22,7 @@ public class FinnhubNetworking {
     private static int callsSinceRefresh = 0;
     private static long lastUpdateTime = 0;
 
+    // Get data from a provided URL, in String format
     public static String fetchData(String url) {
         try {
             callsSinceRefresh++;
@@ -38,10 +43,7 @@ public class FinnhubNetworking {
         }
     }
 
-    public static String fetchData(String url, long t) throws MalformedURLException {
-        return Requests.get(url);
-    }
-
+    // Request JSON for a Stock (not a Candle) from FinnHub
     public static String getJsonFromFinnhub(String ticker) throws MalformedURLException, JsonProcessingException {
         String companyInfoJson = fetchData("https://finnhub.io/api/v1/stock/profile2?symbol="
                     + ticker + "&token=" + token);
@@ -49,10 +51,10 @@ public class FinnhubNetworking {
                     + ticker + "&token=" + token);
         JsonObject obj1 = new JsonObject(companyInfoJson);
         JsonObject obj2 = new JsonObject(stockPriceJson);
-        return obj1.merge(obj2).getString();
+        return obj1.mergeStockData(obj2).getString();
     }
 
-    // The static list of index attributes we want to request from FinnHub API
+    // Get StockCandle data from FinnHub
     public static String getCandleFromFinnhub(String ticker, String duration, long time1, long time2) throws MalformedURLException, JsonProcessingException {
         String resolution = TimeMethods.getFrequency(duration);
         long[] time = TimeMethods.getTimeRange(duration);
