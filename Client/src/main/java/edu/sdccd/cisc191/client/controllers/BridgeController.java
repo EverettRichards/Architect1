@@ -81,9 +81,11 @@ public class BridgeController implements DataFetcher {
                 new ParameterizedTypeReference<>() {}
             );
             
-            if(response.getStatusCode().equals(HttpStatus.OK)) {
-                return new ResponseEntity<String>("Invalid username or password", null, 0);
+            if(response.getStatusCode() != HttpStatus.OK) {
+                return new ResponseEntity<String>("Invalid username or password", null, HttpStatus.UNAUTHORIZED);
             }
+
+            System.out.println(response.getBody());
         } catch(ClassCastException e) {
             System.err.println(e.toString());
             throw new InvalidPayloadException();
