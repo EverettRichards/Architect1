@@ -13,8 +13,8 @@ class StockListTest {
 
 
     //Stock objects for testing.
-    Stock stock = new Stock("ABCD", "Alphabet", "Testing stocks", "Testing", 12.34, 0.5, 1234);
-    Stock stock2 = new Stock("FFFF", "FU University", "Get F'd!!!", "Testing", 33.45, 0.02, 1235);
+    Stock stock = new Stock("ABCD", "Alphabet", "Testing stocks", "Testing", 12.34, 0.5);
+    Stock stock2 = new Stock("FFFF", "FU University", "Get F'd!!!", "Testing", 33.45, 0.02);
 
 
     //Test that no-args stockList behaves properly by adding and removing stock objects
