@@ -109,7 +109,6 @@ public class DataMethods {
 
     private static final String[] subKeys = {"c","h","l","o","t","v"}; // Close, High, Low, Open ... Time, Volume
     public static String annotateCandles(String json, String ticker, String duration, long time1, long time2) throws JsonProcessingException {
-        System.out.println(json);
         JsonNode root = decodeJson(json);
 
         ObjectMapper map = new ObjectMapper();

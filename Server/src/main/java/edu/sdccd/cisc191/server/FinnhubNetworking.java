@@ -54,7 +54,6 @@ public class FinnhubNetworking {
     public static String getCandleFromFinnhub(String ticker, String duration, long time1, long time2) throws MalformedURLException, JsonProcessingException {
         String resolution = TimeMethods.getFrequency(duration);
         long[] time = TimeMethods.getTimeRange(duration);
-        System.out.println(time[0] + " " + time[1]);
         String URL = "https://finnhub.io/api/v1/stock/candle?symbol=" + ticker
                 + "&resolution=" + resolution
                 + "&from=" + time[0] + "&to=" + time[1]
