@@ -27,7 +27,7 @@ import java.util.concurrent.*;
 @Controller
 public class StockController implements DataFetcher {
 
-    public StockList stocks; //List of stocks the user follows.
+    public StockList stockList; //List of stocks the user follows.
     RestTemplate restTemplate = new RestTemplate();
     String resourceURL = DataFetcher.backendEndpointURL + DataFetcher.apiEndpointURL;
 
@@ -38,7 +38,9 @@ public class StockController implements DataFetcher {
      */
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        LinkedList<Stock> stockList;
+        LinkedList<Stock> list;
+
+        LinkedList<Stock> stocks = null;
         //restTemplate.getForObject
         try {
             ResponseEntity<LinkedList<Stock>> response = restTemplate.exchange(
@@ -48,20 +50,26 @@ public class StockController implements DataFetcher {
                     new ParameterizedTypeReference<>() {}
             );
 
-            stockList = response.getBody();
-            this.stocks = new StockList(stockList);
+            list = response.getBody();
+            if(list != null) {
+                this.stockList = new StockList(list);
+                stocks = this.stockList.getStocks();
+            }
+            else {
+                this.stockList = null;
+            }
         } catch (Exception e) {
-            this.stocks = null;
+            this.stockList = null;
         }
 
-        model.addAttribute("stocks", this.stocks);
+        model.addAttribute("stocks", stocks);
 
         return "dashboard";
     }
 
     /**
      * Sets up to display the stock page
-     * @param id the Long id that identifies each stock
+     * @param ticker the Long id that identifies each stock
      * @param model the method to create the stock listing
      * @return stock the stock page
      */
@@ -84,12 +92,6 @@ public class StockController implements DataFetcher {
 
         model.addAttribute("stock", stock);
         return "stock";
-    }
-
-    @GetMapping("/dashboard/delete_stock/{id}")
-    @ResponseBody
-    public void deleteStock(@PathVariable("id") Long id) {
-        this.stocks.removeStock(id);
     }
 
     @GetMapping("/search")

@@ -2,7 +2,7 @@ package edu.sdccd.cisc191.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.sdccd.cisc191.server.errors.BadTickerException;
+import edu.sdccd.cisc191.common.errors.BadTickerException;
 import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;

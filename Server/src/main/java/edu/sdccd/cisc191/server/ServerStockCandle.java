@@ -5,14 +5,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.sdccd.cisc191.common.entities.StockCandle;
+import edu.sdccd.cisc191.common.entities.Ticker;
 import edu.sdccd.cisc191.server.concurrency.FinnhubTask;
-import edu.sdccd.cisc191.server.errors.BadTickerException;
+import edu.sdccd.cisc191.common.errors.BadTickerException;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 
 import java.io.*;
-import java.util.Locale;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServerStockCandle extends StockCandle {
@@ -25,7 +25,7 @@ public class ServerStockCandle extends StockCandle {
     // once valid JSON is found either from the API or the server.
 
     private void updateFromJsonNode(JsonNode root, Boolean updateTimeStamp) throws JsonProcessingException {
-        String json = DataMethods.encodeJson(root);
+        String json = new JsonObject(root).getString();
         ServerStockCandle newCandle = new ObjectMapper().readValue(json,ServerStockCandle.class);
 
         this.c = newCandle.c;
@@ -42,12 +42,6 @@ public class ServerStockCandle extends StockCandle {
         this.time1 = newCandle.time1;
         this.time2 = newCandle.time2;
         this.jsonVersion = stockCandleJsonVersion;
-
-        try {
-            this.id = DataMethods.getStockId(getTicker());
-        } catch (IOException e) {
-            setId(0L);
-        }
     }
 
 
@@ -55,7 +49,7 @@ public class ServerStockCandle extends StockCandle {
     private void updateFromAPI() throws MalformedURLException, JsonProcessingException, FileNotFoundException {
         String ticker = getTicker();
         String finnhubResult = FinnhubNetworking.getCandleFromFinnhub(ticker,duration,time1,time2);
-        JsonNode root = DataMethods.decodeJson(finnhubResult);
+        JsonNode root = new JsonObject(finnhubResult).getJsonNode();
         // ERROR HAPPENS here (below)
         updateFromJsonNode(root,true);
         saveAsJsonFile();
@@ -63,8 +57,13 @@ public class ServerStockCandle extends StockCandle {
 
     // Opens the corresponding JSON file to see if it's good for using.
     private void updateFromFile() throws IOException {
-        String contents = DataMethods.readFile(DataMethods.stockCandleDirectory,getFileName());
-        JsonNode root = DataMethods.decodeJson(contents);
+        FileInputStream stream = new FileInputStream(Server.stockCandleDirectory+"/"+getFileName());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        String contents = reader.readLine();
+        reader.close();
+        stream.close();
+
+        JsonNode root = new JsonObject(contents).getJsonNode();;
 
         if (root.get("jsonVersion").asInt() != stockCandleJsonVersion) {
             // Stock has an old version. Don't use it.
@@ -97,8 +96,8 @@ public class ServerStockCandle extends StockCandle {
     // Creates a new stock using the best data. Like a constructor, but defined outside of Stock.java itself.
     // Will use an existing file OR the FinnHub API, depending on the availability and recency of a relevant file.
     public ServerStockCandle(String ticker, String duration) throws BadTickerException {
-        ticker = DataMethods.validateTicker(ticker);
-        setTicker(ticker);
+        Ticker ticker_object = new Ticker(ticker);
+        setTicker(ticker_object.getTicker());
 
         long[] timeRange = TimeMethods.getTimeRange(duration);
         time1 = timeRange[0];
@@ -115,7 +114,8 @@ public class ServerStockCandle extends StockCandle {
     }
 
     public ServerStockCandle(String ticker, String duration, long time1, long time2) throws BadTickerException {
-        ticker = DataMethods.validateTicker(ticker);
+        Ticker ticker_object = new Ticker(ticker);
+        setTicker(ticker_object.getTicker());
         setTicker(ticker);
 
         this.duration = duration;
@@ -148,6 +148,6 @@ public class ServerStockCandle extends StockCandle {
     public void saveAsJsonFile() throws JsonProcessingException, FileNotFoundException {
         // System.out.println("Saved a stock candle!!");
         String json = toJson();
-        DataMethods.createFile(DataMethods.stockCandleDirectory,getFileName(),json);
+        new PrintWriter(Server.stockCandleDirectory+"/"+getFileName()).print(json);
     }
 }

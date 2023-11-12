@@ -18,8 +18,6 @@ import edu.sdccd.cisc191.server.concurrency.FileWriter;
 import edu.sdccd.cisc191.server.concurrency.FinnhubTask;
 import edu.sdccd.cisc191.server.concurrency.FinnhubWorker;
 
-import edu.sdccd.cisc191.server.DataMethods;
-
 @SpringBootApplication
 @ComponentScan(basePackages = {"edu.sdccd.cisc191"})
 @EnableJpaRepositories("edu.sdccd.cisc191.server.repositories")
@@ -27,10 +25,14 @@ import edu.sdccd.cisc191.server.DataMethods;
 @EnableScheduling
 public class Server {
 
+    public static final String mainDirectory = "Server/server_storage";
+    public static final String stockDirectory = mainDirectory + "/stock_repository"; // Directory of where to store STOCK.json files
+    public static final String stockCandleDirectory = mainDirectory + "/stock_candle_repository"; // Directory of where to store STOCKCANDLE.json files
+
     public static void main(String[] args) {
-        new File(DataMethods.stockDirectory).mkdirs();
-        new File(DataMethods.stockCandleDirectory).mkdirs();
-        DataMethods.instantiateStockIdFile();
+        new File(stockDirectory).mkdirs();
+        new File(stockCandleDirectory).mkdirs();
+        //ServerFilePointers.instantiateStockIdFile();
         SpringApplication.run(Server.class, args);
     }
 

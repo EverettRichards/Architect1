@@ -21,10 +21,10 @@ public class UserController implements DataFetcher {
         return "signin";
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
+//    @GetMapping("/login")
+//    public String login() {
+//        return "login";
+//    }
 
     //GET Sign Up HTML template handler
     @GetMapping("/sign-up")
