@@ -1,6 +1,7 @@
 package edu.sdccd.cisc191.client.controllers;
 
 import edu.sdccd.cisc191.client.models.DefaultStocksFileIO;
+import edu.sdccd.cisc191.client.models.RankedResult;
 import edu.sdccd.cisc191.common.entities.Stock;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
 import org.springframework.core.ParameterizedTypeReference;
@@ -19,6 +20,8 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 
 import java.util.concurrent.*;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 /**
  * StockController*
@@ -125,14 +128,12 @@ public class StockController implements DataFetcher {
         System.out.println(allTickers.size());
         List<ExtractedResult> topResults = FuzzySearch.extractTop(query, allTickers, 10);
 
-        ArrayList<Stock> stockList = new ArrayList<>();
+        ArrayList<RankedResult> rankedResultList = new ArrayList<>();
 
         ExecutorService executor = Executors.newFixedThreadPool(topResults.size());
-        CompletionService<Stock> completionService = new ExecutorCompletionService<>(executor);
+        CompletionService<RankedResult> completionService = new ExecutorCompletionService<>(executor);
 
         int totalStockOptions = 0;
-
-        System.out.println(topResults);
 
         for(ExtractedResult result : topResults) {
             if(result.getScore() < 50) {
@@ -151,8 +152,8 @@ public class StockController implements DataFetcher {
                             null,
                             new ParameterizedTypeReference<>() {}
                     );
-                    System.out.println(response.getBody());
-                    return response.getBody();
+                    RankedResult rankedResult = new RankedResult(result.getScore(), response.getBody());
+                    return rankedResult;
                 } catch (Exception e) {
                     System.err.println(e);
                     return null;
@@ -163,10 +164,9 @@ public class StockController implements DataFetcher {
         int received = 0;
         while(received < totalStockOptions) {
             try {
-                Stock stock = completionService.take().get();
-                System.out.println(stock.toString());
-                if(stock.getName() != null) {
-                    stockList.add(stock);
+                RankedResult rankedResult = completionService.take().get();
+                if(rankedResult.getStock().getName() != null) {
+                    rankedResultList.add(rankedResult);
                 }
             } catch (Exception e) {
                 System.err.println("Error: " + e);
@@ -174,6 +174,11 @@ public class StockController implements DataFetcher {
 
             received++;
         }
+
+        rankedResultList.sort(Comparator.comparing(RankedResult::getScore).reversed());
+
+        // extract stock from rankedResult from rankedResultList
+        List<Stock> stockList = rankedResultList.stream().map(RankedResult::getStock).collect(Collectors.toList());
 
         // shutdown threads
         executor.shutdown();
@@ -183,7 +188,6 @@ public class StockController implements DataFetcher {
             System.err.println("Error shutting down threads: " + e);
         }
 
-        System.out.println(stockList);
         model.addAttribute("query", query);
         model.addAttribute("stocks", stockList);
         return "search";
