@@ -61,6 +61,7 @@ public class TimeMethods {
         return stamps;
     }
 
+    // Given a String "duration", get the FinnHub-formatted frequency for candle density
     public static String getFrequency(String duration){
         String frequency = switch (duration) {
             case "day" -> "5";
