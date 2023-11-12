@@ -113,6 +113,8 @@ public class StockController implements DataFetcher {
 
         int totalStockOptions = 0;
 
+        System.out.println(topResults);
+
         for(ExtractedResult result : topResults) {
             if(result.getScore() < 50) {
                 break;
@@ -142,7 +144,11 @@ public class StockController implements DataFetcher {
         int received = 0;
         while(received < totalStockOptions) {
             try {
-                stockList.add(completionService.take().get());
+                Stock stock = completionService.take().get();
+                System.out.println(stock.toString());
+                if(stock.getName() != null) {
+                    stockList.add(stock);
+                }
             } catch (Exception e) {
                 System.err.println("Error: " + e);
             }

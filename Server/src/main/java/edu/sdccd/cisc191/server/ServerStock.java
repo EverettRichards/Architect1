@@ -72,6 +72,7 @@ public class ServerStock extends Stock {
     public void updateFromBestMethod() throws MalformedURLException, JsonProcessingException, FileNotFoundException {
         try {
             // Attempt to instantiate the Stock using data from a JSON file on the server.
+            System.out.println("File found (Stock). Find from file.");
             updateFromFile();
         } catch (IOException e) {
             // If there was no file to open, use the API and then create a file.
@@ -113,6 +114,16 @@ public class ServerStock extends Stock {
     public void saveAsJsonFile() throws JsonProcessingException, FileNotFoundException {
         System.out.println("Saved a stock!!");
         String json = toJson();
-        new PrintWriter(Server.stockDirectory+"/"+getTicker()+".json").print(json);
+
+        String filePath = Server.stockDirectory+"/"+getTicker()+".json";
+        // write json to filepath
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+            writer.write(json);
+            writer.close();
+        } catch(IOException e) {
+            System.out.println("Failed to write. Error: " + e);
+        }
+
     }
 }

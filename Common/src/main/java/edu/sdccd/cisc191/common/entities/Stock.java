@@ -3,6 +3,8 @@ package edu.sdccd.cisc191.common.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import lombok.ToString;
+
 import java.net.MalformedURLException;
 //import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,6 +13,7 @@ import java.net.MalformedURLException;
  * information about stocks being traded on the Exchange
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 public class Stock implements Comparable<Stock> {
     //@JsonProperty("id")
     private String ticker;          //the stock ticker or symbol listed on the exchange
@@ -164,16 +167,6 @@ public class Stock implements Comparable<Stock> {
      */
     public void setSector(String name) {
         this.stockSector = name;
-    }
-
-
-    /**
-     * The custom toString for writing the stock info
-     * @return String formatted string with stock info to be displayed
-     */
-    public String toString() {
-        return String.format("[%s] %s. Sect: %s. Desc: %s. $%.2f/share.",
-                ticker,name,stockSector,description,sharePrice);
     }
 
     @Override
