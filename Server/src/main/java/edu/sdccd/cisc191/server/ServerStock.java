@@ -98,8 +98,6 @@ public class ServerStock extends Stock {
         ObjectMapper map = new ObjectMapper();
         ObjectNode parent = map.createObjectNode();
 
-        parent.put("ticker",getTicker());
-        parent.put("id",getId());
         parent.put("name",getName());
         parent.put("sector",getSector());
         parent.put("description",getDescription());

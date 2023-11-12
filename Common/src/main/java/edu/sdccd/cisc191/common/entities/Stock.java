@@ -13,7 +13,6 @@ import java.net.MalformedURLException;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Stock implements Comparable<Stock> {
     //@JsonProperty("id")
-    private Long id;
     private String ticker;          //the stock ticker or symbol listed on the exchange
     private String name;            //the company name that issued the stock
     private String description;     //description of the company issuing the stock
@@ -35,9 +34,8 @@ public class Stock implements Comparable<Stock> {
      * Creates a Stock object using each applicable piece of data.
      */
     public Stock(String ticker, String newName, String description,
-                 String sector, double price, double dividend, long id){
+                 String sector, double price, double dividend){
         //id = ++lastId;
-        this.id = id;
         this.ticker = ticker;
         this.name = newName;
         this.description = description;
@@ -52,9 +50,8 @@ public class Stock implements Comparable<Stock> {
      * This constructor is used to read a stock from memory.
      */
     public Stock(long newId, long lastRefresh, String ticker, String newName, String description,
-                 String sector, double price, double dividend, long stockId) throws MalformedURLException, JsonProcessingException {
-        this(ticker,newName,description,sector,price,dividend,stockId);
-        this.id = newId;
+                 String sector, double price, double dividend) throws MalformedURLException, JsonProcessingException {
+        this(ticker,newName,description,sector,price,dividend);
         this.lastRefreshTime = lastRefresh;
         long currentTime = System.currentTimeMillis();
     }
@@ -96,12 +93,6 @@ public class Stock implements Comparable<Stock> {
     public void setName(String name) {
         this.name = name;
     }
-
-    public long getId() {
-        return this.id;
-    }
-
-    public void setId(Long newId) { id = newId; }
 
     /**
      * The company description to provide basic info on stocks

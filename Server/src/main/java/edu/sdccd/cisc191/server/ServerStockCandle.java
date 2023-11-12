@@ -36,7 +36,6 @@ public class ServerStockCandle extends StockCandle {
         this.v = newCandle.v;
 
         this.ticker = newCandle.getTicker();
-        this.id = newCandle.getId();
         this.lastRefreshTime = newCandle.getLastRefresh();
         this.duration = newCandle.duration;
         this.time1 = newCandle.time1;
