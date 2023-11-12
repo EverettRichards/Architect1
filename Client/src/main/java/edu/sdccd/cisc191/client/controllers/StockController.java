@@ -1,5 +1,6 @@
 package edu.sdccd.cisc191.client.controllers;
 
+import edu.sdccd.cisc191.client.models.DefaultStocksFileIO;
 import edu.sdccd.cisc191.common.entities.Stock;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
 import org.springframework.core.ParameterizedTypeReference;
@@ -27,7 +28,7 @@ import java.util.concurrent.*;
 @Controller
 public class StockController implements DataFetcher {
 
-    public StockList stockList; //List of stocks the user follows.
+    public StockList stockList = new StockList(); //List of stocks the user follows.
     RestTemplate restTemplate = new RestTemplate();
     String resourceURL = DataFetcher.backendEndpointURL + DataFetcher.apiEndpointURL;
 
@@ -38,28 +39,46 @@ public class StockController implements DataFetcher {
      */
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        LinkedList<Stock> list;
 
+        //Temporary file i/o for reading a list of stocks
+        //until we have proper authentication working.
+        //Will be replaced by the user's followed stocks instead of
+        //default.
+        DefaultStocksFileIO defaultStocks = new DefaultStocksFileIO();
+        defaultStocks.readAndUpdateDefaultStocks(DefaultStocksFileIO.defaultStocks);
+        ArrayList<String> tickers = defaultStocks.getDefaultStocks();
+
+        System.out.println(defaultStocks.getDefaultStocks());
+        //For use in html
         LinkedList<Stock> stocks = null;
-        //restTemplate.getForObject
-        try {
-            ResponseEntity<LinkedList<Stock>> response = restTemplate.exchange(
-                    resourceURL + "/stocks",
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<>() {}
-            );
 
-            list = response.getBody();
-            if(list != null) {
-                this.stockList = new StockList(list);
-                stocks = this.stockList.getStocks();
-            }
-            else {
+        for (String ticker : tickers) {
+            Stock stock;
+            try {
+                ResponseEntity<Stock> response = restTemplate.exchange(
+                        resourceURL + "/stock/" + ticker,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<>() {}
+                );
+
+                stock = response.getBody();
+                if(stock != null) {
+                    this.stockList.add(stock);
+                    System.out.println("Added stock");
+                }
+                else {
+                    this.stockList = null;
+                    System.out.println("No stock foound.");
+                }
+            } catch (Exception e) {
                 this.stockList = null;
+                System.out.println("Error");
             }
-        } catch (Exception e) {
-            this.stockList = null;
+        }
+
+        if(this.stockList.length() != 0) {
+            stocks = this.stockList.getStocks();
         }
 
         model.addAttribute("stocks", stocks);
