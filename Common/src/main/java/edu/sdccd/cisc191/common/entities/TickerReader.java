@@ -13,6 +13,7 @@ public class TickerReader {
     private String[] defaultTickers = new String[0];
     private String[] allTickers = new String[0];
 
+    // Updates the list of all Default Tickers (in the user's portfolio by default)
     private void updateDefaultTickers(){
         if (defaultTickers.length>1){ return; }
         try {
@@ -25,6 +26,7 @@ public class TickerReader {
         }
     }
 
+    // Updates the list of all valid tickers in US Stock Exchanges on FinnHub (about 25,000 tickers)
     public void updateAllTickers(){
         if (allTickers.length>1){ return; }
         try {
@@ -37,18 +39,17 @@ public class TickerReader {
         }
     }
 
+    // Constructor
     public TickerReader(){
         updateDefaultTickers();
         updateAllTickers();
     }
 
-    // Returns a list of all Default Tickers (in the user's portfolio by default)
     public String[] getDefaultTickers(){
         updateDefaultTickers();
         return defaultTickers;
     }
 
-    // Returns a list of all valid tickers in US Stock Exchanges on FinnHub
     public String[] getAllTickers(){
         updateAllTickers();
         return allTickers;
