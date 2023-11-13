@@ -17,7 +17,6 @@ import java.io.IOException;
  */
 
 public class Requests {
-    public static final String token = "bsq5ig8fkcbcavsjbrrg";
     enum Protocol {
         GET,
         POST,
@@ -30,7 +29,7 @@ public class Requests {
         try {
             URL url = new URL(urlToRead);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            System.out.println(method.toString());
+            // System.out.println(method.toString());
             conn.setRequestMethod(method.toString());
 
             // if header is not null or empty

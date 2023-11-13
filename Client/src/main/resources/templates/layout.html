@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
+<head th:fragment="common_header(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="http://localhost:35729/livereload.js"></script>
+    <title th:replace="${title}">Title</title>
+    <style>
+        #account-dropdown-menu {
+            opacity: 0;
+            translate: 0 -100vw;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        #account-dropdown-menu.open {
+            opacity: 1;
+            translate: 0 0;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header th:fragment="site-nav" class="absolute inset-x-0 top-0 z-50">
+        <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+            <div class="flex lg:flex-1">
+                <a th:href="@{/}" class="-m-1.5 p-1.5">
+                    <span class="sr-only">Your Company</span>
+                    <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=400" alt="">
+                </a>
+            </div>
+
+            <div class="flex flex-1 justify-end">
+                <a th:href="@{/search}" class="text-sm font-semibold leading-6 pl-5 text-gray-50 hover:text-emerald-200">Search Stocks</a>
+                <a th:href="@{/sign-in}" class="text-sm font-semibold leading-6 pl-5 text-gray-50 hover:text-emerald-200">Sign In</a>
+                <div class="relative">
+                    <button id="account-dropdown-toggle" type="button" class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 pl-5 text-gray-50 hover:text-emerald-200" aria-expanded="false">
+                        <span class="sr-only">Account Menu</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </button>
+
+                    <div id="account-dropdown-menu" class="absolute right-0 z-10 mt-5 flex w-screen max-w-max px-4">
+                        <div class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
+                            <div class="p-4">
+                                <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                    <div class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <a th:href="@{/my-account}"  class="font-semibold text-gray-900">
+                                            My Account
+                                            <span class="absolute inset-0"></span>
+                                        </a>
+                                        <p class="mt-1 text-gray-600">View and update your information.</p>
+                                    </div>
+                                </div>
+                                <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                    <div class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <a th:href="@{/dashboard}" class="font-semibold text-gray-900">
+                                            My Dashboard
+                                            <span class="absolute inset-0"></span>
+                                        </a>
+                                        <p class="mt-1 text-gray-600">View your tracked stocks.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 divide-x divide-gray-900/5 bg-gray-50">
+                                <form th:action="@{/sign-out}" method="post" class="flex items-center justify-center gap-x-2.5 p-3 font-semibold text-gray-900 hover:bg-gray-100" >
+                                    <input type="submit" class="cursor-pointer" value="Sign Out"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    const accountDropdownToggle = document.getElementById("account-dropdown-toggle");
+                    const accountDropdownMenu = document.getElementById("account-dropdown-menu");
+                    accountDropdownToggle.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        if (accountDropdownToggle.getAttribute('aria-expanded') === "false") {
+                            accountDropdownMenu.classList.add('open');
+                            accountDropdownToggle.setAttribute('aria-expanded', "true");
+                        } else {
+                            accountDropdownMenu.classList.remove('open');
+                            accountDropdownToggle.setAttribute('aria-expanded', "false");
+                        }
+                    })
+                </script>
+            </div>
+        </nav>
+    </header>
+</body>
+</html>

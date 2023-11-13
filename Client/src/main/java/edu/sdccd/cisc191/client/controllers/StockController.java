@@ -1,147 +1,195 @@
 package edu.sdccd.cisc191.client.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import edu.sdccd.cisc191.client.models.DefaultStocksFileIO;
+import edu.sdccd.cisc191.client.models.RankedResult;
 import edu.sdccd.cisc191.common.entities.Stock;
-import edu.sdccd.cisc191.client.models.DataFetcher;
-import edu.sdccd.cisc191.common.entities.StockCandle;
-
-//import org.springframework.stereotype.Controller;
-/*import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;*/
+import edu.sdccd.cisc191.common.entities.DataFetcher;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-//import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.client.RestTemplate;
 
-import java.net.MalformedURLException;
-//import java.util.Arrays;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
+import edu.sdccd.cisc191.common.entities.StockList;
+import me.xdrop.fuzzywuzzy.FuzzySearch;
+import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 
-/*
-* (String newTicker, String newName, String newDescription,
-                 String newSector, double newPrice, double newDividend)
-* */
+import java.util.concurrent.*;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 /**
- * StockController a class to generate the data to display on the client webpage
+ * StockController*
+ * Handles the views for a user's dashboard of stock data
+ * as well as the interactivity with the data.
  */
-@RequestMapping(DataFetcher.apiEndpointURL)
-@RestController
+@Controller
 public class StockController implements DataFetcher {
-    String[] myTickers = {"AAPL","DIS","BAC","UAA","CCL","KO","WMT","T","GOOGL","MSFT","V","NVDA","AMZN","COST","AMD","TSM","META","TSLA"};
-    //Dummy Data to initialize UIStock objects
-    public ArrayList<Stock> stocks = new ArrayList<>() {
-        {
-            for (String ticker : myTickers) {
-                try {
-                    add(new Stock(ticker));
-                } catch (MalformedURLException | JsonProcessingException e) {
-                    throw new RuntimeException(e);
+
+    public StockList stockList = new StockList(); //List of stocks the user follows.
+    RestTemplate restTemplate = new RestTemplate();
+    String resourceURL = DataFetcher.backendEndpointURL + DataFetcher.apiEndpointURL;
+
+    /**
+     * Sets up to display the dashboard, which displays a list of stocks the user follows.
+     * @param model model to display stocks
+     * @return dashboard the dashboard page
+     */
+    @GetMapping("/dashboard")
+    public String dashboard(Model model) {
+
+        //Temporary file i/o for reading a list of stocks
+        //until we have proper authentication working.
+        //Will be replaced by the user's followed stocks instead of
+        //default.
+        DefaultStocksFileIO defaultStocks = new DefaultStocksFileIO();
+        defaultStocks.readAndUpdateDefaultStocks(DefaultStocksFileIO.defaultStocks);
+        ArrayList<String> tickers = defaultStocks.getDefaultStocks();
+
+        System.out.println(defaultStocks.getDefaultStocks());
+        //For use in html
+        LinkedList<Stock> stocks = null;
+
+        for (String ticker : tickers) {
+            Stock stock;
+            try {
+                ResponseEntity<Stock> response = restTemplate.exchange(
+                        resourceURL + "/stock/" + ticker,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<>() {}
+                );
+
+                stock = response.getBody();
+                if(stock != null) {
+                    this.stockList.add(stock);
+                    System.out.println("Added stock");
                 }
+                else {
+                    this.stockList = null;
+                    System.out.println("No stock foound.");
+                }
+            } catch (Exception e) {
+                this.stockList = null;
+                System.out.println("Error");
             }
         }
 
-    };
-
-    //Convert the above dummy data into a List so we can perform CRUD
-    //operations on them.
-//    public static final String stockRepositoryAddress = "stockrepo.txt";
-
-    /**
-     * Lists all the stocks to display on the webpage
-     * @return stocks the stocks that are being watched
-     */
-    //CRUD Get all stocks
-    @GetMapping("/stocks")
-    public List<Stock> getAll() {
-        return stocks;
-    }
-
-    /**
-     * Creates a new stock to be added to the website
-     * @param stock the new stock created
-     */
-    //CRUD Create a new stock and add to stocks List
-    @PostMapping("/stocks")
-    public void create(@RequestBody Stock stock) {
-        Stock newStock = new Stock(
-            stock.getTicker(), stock.getName(),
-            stock.getDescription(), stock.getSector(), stock.getPrice(),
-            stock.getDividend()
-        );
-        this.stocks.add(newStock);
-    }
-
-    /**
-     * Gets the information for a single stock
-     * @param id the Long id of the stock to get its information
-     * @return stock the stock with that id or null if no match
-     */
-    //CRUD Get a single stock
-    @GetMapping("/stocks/{id}")
-    public Stock getSingle(@PathVariable Long id) {
-        for (Stock stock : stocks) {
-            if (stock.getId().equals(id)) {
-                return stock;
-            }
+        if(this.stockList.length() != 0) {
+            stocks = this.stockList.getStocks();
         }
-        return null;
+
+        model.addAttribute("stocks", stocks);
+
+        return "dashboard";
     }
 
     /**
-     * Updates the stock info with new price data
-     * @param updatedStock the new stock price data
-     * @param id the id of the stock to update
+     * Sets up to display the stock page
+     * @param ticker the Long id that identifies each stock
+     * @param model the method to create the stock listing
+     * @return stock the stock page
      */
-    @PutMapping("/stocks/{id}")
-    public void update(@RequestBody Stock updatedStock, @PathVariable Long id) {
-        for (Stock stock : stocks) {
-            if (stock.getId().equals(id)) {
-                stock.setTicker(updatedStock.getTicker());
-                stock.setName(updatedStock.getName());
-                stock.setDescription(updatedStock.getDescription());
-                stock.setSector(updatedStock.getSector());
-                stock.setPrice(updatedStock.getPrice());
-                stock.setDividend(updatedStock.getDividend());
-
-                System.out.println("Successfully updated stock.");
-            }
-        }
-    }
-
-    /**
-     * Deletes a stock from display on the webpage, so you don't follow it anymore
-     * @param id the long id to identify the stock to delete
-     */
-    @DeleteMapping("/stocks/{id}")
-    public void delete(@PathVariable Long id) {
-        for (Stock stock : stocks) {
-            if (stock.getId().equals(id)) {
-                stocks.remove(stock);
-                System.out.println("Successfully deleted stock.");
-                return;
-            }
-        }
-    }
-
-    /**
-     * Gets the candle data and puts it into a ticker format to be displayed
-     * @param ticker the stock information
-     * @return data the candle data in 2d array
-     */
-    @GetMapping("/stocks/candles/{ticker}")
-    public double[][] getCandles(@PathVariable String ticker) {
-        StockCandle candles;
+    @GetMapping("/dashboard/stock/{ticker}")
+    public String stockDetails(@PathVariable("ticker") String ticker, Model model) {
+        //Stock variable for passing into template
+        Stock stock;
 
         try {
-            candles = new StockCandle(ticker);
-        } catch(Exception e) {
-            System.err.println(e);
-            return null;
+            ResponseEntity<Stock> response = restTemplate.exchange(
+                    resourceURL + "/stock/" + ticker,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<>() {}
+            );
+            stock = response.getBody();
+        } catch (Exception e) {
+            stock = null;
         }
 
-        double[][] data = candles.getStockInfo();
-        //System.out.println(candles.toString());
-        return data;
+        model.addAttribute("stock", stock);
+        return "stock";
+    }
+
+    @GetMapping("/search")
+    public String search(Model model) {
+        model.addAttribute("query", "...");
+        model.addAttribute("stocks", new ArrayList<String>());
+        return "search";
+    }
+
+    @GetMapping("/search/{query}")
+    public String searchWithQuery(@PathVariable("query") String query, Model model) {
+        System.out.println(allTickers.size());
+        List<ExtractedResult> topResults = FuzzySearch.extractTop(query, allTickers, 10);
+
+        ArrayList<RankedResult> rankedResultList = new ArrayList<>();
+
+        ExecutorService executor = Executors.newFixedThreadPool(topResults.size());
+        CompletionService<RankedResult> completionService = new ExecutorCompletionService<>(executor);
+
+        int totalStockOptions = 0;
+
+        for(ExtractedResult result : topResults) {
+            if(result.getScore() < 50) {
+                break;
+            }
+
+            totalStockOptions += 1;
+
+            completionService.submit(() -> {
+                try {
+                    String ticker = result.getString();
+                    System.out.println(result.getScore());
+                    ResponseEntity<Stock> response = restTemplate.exchange(
+                            resourceURL + "/stock/" + ticker,
+                            HttpMethod.GET,
+                            null,
+                            new ParameterizedTypeReference<>() {}
+                    );
+                    RankedResult rankedResult = new RankedResult(result.getScore(), response.getBody());
+                    return rankedResult;
+                } catch (Exception e) {
+                    System.err.println(e);
+                    return null;
+                }
+            });
+        }
+
+        int received = 0;
+        while(received < totalStockOptions) {
+            try {
+                RankedResult rankedResult = completionService.take().get();
+                if(rankedResult.getStock().getName() != null) {
+                    rankedResultList.add(rankedResult);
+                }
+            } catch (Exception e) {
+                System.err.println("Error: " + e);
+            }
+
+            received++;
+        }
+
+        rankedResultList.sort(Comparator.comparing(RankedResult::getScore).reversed());
+
+        // extract stock from rankedResult from rankedResultList
+        List<Stock> stockList = rankedResultList.stream().map(RankedResult::getStock).collect(Collectors.toList());
+
+        // shutdown threads
+        executor.shutdown();
+        try {
+            executor.awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            System.err.println("Error shutting down threads: " + e);
+        }
+
+        model.addAttribute("query", query);
+        model.addAttribute("stocks", stockList);
+        return "search";
     }
 }

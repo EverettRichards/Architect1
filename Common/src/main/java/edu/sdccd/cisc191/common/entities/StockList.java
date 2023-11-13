@@ -1,82 +1,169 @@
 package edu.sdccd.cisc191.common.entities;
 
+import java.util.LinkedList;
+
 /**
  * StockList a program to create a list of stocks to be used to display on the webpage
  */
 public class StockList {
-    private Stock[] stocks;         //the stocks that will make up the list of stocks
-    private User owner;             //the user that will be tracking a set of stocks on the webpage
 
-    public static void main(String[] args) {
-        System.out.println("Test");
+    //Node for each item in list with pointer to next item.
+    private class Node {
+        Stock item;
+        Node next;
+    }
+
+    private Node head;  //Head of list
+    private int length;  //Length of list
+
+
+//    private LinkedList<Stock> stocks; //the stocks that will make up the list of stocks
+
+    /**
+     * Constructor creates a new StockList
+     * no-args constructor, just initializes a new LinkedList<Stock>
+     * instance variable for stocks.
+     */
+    public StockList() {
+        this.head = null;
+        this.length = 0;
     }
 
     /**
-     * Constructor that creates a new StockList based on the array of stocks passed in
-     * @param conveyedStocks the array of stocks to be added to the list
+     * Constructor creates a new StockList from data
+     * @param stocks - a linked list of stocks to initialize the stocks
+     * instance variable.
      */
-    public StockList(Stock[] conveyedStocks) {
-        stocks = new Stock[conveyedStocks.length];
-        for (int i=0;i<conveyedStocks.length;i++){
-            stocks[i] = conveyedStocks[i];
+    public StockList(LinkedList<Stock> stocks) {
+        for (Stock stock : stocks) {
+            this.add(stock);
         }
     }
 
+    //Class Methods
+
     /**
-     * Gets the stock tickers
-     * @return outputString the stock info in a string format
+     * getStocks
+     * no args
+     * returns stocks as a Java LinkedList (for use in frontend)
      */
-    public String getTickers(){
-        String outputString = "";
-        for (int i=0;i<stocks.length;i++){
-            outputString = outputString + stocks[i].getTicker();
-            if (i<stocks.length-1){
-                outputString = outputString + ",";
+    public LinkedList<Stock> getStocks() {
+        LinkedList<Stock> stocks = new LinkedList<>();
+
+        if(head == null) {
+            return stocks;
+        }
+        //Traverse through linked list and add to stocks variable.
+        Node runner;
+        Node previous;
+        runner = head.next;
+        previous = head;
+
+        //Add the head to the stocks list
+        stocks.add(head.item);
+
+        while (runner != null) {
+            // Move along the list until either the runner hits the end or finds
+            //where to insert the newStock.
+            stocks.add(runner.item);
+            previous = runner;
+            runner = runner.next;
+        }
+
+        //Return stocks
+        return stocks;
+    }
+
+    /**
+     * add
+     * @param newStock
+     * Adds newStock to the linked list stocks and
+     * sorts list.
+     */
+    public void add(Stock newStock) {
+
+        //Create a new node and add newStock as the item.
+        Node newNode = new Node();
+        newNode.item = newStock;
+
+        if (head == null) {
+            //If list is empty, insert at beginning.
+            head = newNode;
+        } else if (head.item.compareTo(newStock) >= 0) {
+            //If ticker symbol for head is greater than ticker symbol for newStock,
+            //Make newStock the head and push list up.
+            newNode.next = head;
+            head = newNode;
+        } else {
+            //If the newStock ticker is larger than the head's ticker, then traverse the
+            //list to place it in the correct location.
+            Node runner;
+            Node previous;
+            runner = head.next;
+            previous = head;
+
+            while (runner != null && runner.item.compareTo(newStock) < 0) {
+                // Move along the list until either the runner hits the end or finds
+                //where to insert the newStock.
+                previous = runner;
+                runner = runner.next;
+            }
+            //Insert newNode after traversal.
+            newNode.next = runner;
+            previous.next = newNode;
+        }
+
+        //Update length
+        this.length++;
+    }
+
+    /**
+     * delete
+     * @param stockToRemove
+     * Takes the variable id and uses it to
+     * find a stock in the stocks list.  If successful,
+     * the stock is removed from the linked list and returns 0.
+     * If unsuccessful, the method returns -1.
+     */
+    public boolean delete(Stock stockToRemove) {
+        //If the head is null, list is empty
+        if (head == null) {
+            return false;
+        } else if (head.item.equals(stockToRemove)) {
+            //If the stock to remove is the head, remove the head.
+            head = head.next;
+            this.length--;
+            return true;
+        } else {
+            Node runner;
+            Node previous;
+            runner = head.next;
+            previous = head;
+
+            //Traverse list.
+            while (runner != null && runner.item.compareTo(stockToRemove) < 0) {
+                previous = runner;
+                runner = runner.next;
+            }
+            if (runner != null && runner.item.equals(stockToRemove)) {
+                //If stockToRemove is found, remove it.
+                previous.next = runner.next;
+                this.length--;
+                return true;
+            } else {
+                //stockToRemove not found in list.
+                return false;
             }
         }
-        return outputString;
     }
 
-    /**
-     * Gets the list of stocks and returns them as a 2d array
-     * @return mainArray the stock list in the 2d array
-     */
-    public Object[][] getStocksAs2DArray(){
-        Object[][] mainArray = new Object[stocks.length][6];
-        int i = 0;
-        for (Stock thisStock : stocks) {
-            mainArray[i][0] = thisStock.getTicker();
-            mainArray[i][1] = thisStock.getName();
-            mainArray[i][2] = thisStock.getDescription();
-            mainArray[i][3] = thisStock.getSector();
-            mainArray[i][4] = thisStock.getPrice();
-            mainArray[i][5] = thisStock.getDividend();
-            i++;//increase index
-        }
-        return mainArray;
-    }
 
     /**
-     * Gets all the stock info that available and formats it into a String from
-     * concatenating the individual pieces that make up a stock listing
-     * @return outputString the stock info in string format
+     * length
+     * no-args
+     * Returns the number of items in the stocks linked list as an integer.
      */
-    public String getAllStockInfo(){
-        String outputString = "";
-        String formatString = "%s (%s). $%.2f/share. Div yield $%.2f (%.2f%%). Sector: %s. Description: %s.";
-        for (int i=0; i<stocks.length;i++){
-            Stock thisStock = stocks[i];
-            String thisLine = String.format(formatString,
-                    thisStock.getName(), thisStock.getTicker(),
-                    thisStock.getPrice(), thisStock.getDividend(),
-                    thisStock.getDividend() / thisStock.getPrice() * 100,
-                    thisStock.getSector(), thisStock.getDescription()
-                    );
-            outputString = outputString + thisLine;
-            if (i<stocks.length-1){
-                outputString = outputString + "\n";
-            }
-        }
-        return outputString;
+    public int length() {
+        return this.length;
     }
 }

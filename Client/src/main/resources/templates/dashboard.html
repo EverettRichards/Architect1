@@ -1,27 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>CISC 191 Architect 1 | Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+
+<head th:replace="~{ layout :: common_header(~{::title}) }">
+  <title>STOCKS | Dashboard</title>
   <script th:src="@{/js/stockManager.js}" defer></script>
+
 </head>
 <body class="bg-zinc-950">
 <div>
-  <header class="absolute inset-x-0 top-0 z-50">
-    <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
-      <div class="flex lg:flex-1">
-        <a th:href="@{/}" class="-m-1.5 p-1.5">
-          <span class="sr-only">Your Company</span>
-          <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="">
-        </a>
-      </div>
-
-      <div class="flex flex-1 justify-end">
-        <a th:href="@{/}" class="text-sm font-semibold leading-6 text-gray-50"><span aria-hidden="true">&larr;</span>Back to Home</a>
-      </div>
-    </nav>
-  </header>
+  <header th:replace="~{ layout :: site-nav }"></header>
 
   <section class="pt-20">
     <header>
@@ -51,12 +38,13 @@
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                    <tr th:each="stock : ${stocks}">
+                    <tr th:each="stock : ${stocks.getStocks()}">
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-200" th:text="${stock.getTicker()}"></td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-200" th:text="${stock.getName()}"></td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-200" th:text="${stock.getPrice()}"></td>
                       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><a class="text-blue-500 hover:text-blue-700" th:href="@{/dashboard/stock/{id}(id = ${stock.getId()})}">Details</a></td>
-                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><a class="text-blue-500 hover:text-blue-700" th:attr="onclick=|remove(event, '${stock.getId()}', '/dashboard')|" href="#">Remove</a></td>
+<!--                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><a class="text-blue-500 hover:text-blue-700" th:attr="onclick=|remove(event, '${stock.getId()}', '/dashboard')|" href="#">Remove</a></td>-->
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><a class="text-blue-500 hover:text-blue-700" th:href="@{/dashboard/delete_stock/{id}(id = ${stock.getId()})}">Remove</a></td>
                     </tr>
                     </tbody>
                   </table>

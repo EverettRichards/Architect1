@@ -2,9 +2,8 @@ package edu.sdccd.cisc191.common.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.sdccd.cisc191.common.entities.Requests;
+
+import lombok.ToString;
 
 import java.net.MalformedURLException;
 //import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,9 +13,9 @@ import java.net.MalformedURLException;
  * information about stocks being traded on the Exchange
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Stock {
+@ToString
+public class Stock implements Comparable<Stock> {
     //@JsonProperty("id")
-    private Long id;
     private String ticker;          //the stock ticker or symbol listed on the exchange
     private String name;            //the company name that issued the stock
     private String description;     //description of the company issuing the stock
@@ -24,18 +23,22 @@ public class Stock {
     private double dividendYield;   //the yield of any dividends the company issues
     private String stockSector;     //the sector or market that the company operates in
 
-    public static long lastId = 0L;
+    private long lastRefreshTime;
+
+    //public static long lastId = 0L;  //Initialize an id on startup.  Every Stock object created adds 1 to this and uses that for its own id.
 
     /**
-     * Default constructor for the Stock class
+     * Default constructor for the Stock class. Creates an empty Stock object.
      */
     public Stock () {
     }
 
+    /*
+     * Creates a Stock object using each applicable piece of data.
+     */
     public Stock(String ticker, String newName, String description,
                  String sector, double price, double dividend){
-        id = ++lastId;
-        this.id = id;
+        //id = ++lastId;
         this.ticker = ticker;
         this.name = newName;
         this.description = description;
@@ -44,35 +47,22 @@ public class Stock {
         this.stockSector = sector;
     }
 
-    public void Update() throws JsonProcessingException, MalformedURLException {
-        // Get the JSON data from Finnhub with basic company info such as name, sector, etc.
-        String jsonInput = Requests.get("https://finnhub.io/api/v1/stock/profile2?symbol="
-                + ticker + "&token=" + Requests.token);
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.readTree(jsonInput);
-
-        // Update core attributes accordingly
-        name = rootNode.get("name").asText();
-        stockSector = rootNode.get("finnhubIndustry").asText();
-        description = String.format("%s is a company in the %s sector.",name,stockSector);
-
-        // Get the JSON data with FINANCIAL info such as price
-        String jsonInput2 = Requests.get("https://finnhub.io/api/v1/quote?symbol="
-                + ticker + "&token=" + Requests.token);
-        ObjectMapper mapper2 = new ObjectMapper();
-        JsonNode rootNode2 = mapper2.readTree(jsonInput2);
-
-        // Update core attributes accordingly
-        sharePrice = rootNode2.get("c").asDouble();
+    /**
+     * Most comprehensive constructor available. Allows for full override of all
+     * core attributes of a stock, including "id" and "lastRefreshTime".
+     * This constructor is used to read a stock from memory.
+     */
+    public Stock(long newId, long lastRefresh, String ticker, String newName, String description,
+                 String sector, double price, double dividend) throws MalformedURLException, JsonProcessingException {
+        this(ticker,newName,description,sector,price,dividend);
+        this.lastRefreshTime = lastRefresh;
+        long currentTime = System.currentTimeMillis();
     }
 
-    public Stock(String newTicker) throws MalformedURLException, JsonProcessingException {
+    public Stock(String newTicker) {
         // Internally assign the new Ticker value
         ticker = newTicker;
-        // Increment and set the stock's unique ID as a long
-        id = ++lastId;
-        // Get live, up-to-date information about the stock
-        Update();
+        lastRefreshTime = 0L;
     }
 
     /**
@@ -132,6 +122,14 @@ public class Stock {
     }
 
     /**
+     * Gets the time stamp (in ms) of the last time this stock was updated with real-time data
+     * @return lastRefreshTime the time stamp of the last time the stock was refreshed
+     */
+    public long getLastRefresh() { return lastRefreshTime; }
+
+    public void setLastRefresh(long num) { lastRefreshTime = num; }
+
+    /**
      * Sets the share price of the stock
      * @param price the price of a stock share
      */
@@ -171,16 +169,8 @@ public class Stock {
         this.stockSector = name;
     }
 
-    public Long getId() {
-        return this.id;
-    }
-
-    /**
-     * The custom toString for writing the stock info
-     * @return String formatted string with stock info to be displayed
-     */
-    public String toString() {
-        return String.format("[%s] %s. Sect: %s. Desc: %s. $%.2f/share.",
-                ticker,name,stockSector,description,sharePrice);
+    @Override
+    public int compareTo(Stock compareStock) {
+        return this.getTicker().compareTo(compareStock.getTicker());
     }
 }

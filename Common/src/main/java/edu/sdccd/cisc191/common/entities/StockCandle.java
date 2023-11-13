@@ -12,17 +12,65 @@ import java.time.ZoneOffset;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
+import java.util.List;
 
 /**
  * a program that creates a graph for a selected stock
  */
 
 public class StockCandle {
-    private String ticker;
 
-    private static final String[] subKeys = {"c","h","l","o","t","v"};
+    /*
 
-    private static double[][] stockInfo;
+    FORMAT FOR STOCK CANDLE DATA:
+
+    StockCandle.getStockInfo(): double[][]
+    Is an array of sub-arrays, each corresponding to a certain instant in time.
+
+    Each sub-array is indexed by (all doubles):
+
+    0. Closing cost
+    1. High cost
+    2. Low cost
+    3. Open cost
+    4. Time stamp
+
+     */
+
+    protected long id;
+
+    protected String ticker;
+
+    protected long lastRefreshTime;
+
+    protected String duration;
+
+    protected long time1; // Start time (ms)
+
+    protected long time2; // End time (ms)
+
+    //protected double[][] stockInfo;
+
+    protected List<Double> c; // Closing prices
+    protected List<Double> h; // High prices
+    protected List<Double> l; // Low prices
+    protected List<Double> o; // Open prices
+    protected List<Long> t; // Time stamps
+    protected List<Long> v; // Trade volume
+
+    public List<Double> getC() { return c; }
+    public List<Double> getH() { return h; }
+    public List<Double> getL() { return l; }
+    public List<Double> getO() { return o; }
+    public List<Long> getT() { return t; }
+    public List<Long> getV() { return v; }
+
+    public void setC(List<Double> val) { c = val; }
+    public void setH(List<Double> val) { h = val; }
+    public void setL(List<Double> val) { l = val; }
+    public void setO(List<Double> val) { o = val; }
+    public void setT(List<Long> val) { t = val; }
+    public void setV(List<Long> val) { v = val; }
 
     public void setTicker(String txt){
         ticker = txt;
@@ -32,154 +80,83 @@ public class StockCandle {
         return ticker;
     }
 
-    public static double[][] invert2DArray(double[][] inputArray){
-        int rows = inputArray.length;
-        int columns = inputArray[0].length;
-
-        double[][] newArray = new double[columns][rows];
-        for (int i=0;i<rows;i++){
-            for (int j=0;j<columns;j++){
-                newArray[j][i] = inputArray[i][j];
-            }
-        }
-
-        return newArray;
+    public void setDuration(String res){
+        duration = res;
     }
 
-    private static final String token = "bsq5ig8fkcbcavsjbrrg";
-
-    public static String getFrequency(String duration){
-        String frequency = switch (duration) {
-            case "day" -> "5";
-            case "week" -> "15";
-            case "month" -> "60";
-            case "6month" -> "D";
-            case "year" -> "D";
-            case "5year" -> "W";
-            default -> "5";
-        };
-        return frequency;
+    public String getDuration(){
+        return duration;
     }
 
-    public static long[] getTimeRange(String duration){ // duration can be day, week, month, 6month, year
-
-        ZoneId estZoneId = ZoneId.of("America/New_York");
-        LocalDateTime now = LocalDateTime.now(estZoneId);
-        DayOfWeek currentDayOfWeek = now.getDayOfWeek();
-        LocalDateTime targetDateTime = now;
-
-        if (duration.equals("day")) {
-            if (currentDayOfWeek == DayOfWeek.SATURDAY || currentDayOfWeek == DayOfWeek.SUNDAY) {
-                targetDateTime = now.with(TemporalAdjusters.previous(DayOfWeek.FRIDAY));
-            } else {
-                targetDateTime = now;
-            }
-        } else if (duration.equals("week")) {
-            if (currentDayOfWeek != DayOfWeek.MONDAY) {
-                targetDateTime = now.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
-            } else {
-                targetDateTime = now;
-            }
-        } else if (duration.equals("month")) {
-            targetDateTime = targetDateTime.minusDays(30);
-        } else if (duration.equals("6month")) {
-            targetDateTime = targetDateTime.minusDays(183);
-        } else if (duration.equals("year")) {
-            targetDateTime = targetDateTime.minusDays(365);
-        } else if (duration.equals("5year")) {
-            targetDateTime = targetDateTime.minusDays(365*5);
-        }
-
-        long additionalTime = switch (duration) {
-            case "day" -> 60*60*16; // 4:00PM
-            case "week" -> 60*60*16 + 60*60*24*4; // Assume 5 days (M-F)
-            case "month" -> 60*60*16 + 60*60*24*29; // Assume 30 days
-            case "6month" -> 60*60*16 + 60*60*24*(182); // Assume 183 days
-            case "year" -> 60*60*16 + 60*60*24*(364); // Assume 365 days
-            case "5year" -> 60*60*16 + 60*60*24*(365*5); // Assume 365*5+1 days
-            default -> 60*60*16;
-        };
-
-        targetDateTime = targetDateTime.withHour(0).withMinute(0).withSecond(0).withNano(0);
-        long baseTime = targetDateTime.atZone(estZoneId).toInstant().toEpochMilli()/1000;
-        long startTime = baseTime + (long)(60*60*9.5); // Opening time is always 9:30AM Eastern
-        long endTime = baseTime + additionalTime;
-
-        long[] stamps = new long[2];
-        stamps[0] = startTime;
-        stamps[1] = endTime;
-        return stamps;
+    public void setTime1(long res){
+        time1 = res;
     }
 
-    public static void refreshData(String newTicker, String duration) throws MalformedURLException, JsonProcessingException {
-        long[] timeRange = getTimeRange(duration);
-        String frequency = getFrequency(duration);
-        refreshData(newTicker,frequency, timeRange[0],timeRange[1]);
-    }
-    public static void refreshData(String newTicker) throws MalformedURLException, JsonProcessingException {
-        refreshData(newTicker,"5year");
+    public long getTime1(){
+        return time1;
     }
 
-    private static void refreshData(String newTicker, String resolution, long time1, long time2)
-            throws JsonProcessingException, MalformedURLException {
-        String URL = "https://finnhub.io/api/v1/stock/candle?symbol="+newTicker
-                +"&resolution="+resolution
-                +"&from="+time1+"&to="+time2
-                +"&token="+token;
-        String jsonInput = Requests.get(URL);
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.readTree(jsonInput);
-
-        double[][] result = new double[subKeys.length][];
-
-        int keyIndex = 0;
-
-        for (String subKey : subKeys) {
-
-            JsonNode tNode = rootNode.get(subKey);
-            result[keyIndex] = new double[tNode.size()];
-
-            for (int i = 0; i < tNode.size(); i++) {
-                result[keyIndex][i] = tNode.get(i).asDouble();
-            }
-
-            keyIndex++;
-
-        }
-
-        stockInfo = invert2DArray(result);
-
-        //System.out.println(stockInfo[0][0]);
+    public void setTime2(long res){
+        time2 = res;
     }
 
-    /*public static void main(String[] args) throws JsonProcessingException {
-        refreshData(candleExample);
-    }*/
+    public long getTime2(){
+        return time2;
+    }
 
-    public StockCandle(String newTicker) throws JsonProcessingException, MalformedURLException {
-        refreshData(newTicker);
+    public long getId() {return id;}
+
+    public void setId(long val) { id = val; }
+
+    public void setLastRefresh(long stamp) { lastRefreshTime = stamp; }
+
+    public long getLastRefresh() { return lastRefreshTime; }
+
+    public StockCandle(String newTicker, List<List<?>> values){
         setTicker(newTicker);
+        c = (List<Double>)values.get(0);
+        h = (List<Double>)values.get(1);
+        l = (List<Double>)values.get(2);
+        o = (List<Double>)values.get(3);
+        t = (List<Long>)values.get(4);
+        v = (List<Long>)values.get(5);
+        //setStockInfo(array);
     }
 
-    public StockCandle(String newTicker, String resolution, long time1, long time2) throws MalformedURLException, JsonProcessingException {
-        refreshData(newTicker,resolution,time1,time2);
-        setTicker(newTicker);
+    public StockCandle(){
+        // Blank constructor
     }
 
-    public double[][] getStockInfo(){
+    public Number[][] getStockInfo(){
+        if (c == null) { return null; }
+        Number[][] stockInfo = new Number[c.size()][6];
+        List<?>[] parse = new List<?>[]{c,h,l,o,t,v};
+        for(int i = 0; i < c.size(); i++){
+            for(int j = 0; j < 6; j++){
+                stockInfo[i][j] = (Number)parse[j].get(i);
+            }
+        }
         return stockInfo;
     }
-    
-    public String toString(){
+
+    /*public double[][] getStockInfo(){
+        return stockInfo;
+    }
+
+    public void setStockInfo(double[][] array){
+        stockInfo = array;
+    }*/
+
+    /*public String toString(){
         String outputString = "";
         for (double[] row : stockInfo){
             outputString += String.format("@t=%.0f, %s low=%.2f, high=%.2f, open=%.2f, close=%.2f.",row[4],ticker,row[2],row[1],row[3],row[0]);
             outputString += "\n";
         }
         return outputString;
-    }
+    }*/
 
-    public void printConciseContents(){
+    /*public void printConciseContents(){
         System.out.println(ticker+":");
         for (double[] row : stockInfo){
             String outputString = "{";
@@ -195,5 +172,5 @@ public class StockCandle {
             }
             System.out.println(outputString);
         }
-    }
+    }*/
 }

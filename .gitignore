@@ -2,7 +2,9 @@
 *.iml
 target
 dependency-reduced-pom.xml
-DatabaseLab.h2.mv.db
+*.h2.mv.db
+*.h2.trace.db
+*.json
 
 # Compiled class file
 *.class
