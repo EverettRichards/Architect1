@@ -25,10 +25,10 @@ public class UserController implements DataFetcher {
             return "signin";
         }
 
-        SessionCookie cookie = new SessionCookie(sessionCookie);
-        if(cookie.isValid()) {
-            return "dashboard";
-        }
+        // SessionCookie cookie = new SessionCookie(sessionCookie);
+        // if(cookie.isValid()) {
+        //     return "dashboard";
+        // }
 
         return "signin";
     }
@@ -45,10 +45,10 @@ public class UserController implements DataFetcher {
             return "signin";
         }
 
-        SessionCookie cookie = new SessionCookie(sessionCookie);
-        if(cookie.isValid()) {
-            return "dashboard";
-        }
+        // SessionCookie cookie = new SessionCookie(sessionCookie);
+        // if(cookie.isValid()) {
+        //     return "dashboard";
+        // }
         return "signup";
     }
 

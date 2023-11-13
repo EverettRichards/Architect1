@@ -105,7 +105,7 @@ public class BridgeController implements DataFetcher {
                 headers.add(HttpHeaders.SET_COOKIE, "token=" + cookie);
                 headers.add(HttpHeaders.LOCATION, "/dashboard");
 
-                return new ResponseEntity<String>("logged in", headers, HttpStatus.PERMANENT_REDIRECT);
+                return new ResponseEntity<String>("logged in", headers, HttpStatus.OK);
             }
         } catch(JsonProcessingException e) {
             return new ResponseEntity<String>("User values are corrupted in database.", null, HttpStatus.INTERNAL_SERVER_ERROR);
