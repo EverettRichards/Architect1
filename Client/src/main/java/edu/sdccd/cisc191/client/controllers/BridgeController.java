@@ -42,8 +42,9 @@ public class BridgeController implements DataFetcher {
 
         User newUser = new User(form.getEmail(), form.getUsername(), form.getNickname(), passwordHash, User.Role.Regular);
 
+        ResponseEntity<String> response;
         try {
-            ResponseEntity<String> response = restTemplate.exchange(
+            response = restTemplate.exchange(
                 baseURL + "/add", 
                 HttpMethod.POST, 
                 new HttpEntity<User>(newUser), 
@@ -62,13 +63,20 @@ public class BridgeController implements DataFetcher {
             return new ResponseEntity<String>(e.getMessage(), null, HttpStatus.FORBIDDEN);
         }
 
+        try {
+            newUser = new ObjectMapper().readValue(response.getBody(), User.class);
+        } catch(JsonProcessingException e) {
+            return new ResponseEntity<String>("User values are corrupted in database.", null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        System.out.println(newUser.toString());
+
         String cookie = SessionCookie.createToken(newUser);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, "token=" + cookie);
         headers.add(HttpHeaders.LOCATION, "/dashboard");
 
-        return new ResponseEntity<String>("Account created successfully", headers, HttpStatus.PERMANENT_REDIRECT);
+        return new ResponseEntity<String>("Account created successfully", headers, HttpStatus.OK);
     }
 
     @PostMapping("/login")

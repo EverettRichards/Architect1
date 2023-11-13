@@ -29,7 +29,6 @@ function broadcastMessage(message) { //only here for testing reasons
 
         // in case follow didn't work
         let location = response.headers.get("Location");
-        // check if location is null
         if (location !== null) {
             window.location.href = location;
         }

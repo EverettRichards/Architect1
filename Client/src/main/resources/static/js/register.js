@@ -30,8 +30,9 @@ function broadcastMessage(message) {
         broadcastMessage(message);
 
         // in case follow didn't work
-        if (response.redirected) {
-            window.location.href = response.url;
+        let location = response.headers.get("Location");
+        if (location !== null) {
+            window.location.href = location;
         }
     }
 })();

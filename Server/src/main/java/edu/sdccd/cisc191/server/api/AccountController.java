@@ -33,9 +33,11 @@ public class AccountController {
     }
     
     @PostMapping("/add")
-    public void add(@RequestBody User user) throws UserExists {
+    public User add(@RequestBody User user) throws UserExists {
         // System.out.println(user.getName());
         userService.createUser(user);
+
+        return userService.getUser(user.getName()).get();
     }
 
     @PutMapping("/update/{id}")
