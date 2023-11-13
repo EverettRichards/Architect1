@@ -42,7 +42,7 @@ public class UserController implements DataFetcher {
     @GetMapping("/sign-up")
     public String signUp(@CookieValue(value = "token", required = false) String sessionCookie) {
         if(sessionCookie == null) {
-            return "signin";
+            return "signup";
         }
 
         // SessionCookie cookie = new SessionCookie(sessionCookie);
