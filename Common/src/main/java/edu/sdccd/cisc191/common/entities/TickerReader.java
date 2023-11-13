@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 // This class is used to view the contents of All Tickers or Default Tickers (text files) WITHOUT static methods.
 public class TickerReader {
-    private static final String defaultTickersFileAddress = "src/main/static_data/default_tickers.txt";
-    private static final String allTickersFileAddress = "src/main/static_data/all_tickers.txt";
+    private static final String defaultTickersFileAddress = "Common/src/main/static_data/default_tickers.txt";
+    private static final String allTickersFileAddress = "Common/src/main/static_data/all_tickers.txt";
 
     private String[] defaultTickers = new String[0];
     private String[] allTickers = new String[0];
