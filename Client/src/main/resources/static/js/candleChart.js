@@ -74,12 +74,6 @@ async function changeResolution(resolution) {
                         modifierKey: 'shift',
                     },
                     zoom: {
-                        wheel: {
-                            enabled: true,
-                        },
-                        pinch: {
-                            enabled: true,
-                        },
                         drag: {
                             enabled: true
                         },
