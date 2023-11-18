@@ -102,7 +102,6 @@ public class ServerStockCandle extends StockCandle {
         long[] timeRange = TimeMethods.getTimeRange(duration);
         time1 = timeRange[0];
         time2 = timeRange[1];
-        System.out.println(time1 + " " + time2);
         this.duration = duration;
 
         try {
@@ -143,8 +142,6 @@ public class ServerStockCandle extends StockCandle {
 
     // Determine an appropriate file name for the StockCandle
     private String getFileName(){
-        System.out.println(this.ticker);
-        System.out.println(this.duration);
         return String.format("%s-%s.json",ticker,duration);
     }
 
@@ -154,7 +151,6 @@ public class ServerStockCandle extends StockCandle {
         String json = toJson();
         String filePath = Server.stockCandleDirectory+"/"+getFileName();
         // write json to filepath
-        System.out.println(filePath);
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
             writer.write(json);

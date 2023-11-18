@@ -63,7 +63,6 @@ public class FinnhubNetworking {
                 + "&from=" + time[0] + "&to=" + time[1]
                 + "&token=" + DataFetcher.finnhubKey;
         String result = fetchData(URL);
-        System.out.println(result);
         JsonObject output = new JsonObject(result);
         output.annotateForCandles(ticker,duration,time1,time2);
         return output.getString();
