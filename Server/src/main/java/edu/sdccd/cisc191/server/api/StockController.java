@@ -67,6 +67,8 @@ public class StockController {
 
         Number[][] data = candles.getStockInfo();
 
+        System.out.println(data);
+
         return data;
     }
 }

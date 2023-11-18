@@ -1,6 +1,7 @@
 package edu.sdccd.cisc191.common.entities;
 
 import edu.sdccd.cisc191.common.errors.BadTickerException;
+import lombok.Data;
 
 import java.util.Locale;
 
@@ -11,12 +12,9 @@ short unique strings that represent companies on a stock exchange.
 Includes error handling for invalid tickers.
  */
 
+@Data
 public class Ticker {
     private String ticker;
-
-    public String getTicker(){
-        return ticker;
-    }
 
     TickerReader tickerReader = new TickerReader();
 
