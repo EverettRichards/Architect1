@@ -48,7 +48,7 @@ public class StockController implements DataFetcher {
         //Will be replaced by the user's followed stocks instead of
         //default.
         DefaultStocksFileIO defaultStocks = new DefaultStocksFileIO();
-        defaultStocks.readAndUpdateDefaultStocks(DefaultStocksFileIO.defaultStocks);
+        defaultStocks.readAndUpdateDefaultStocks();
         ArrayList<String> tickers = defaultStocks.getDefaultStocks();
 
         System.out.println(defaultStocks.getDefaultStocks());
@@ -71,11 +71,9 @@ public class StockController implements DataFetcher {
                     System.out.println("Added stock");
                 }
                 else {
-                    this.stockList = null;
-                    System.out.println("No stock foound.");
+                    System.out.println("No stock found.");
                 }
             } catch (Exception e) {
-                this.stockList = null;
                 System.out.println("Error");
             }
         }

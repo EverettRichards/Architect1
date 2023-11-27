@@ -1,25 +1,32 @@
 package edu.sdccd.cisc191.client.models;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DefaultStocksFileIO {
 
-    public static final String defaultStocks = "src/main/resources/defaultStocks.txt";
+    private String defaultStocks = "defaultStocks.txt";
+
+    private ResourceLoader resourceLoader; //For reading files in resources folder.
     private ArrayList<String> stocks = new ArrayList<>();
 
-    public int readAndUpdateDefaultStocks(String readFile) {
-        Scanner file;
-        try {
-            file = new Scanner( new File(readFile));
-        } catch(FileNotFoundException e) {
-            return -1;
-        }
+    public int readAndUpdateDefaultStocks() {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(this.defaultStocks);
+//        System.out.println(inputStream);
 
-        while(file.hasNextLine()) {
-            stocks.add(file.nextLine());
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))){
+            while(reader.ready()) {
+                stocks.add(reader.readLine());
+            }
+            inputStream.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+            return -1;
         }
 
         return 0;
