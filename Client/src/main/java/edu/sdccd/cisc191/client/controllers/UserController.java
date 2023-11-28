@@ -20,17 +20,13 @@ public class UserController implements DataFetcher {
 //    private RestTemplate restTemplate = new RestTemplate();
 
     @GetMapping("/sign-in")
-    public String signIn(@CookieValue(value = "token", required = false) String sessionCookie) {
-        if(sessionCookie == null) {
-            return "signin";
-        }
-
-        // SessionCookie cookie = new SessionCookie(sessionCookie);
-        // if(cookie.isValid()) {
-        //     return "dashboard";
-        // }
-
+    public String signIn() {
         return "signin";
+    }
+
+    @GetMapping("/sign-in/success")
+    public String signInSuccess() {
+        return "login-success";
     }
 
 //    @GetMapping("/login")
