@@ -3,35 +3,42 @@ package edu.sdccd.cisc191.client.security;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.sdccd.cisc191.client.errors.InvalidPayloadException;
-import edu.sdccd.cisc191.common.cryptography.Hasher;
-import edu.sdccd.cisc191.common.cryptography.SessionCookie;
-import edu.sdccd.cisc191.common.entities.User;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import edu.sdccd.cisc191.common.entities.DataFetcher;
-
 import static edu.sdccd.cisc191.common.entities.DataFetcher.backendEndpointURL;
 import static edu.sdccd.cisc191.common.entities.DataFetcher.userEndpointURL;
+import edu.sdccd.cisc191.common.entities.User;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class MyDatabaseUserDetailsService implements UserDetailsService {
     private final String baseURL = backendEndpointURL + userEndpointURL;
     private RestTemplate restTemplate = new RestTemplate();
+
+    //For user authorization role.
+    Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { // (1)
         // 1. Load the user from the users table by username. If not found, throw UsernameNotFoundException.
         // 2. Convert/wrap the user to a UserDetails object and return it.
         ResponseEntity<String> response;
-        AuthUser user;
+        User user;
+        UserDetails authUser;
+        String userRole = null;
 
         try {
             response = restTemplate.exchange(
@@ -42,21 +49,54 @@ public class MyDatabaseUserDetailsService implements UserDetailsService {
             );
 
             if(response.getStatusCode() != HttpStatus.OK) {
+                System.out.println("If clause in first try block.");
                 throw new UsernameNotFoundException("User not found.");
             }
-        } catch(ClassCastException e) {
-            System.err.println(e.toString());
-            throw new InvalidPayloadException();
+        }
+        catch(ClassCastException e) {
+            System.out.println("Wrong typecast.");
+            throw new InvalidPayloadException("Invalid payload.");
         } catch(RestClientException e) {
-            throw new UsernameNotFoundException("User not found.");
+            System.out.println("Client Error.");
+            throw new UsernameNotFoundException("Client Error.");
         }
         try {
             user = new ObjectMapper().readValue(response.getBody(),
-                    AuthUser.class);
+                    User.class);
+            if (user.getRole() == User.Role.Regular) {
+                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_USER");
+                grantedAuthorities.add(grantedAuthority);
+                userRole = "ROLE_USER";
+            } else if (user.getRole() == User.Role.Admin) {
+                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
+                grantedAuthorities.add(grantedAuthority);
+                userRole = "ADMIN";
+            }
+            System.out.println("Success");
         } catch(JsonProcessingException e) {
+            System.out.println("Something went wrong.");
             throw new UsernameNotFoundException("User not found.");
         }
+        if (userRole == null) {
+            userRole = "USER";
+        }
 
-        return user;
+        /*
+        String username,
+        String password,
+        Collection<? extends GrantedAuthority > authorities,
+        Long id,
+        String nickname,
+        List<String> followedTickers */
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//        authUser = new AuthUser(user.getName(), user.getPasswordHash(), grantedAuthorities, user.getId(), user.getNickname(), user.getFollowedTickers());
+        authUser = AuthUser.withUsername(user.getName())
+                .password(encoder.encode(user.getPasswordHash()))
+                .roles(userRole)
+                .build();
+
+        System.out.println(authUser);
+        System.out.println();
+        return authUser;
     }
 }

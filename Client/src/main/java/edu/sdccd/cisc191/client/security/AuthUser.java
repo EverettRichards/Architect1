@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * AuthUser - extends User from Spring Security to add additional
@@ -15,15 +16,22 @@ import java.util.Collection;
 public class AuthUser extends User {
 
     //Extended instance variables to store in session management
+    private Long id;
     private String nickname;
+    private List<String> followedTickers;
 
-    private ArrayList<String> followedTickers;
-
-    public AuthUser(String username, String password, Collection<? extends GrantedAuthority> authorities, String nickname, ArrayList<String> followedTickers) {
+    public AuthUser(String username, String password, Collection<? extends GrantedAuthority> authorities, Long id, String nickname, List<String> followedTickers) {
         super(username, password, authorities);
+        this.id = id;
         this.nickname = nickname;
         this.followedTickers = followedTickers;
     }
+
+    //Getter method for id instance variable
+    public Long getId() { return this.id; }
+
+    //Setter method for id instance variable
+    public void setId(Long id) { this.id = id; }
 
     //Getter method for nickname instance variable
     public String getNickname() {
@@ -36,7 +44,7 @@ public class AuthUser extends User {
     }
 
     //Getter method for nickname instance variable
-    public ArrayList<String> getFollowedTickers() {
+    public List<String> getFollowedTickers() {
         return this.followedTickers;
     }
 

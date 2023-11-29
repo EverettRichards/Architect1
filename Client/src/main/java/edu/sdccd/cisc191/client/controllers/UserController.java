@@ -29,7 +29,7 @@ public class UserController implements DataFetcher {
         return "login-success";
     }
 
-//    @GetMapping("/login")
+//    @GetMapping("/log-in")
 //    public String login() {
 //        return "login";
 //    }
@@ -37,14 +37,14 @@ public class UserController implements DataFetcher {
     //GET Sign Up HTML template handler
     @GetMapping("/sign-up")
     public String signUp(@CookieValue(value = "token", required = false) String sessionCookie) {
-        if(sessionCookie == null) {
-            return "signup";
-        }
+//        if(sessionCookie == null) {
+//            return "signup";
+//        }
 
-        // SessionCookie cookie = new SessionCookie(sessionCookie);
-        // if(cookie.isValid()) {
-        //     return "dashboard";
-        // }
+//         SessionCookie cookie = new SessionCookie(sessionCookie);
+//         if(cookie.isValid()) {
+//             return "signin";
+//         }
         return "signup";
     }
 

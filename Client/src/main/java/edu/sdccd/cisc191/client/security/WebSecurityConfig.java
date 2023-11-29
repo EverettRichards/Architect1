@@ -1,19 +1,21 @@
 package edu.sdccd.cisc191.client.security;
 
+import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -23,7 +25,10 @@ public class WebSecurityConfig {
     //static final variables for endpoint strings.
     public static final String[] ENDPOINTS_WHITELIST = {
             "/",
-            "/sign-in"
+            "/sign-in",
+            "/sign-up",
+            "/js/**",
+            "/css/**"
     };
 
     public static final String LOGIN_URL = "/sign-in";
@@ -37,6 +42,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
+
                         .requestMatchers("/dashboard", "/my-account").fullyAuthenticated()
                         .requestMatchers(ENDPOINTS_WHITELIST).permitAll()
                         .anyRequest().authenticated()
@@ -45,20 +51,19 @@ public class WebSecurityConfig {
                         .loginPage(LOGIN_URL)
                         .loginProcessingUrl("/login")
                         .failureUrl(LOGIN_FAIL_URL)
-                        .defaultSuccessUrl(DEFAULT_SUCCESS_URL)
+                        .defaultSuccessUrl(DEFAULT_SUCCESS_URL, true)
                         .permitAll()
                 )
                 .logout((logout) -> logout
                         .logoutUrl(LOGOUT_URL)
                         .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .logoutSuccessUrl("/")
                         .permitAll()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                        .invalidSessionUrl(LOGIN_FAIL_URL)
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(true));
+                        .invalidSessionUrl(LOGIN_FAIL_URL));
 
         return http.build();
     }
@@ -76,19 +81,22 @@ public class WebSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("password")
-                        .roles("USER")
-                        .build();
-
-        return new InMemoryUserDetailsManager(user);
-//        return new MyDatabaseUserDetailsService();
+//        UserDetails user =
+//                User.withDefaultPasswordEncoder()
+//                        .username("user")
+//                        .password("password")
+//                        .roles("USER")
+//                        .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+        return new MyDatabaseUserDetailsService();
     }
 
+//    @Autowired
+//    private CustomAuthenticationProvider authProvider;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
 }
