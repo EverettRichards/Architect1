@@ -1,7 +1,9 @@
 package edu.sdccd.cisc191.client.controllers;
 
+import java.util.ArrayList;
 import java.util.Map;
 
+import edu.sdccd.cisc191.client.models.DefaultStocksFileIO;
 import edu.sdccd.cisc191.common.entities.StockCandle;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -40,7 +42,12 @@ public class BridgeController implements DataFetcher {
     public ResponseEntity<String> register(@RequestBody RegisterForm form) throws FrontendException {
         String passwordHash = Hasher.hashNewPassword(form.getPassword());
 
-        User newUser = new User(form.getEmail(), form.getUsername(), form.getNickname(), passwordHash, User.Role.Regular);
+        //Read from file i/o for a default list of stock tickers to follow.
+        DefaultStocksFileIO defaultStocks = new DefaultStocksFileIO();
+        defaultStocks.readAndUpdateDefaultStocks();
+        ArrayList<String> tickers = defaultStocks.getDefaultStocks();
+
+        User newUser = new User(form.getEmail(), form.getUsername(), form.getNickname(), passwordHash, User.Role.Regular, tickers);
 
         ResponseEntity<String> response;
         try {
@@ -74,7 +81,7 @@ public class BridgeController implements DataFetcher {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, "token=" + cookie);
-        headers.add(HttpHeaders.LOCATION, "/dashboard");
+        headers.add(HttpHeaders.LOCATION, "/sign-in");
 
         return new ResponseEntity<String>("Account created successfully", headers, HttpStatus.OK);
     }

@@ -20,20 +20,16 @@ public class UserController implements DataFetcher {
 //    private RestTemplate restTemplate = new RestTemplate();
 
     @GetMapping("/sign-in")
-    public String signIn(@CookieValue(value = "token", required = false) String sessionCookie) {
-        if(sessionCookie == null) {
-            return "signin";
-        }
-
-        // SessionCookie cookie = new SessionCookie(sessionCookie);
-        // if(cookie.isValid()) {
-        //     return "dashboard";
-        // }
-
+    public String signIn() {
         return "signin";
     }
 
-//    @GetMapping("/login")
+    @GetMapping("/sign-in/success")
+    public String signInSuccess() {
+        return "login-success";
+    }
+
+//    @GetMapping("/log-in")
 //    public String login() {
 //        return "login";
 //    }
@@ -41,14 +37,14 @@ public class UserController implements DataFetcher {
     //GET Sign Up HTML template handler
     @GetMapping("/sign-up")
     public String signUp(@CookieValue(value = "token", required = false) String sessionCookie) {
-        if(sessionCookie == null) {
-            return "signup";
-        }
+//        if(sessionCookie == null) {
+//            return "signup";
+//        }
 
-        // SessionCookie cookie = new SessionCookie(sessionCookie);
-        // if(cookie.isValid()) {
-        //     return "dashboard";
-        // }
+//         SessionCookie cookie = new SessionCookie(sessionCookie);
+//         if(cookie.isValid()) {
+//             return "signin";
+//         }
         return "signup";
     }
 

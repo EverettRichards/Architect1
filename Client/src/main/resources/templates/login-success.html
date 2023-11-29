@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
+<head th:replace="~{ layout :: common_header(~{::title}) }">
+  <title>STOCKS | Sign In - Success</title>
+</head>
+
+<body class="bg-zinc-950">
+<div>
+  <header th:replace="~{ layout :: site-nav }"></header>
+
+  <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+      <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=emerald&shade=400" alt="Your Company">
+      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-slate-400">Success!</h2>
+    </div>
+
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <p class="mt-10 text-center text-sm text-slate-400">
+        You have successfully signed in.
+      </p>
+    </div>
+    <div class="mt-10 flex items-center justify-center gap-x-6">
+      <a th:href="@{/dashboard}" class="rounded-md bg-emerald-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Go To Dashboard</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

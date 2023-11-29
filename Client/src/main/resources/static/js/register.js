@@ -22,7 +22,7 @@ function broadcastMessage(message) {
                 "username": formData.get("username"),
                 "password": formData.get("password"),
             }),
-            redirect: "follow",
+            //redirect: "follow",
         });
 
 
