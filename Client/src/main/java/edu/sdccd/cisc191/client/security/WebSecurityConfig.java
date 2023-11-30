@@ -28,7 +28,8 @@ public class WebSecurityConfig {
             "/sign-in",
             "/sign-up",
             "/js/**",
-            "/css/**"
+            "/css/**",
+            "/api/register"
     };
 
     public static final String LOGIN_URL = "/sign-in";
