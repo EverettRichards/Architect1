@@ -86,7 +86,7 @@ public class BridgeController implements DataFetcher {
         String cookie = SessionCookie.createToken(newUser);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, "token=" + cookie);
+//        headers.add(HttpHeaders.SET_COOKIE, "token=" + cookie);
         headers.add(HttpHeaders.LOCATION, "/sign-in");
 
         return new ResponseEntity<String>("Account created successfully", headers, HttpStatus.OK);
