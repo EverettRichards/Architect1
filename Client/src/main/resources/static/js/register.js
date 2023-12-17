@@ -26,8 +26,9 @@ function broadcastMessage(message) {
         });
 
 
-        let message = await response.text();
-        broadcastMessage(message);
+        let message = await response;
+        // broadcastMessage(message);
+        console.log(message);
 
         // in case follow didn't work
         let location = response.headers.get("Location");
