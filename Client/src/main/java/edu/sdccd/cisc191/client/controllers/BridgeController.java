@@ -46,8 +46,10 @@ public class BridgeController implements DataFetcher {
         DefaultStocksFileIO defaultStocks = new DefaultStocksFileIO();
         defaultStocks.readAndUpdateDefaultStocks();
         ArrayList<String> tickers = defaultStocks.getDefaultStocks();
+        System.out.println(tickers);
 
         User newUser = new User(form.getEmail(), form.getUsername(), form.getNickname(), passwordHash, User.Role.Regular, tickers);
+        System.out.println(newUser);
 
         ResponseEntity<String> response;
         try {
@@ -61,18 +63,22 @@ public class BridgeController implements DataFetcher {
             System.out.println(response.getStatusCode());
 
             if(response.getStatusCode().is4xxClientError()) {
+                System.out.println("Username taken");
                 throw new UsernameTakenException();
             }
         } catch(ClassCastException e) {
             System.err.println(e.toString());
+            System.out.println("Invalid Payload Exception");
             throw new InvalidPayloadException();
         } catch(RestClientException e) {
+            System.out.println("Forbidden");
             return new ResponseEntity<String>(e.getMessage(), null, HttpStatus.FORBIDDEN);
         }
 
         try {
             newUser = new ObjectMapper().readValue(response.getBody(), User.class);
         } catch(JsonProcessingException e) {
+            System.out.println("Corrupted in database");
             return new ResponseEntity<String>("User values are corrupted in database.", null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         System.out.println(newUser.toString());
