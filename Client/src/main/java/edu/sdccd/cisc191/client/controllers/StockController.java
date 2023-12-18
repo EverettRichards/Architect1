@@ -2,6 +2,7 @@ package edu.sdccd.cisc191.client.controllers;
 
 import edu.sdccd.cisc191.client.models.DefaultStocksFileIO;
 import edu.sdccd.cisc191.client.models.RankedResult;
+import edu.sdccd.cisc191.client.models.UserDataFetcher;
 import edu.sdccd.cisc191.common.entities.Stock;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
 import edu.sdccd.cisc191.common.entities.User;
@@ -58,23 +59,15 @@ public class StockController implements DataFetcher {
         LinkedList<Stock> stocks = null;
         if (session.getAttribute("user") != null) {
             user = (User) session.getAttribute("user");
-            System.out.println("Session User Found: " + user.getName());
         } else {
-            ResponseEntity<User> fetchUser;
             try {
-                fetchUser = restTemplate.exchange(
-                        resourceURL + "/user/name/" + currentPrincipalName,
-                        HttpMethod.GET,
-                        null,
-                        new ParameterizedTypeReference<>() {}
-                );
+                user = UserDataFetcher.get(currentPrincipalName);
             } catch (Exception error) {
                 model.addAttribute("error", "Something went wrong!");
                 return "/dashboard";
             }
 
-            user = fetchUser.getBody();
-            System.out.println("Session User Created: " + user.getName());
+            session.setAttribute("user", user);
 
             session.setAttribute("user", user);
         }
