@@ -1,14 +1,13 @@
 package edu.sdccd.cisc191.client.controllers;
 
+import edu.sdccd.cisc191.client.errors.InvalidPayloadException;
+import edu.sdccd.cisc191.client.errors.UsernameTakenException;
 import edu.sdccd.cisc191.client.models.DefaultStocksFileIO;
 import edu.sdccd.cisc191.client.models.NewUser;
 import edu.sdccd.cisc191.common.cryptography.Hasher;
 import edu.sdccd.cisc191.common.entities.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.client.RestTemplate;
+import edu.sdccd.cisc191.client.models.UserDataFetcher;
 
 import java.util.ArrayList;
 
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 public class UserController implements DataFetcher {
 
     private final String baseURL = backendEndpointURL + userEndpointURL;
-    private RestTemplate restTemplate = new RestTemplate();
 
     //Render sign in page
     @GetMapping("/sign-in")
@@ -60,22 +58,14 @@ public class UserController implements DataFetcher {
         ArrayList<String> tickers = defaultStocks.getDefaultStocks();
 
         User userSignUp = new User(newUser.getEmail(), newUser.getUsername(), newUser.getNickname(), passwordHash, User.Role.Regular, tickers);
-        ResponseEntity<String> response;
 
         try {
-            response = restTemplate.exchange(
-                    baseURL + "/add",
-                    HttpMethod.POST,
-                    new HttpEntity<User>(userSignUp),
-                    new ParameterizedTypeReference<>() {}
-            );
-
-            if(response.getStatusCode().is4xxClientError()) {
-                model.addAttribute("error", "Username taken, please try a different username.");
-                return "signup";
-            }
-        } catch (Exception error) {
-            model.addAttribute("error", "There was an error processing the request.");
+            UserDataFetcher.add(userSignUp);
+        } catch (UsernameTakenException error) {
+            model.addAttribute("error", "The username is taken. Please try a different username.");
+            return "signup";
+        } catch (InvalidPayloadException error) {
+            model.addAttribute("error", "Something went wrong.");
             return "signup";
         }
         return "signup-success";
@@ -93,23 +83,13 @@ public class UserController implements DataFetcher {
 
         if (session.getAttribute("user") != null) {
             user = (User) session.getAttribute("user");
-            System.out.println("Session User Found: " + user.getName());
         } else {
-            ResponseEntity<User> fetchUser;
             try {
-                fetchUser = restTemplate.exchange(
-                        baseURL + "/user/name/" + currentPrincipalName,
-                        HttpMethod.GET,
-                        null,
-                        new ParameterizedTypeReference<>() {}
-                );
+                user = UserDataFetcher.get(currentPrincipalName);
             } catch (Exception error) {
                 model.addAttribute("error", "Something went wrong!");
-                return "/dashboard";
+                return "/myaccount";
             }
-
-            user = fetchUser.getBody();
-            System.out.println("Session User Created: " + user.getName());
 
             session.setAttribute("user", user);
         }
