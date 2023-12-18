@@ -81,22 +81,13 @@ public class MyDatabaseUserDetailsService implements UserDetailsService {
             userRole = "USER";
         }
 
-        /*
-        String username,
-        String password,
-        Collection<? extends GrantedAuthority > authorities,
-        Long id,
-        String nickname,
-        List<String> followedTickers */
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//        authUser = new AuthUser(user.getName(), user.getPasswordHash(), grantedAuthorities, user.getId(), user.getNickname(), user.getFollowedTickers());
+
         authUser = AuthUser.withUsername(user.getName())
                 .password(encoder.encode(user.getPasswordHash()))
                 .roles(userRole)
                 .build();
 
-        System.out.println(authUser);
-        System.out.println();
         return authUser;
     }
 }

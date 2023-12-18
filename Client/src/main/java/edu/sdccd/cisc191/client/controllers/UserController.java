@@ -4,10 +4,14 @@ import edu.sdccd.cisc191.client.models.DefaultStocksFileIO;
 import edu.sdccd.cisc191.client.models.NewUser;
 import edu.sdccd.cisc191.common.cryptography.Hasher;
 import edu.sdccd.cisc191.common.entities.User;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,7 +83,38 @@ public class UserController implements DataFetcher {
 
     //Return user account page
     @GetMapping("/my-account")
-    public String myAccount() {
+    public String myAccount(Model model, HttpServletRequest request) {
+        //For getting user information
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        HttpSession session = request.getSession();
+
+        User user;
+
+        if (session.getAttribute("user") != null) {
+            user = (User) session.getAttribute("user");
+            System.out.println("Session User Found: " + user.getName());
+        } else {
+            ResponseEntity<User> fetchUser;
+            try {
+                fetchUser = restTemplate.exchange(
+                        baseURL + "/user/name/" + currentPrincipalName,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<>() {}
+                );
+            } catch (Exception error) {
+                model.addAttribute("error", "Something went wrong!");
+                return "/dashboard";
+            }
+
+            user = fetchUser.getBody();
+            System.out.println("Session User Created: " + user.getName());
+
+            session.setAttribute("user", user);
+        }
+
+        model.addAttribute("user", user);
         return "myaccount";
     }
 }
