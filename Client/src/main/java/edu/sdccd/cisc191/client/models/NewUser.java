@@ -2,6 +2,7 @@ package edu.sdccd.cisc191.client.models;
 
 //Class new users on sign up.
 public class NewUser {
+    private Long id;
     private String username;
     private String nickname;
     private String email;
@@ -25,5 +26,10 @@ public class NewUser {
     public String getPassword(){ return this.password; }
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getId() { return this.id; }
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -117,4 +117,14 @@ public class UserController implements DataFetcher {
         model.addAttribute("user", user);
         return "myaccount";
     }
+
+    @GetMapping("/my-account/edit")
+    public String editMyAccount(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        NewUser editUser = new NewUser();
+        model.addAttribute("user", user);
+        model.addAttribute("editUser", editUser);
+        return "myaccount-edit";
+    }
 }
