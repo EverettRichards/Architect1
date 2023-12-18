@@ -4,9 +4,14 @@ import edu.sdccd.cisc191.client.models.DefaultStocksFileIO;
 import edu.sdccd.cisc191.client.models.RankedResult;
 import edu.sdccd.cisc191.common.entities.Stock;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
+import edu.sdccd.cisc191.common.entities.User;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,19 +46,40 @@ public class StockController implements DataFetcher {
      * @return dashboard the dashboard page
      */
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
+    public String dashboard(Model model, HttpServletRequest request) {
+        //For getting user information
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        HttpSession session = request.getSession();
 
-        //Temporary file i/o for reading a list of stocks
-        //until we have proper authentication working.
-        //Will be replaced by the user's followed stocks instead of
-        //default.
-        DefaultStocksFileIO defaultStocks = new DefaultStocksFileIO();
-        defaultStocks.readAndUpdateDefaultStocks();
-        ArrayList<String> tickers = defaultStocks.getDefaultStocks();
+        User user;
 
-        System.out.println(defaultStocks.getDefaultStocks());
         //For use in html
         LinkedList<Stock> stocks = null;
+        if (session.getAttribute("user") != null) {
+            user = (User) session.getAttribute("user");
+            System.out.println("Session User Found: " + user.getName());
+        } else {
+            ResponseEntity<User> fetchUser;
+            try {
+                fetchUser = restTemplate.exchange(
+                        resourceURL + "/user/name/" + currentPrincipalName,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<>() {}
+                );
+            } catch (Exception error) {
+                model.addAttribute("error", "Something went wrong!");
+                return "/dashboard";
+            }
+
+            user = fetchUser.getBody();
+            System.out.println("Session User Created: " + user.getName());
+
+            session.setAttribute("user", user);
+        }
+
+        List<String> tickers = user.getFollowedTickers();
 
         for (String ticker : tickers) {
             Stock stock;
@@ -62,15 +88,15 @@ public class StockController implements DataFetcher {
                         resourceURL + "/stock/" + ticker,
                         HttpMethod.GET,
                         null,
-                        new ParameterizedTypeReference<>() {}
+                        new ParameterizedTypeReference<>() {
+                        }
                 );
 
                 stock = response.getBody();
-                if(stock != null) {
+                if (stock != null) {
                     this.stockList.add(stock);
                     System.out.println("Added stock");
-                }
-                else {
+                } else {
                     System.out.println("No stock found.");
                 }
             } catch (Exception e) {
