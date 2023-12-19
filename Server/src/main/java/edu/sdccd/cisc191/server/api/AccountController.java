@@ -47,8 +47,13 @@ public class AccountController {
         if(oldUser.isEmpty()) {
             throw new UserNotFound();
         }
-        newUserData.setId(id);
-        userService.updateUser(newUserData);
+
+        oldUser.get().setName(newUserData.getName());
+        oldUser.get().setNickname(newUserData.getNickname());
+        oldUser.get().setEmail(newUserData.getEmail());
+        oldUser.get().setFollowedTickers(newUserData.getFollowedTickers());
+
+        userService.updateUser(oldUser.get());
     }
 
     @DeleteMapping("/{id}")
