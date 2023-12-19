@@ -23,11 +23,16 @@
     <main>
       <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 text-gray-50">
         <div>
-          <form id="edit-my-account" action="#" th:action="@{/my-account/edit}" method="post" th:object="${editUser}">
-          <div class="flex w-full justify-between">
+          <form id="edit-my-account" action="#" th:action="@{/my-account}" method="post" th:object="${user}">
+          <div class="flex w-full justify-between items-center">
             <div class="px-4 sm:px-0">
               <h3 class="text-base font-semibold leading-7 text-gray-200">Account Information</h3>
               <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-200">View and edit your personal details.</p>
+              <div class="flex gap-x-9">
+                <a class="text-blue-500 hover:text-blue-700 justify-self-end" href="/my-account">Cancel</a>
+                <a class="text-blue-500 hover:text-blue-700 justify-self-end" th:href="@{/delete(id=${user.getId()})}">Delete Account</a>
+              </div>
+
             </div>
             <div>
               <button type="submit" id="save-account-details" class="flex justify-center rounded-md bg-emerald-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">Save My Information</button>
@@ -36,25 +41,22 @@
           <div class="mt-6 border-t border-gray-100">
             <dl class="divide-y divide-gray-100">
               <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-slate-400"><label for="username">Username</label></dt>
-                <input id="username" name="username" type="text" th:placeholder="${user.getName()}" th:field="*{username}" required class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <dt class="text-sm font-medium leading-6 text-slate-400"><label for="name">Username</label></dt>
+                <input id="name" th:id="name" th:name="name" type="text" th:value="*{name}" class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
               </div>
               <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-slate-400"><label for="nickname">Nickname</label></dt>
-                <input id="nickname" name="nickname" type="text" th:placeholder="${user.getNickname()}" th:field="*{nickname}" class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <input id="nickname" th:id="nickname" th:name="nickname" type="text" th:value="*{nickname}" class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
               </div>
               <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-slate-400"><label for="email">Email address</label></dt>
-                <input id="email" name="email" type="email" th:field="*{email}" th:placeholder="${user.getEmail()}" required class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <input id="email" th:id="email" th:name="email" type="email" th:value="*{email}" class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
               </div>
-              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-slate-400"><label for ="password">Password</label></dt>
-                <input id="password" name="password" type="password" th:placeholder="${user.getPasswordHash()}" th:field="*{password}" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-              </div>
-              <input type="hidden" id="userId" name="userId" th:placeholder="${user.getId()}" th:field="*{id}" />
+              <input type="hidden" id="userId" name="userId" th:field="*{id}" th:value="*{id}" />
             </dl>
           </div>
           </form>
+          <div th:if="${error != null}" th:text="${error}" class="mt-10 text-center text-sm text-red-400"></div>
         </div>
       </div>
     </main>
