@@ -13,11 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import edu.sdccd.cisc191.common.entities.DataFetcher;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import edu.sdccd.cisc191.client.models.UserDataFetcher;
 
 import java.util.ArrayList;
@@ -106,5 +104,37 @@ public class UserController implements DataFetcher {
         model.addAttribute("user", user);
         model.addAttribute("editUser", editUser);
         return "myaccount-edit";
+    }
+
+    @PostMapping("/my-account")
+    public String handleSubmitEditMyAccount(Model model, HttpServletRequest request, User editedUserDetails) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        editedUserDetails.setId(user.getId());
+
+        try {
+            UserDataFetcher.update(editedUserDetails);
+        } catch (Exception error) {
+            model.addAttribute("error", "There was an error processing your request.");
+            return "myaccount-edit";
+        }
+
+        user.setName(editedUserDetails.getName());
+        user.setEmail(editedUserDetails.getEmail());
+        user.setNickname(editedUserDetails.getNickname());
+        session.setAttribute("user", user);
+
+        model.addAttribute("user", user);
+        return "redirect:my-account";
+    }
+
+    @GetMapping("/delete")
+    public String deleteUser(@RequestParam Long id) {
+        try {
+            UserDataFetcher.delete(id);
+        } catch (Exception error) {
+            return "redirect:my-account";
+        }
+        return "redirect:/";
     }
 }

@@ -15,6 +15,7 @@ import edu.sdccd.cisc191.server.errors.DatabaseError;
 import edu.sdccd.cisc191.server.errors.UserExists;
 import edu.sdccd.cisc191.server.errors.UserNotFound;
 import edu.sdccd.cisc191.server.services.UserService;
+import edu.sdccd.cisc191.server.services.implimentations.UserServiceImpl;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AccountController {
 
     @Autowired(required = true)
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @GetMapping("/sanitycheck")
     public String ineedsanity() {
@@ -40,8 +41,8 @@ public class AccountController {
         return userService.getUser(user.getName()).get();
     }
 
-    @PutMapping("/update/{id}")
-    public void update(@PathVariable Long id, User newUserData) throws UserNotFound {
+    @PostMapping("/update/{id}")
+    public void update(@PathVariable Long id, @RequestBody User newUserData) throws UserNotFound {
         Optional<User> oldUser = userService.getUser(id);
         if(oldUser.isEmpty()) {
             throw new UserNotFound();

@@ -64,6 +64,35 @@ public class UserDataFetcher implements DataFetcher {
             throw new InvalidPayloadException();
         }
 
-        return "Success!";
+        return "Success";
+    }
+
+    public static String update(User user) {
+        try {
+            restTemplate.exchange(
+                    DataFetcher.backendEndpointURL + DataFetcher.userEndpointURL + "/update/" + user.getId(),
+                    HttpMethod.POST,
+                    new HttpEntity<User>(user),
+                    new ParameterizedTypeReference<>() {}
+            );
+        } catch (Exception error) {
+            throw new InvalidPayloadException();
+        }
+        return "Success";
+    }
+
+    public static String delete(Long id) {
+        try {
+            restTemplate.exchange(
+                    DataFetcher.backendEndpointURL + DataFetcher.userEndpointURL + id,
+                    HttpMethod.DELETE,
+                    null,
+                    new ParameterizedTypeReference<>() {}
+            );
+        } catch (Exception error) {
+            throw new InvalidPayloadException();
+        }
+
+        return "Success";
     }
 }
