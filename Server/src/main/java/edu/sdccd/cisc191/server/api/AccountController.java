@@ -53,6 +53,7 @@ public class AccountController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) throws DatabaseError {
+        System.out.println(id);
         Optional<User> user = userService.getUser(id);
         if(user.isEmpty()) {
             throw new UserNotFound();

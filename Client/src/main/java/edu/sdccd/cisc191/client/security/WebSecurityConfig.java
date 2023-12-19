@@ -64,7 +64,7 @@ public class WebSecurityConfig {
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                        .invalidSessionUrl(LOGIN_FAIL_URL));
+                        .invalidSessionUrl("/"));
 
         return http.build();
     }

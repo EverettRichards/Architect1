@@ -72,7 +72,7 @@ public class UserDataFetcher implements DataFetcher {
             restTemplate.exchange(
                     DataFetcher.backendEndpointURL + DataFetcher.userEndpointURL + "/update/" + user.getId(),
                     HttpMethod.POST,
-                    new HttpEntity<User>(user),
+                    new HttpEntity<>(user),
                     new ParameterizedTypeReference<>() {}
             );
         } catch (Exception error) {
@@ -84,7 +84,7 @@ public class UserDataFetcher implements DataFetcher {
     public static String delete(Long id) {
         try {
             restTemplate.exchange(
-                    DataFetcher.backendEndpointURL + DataFetcher.userEndpointURL + id,
+                    DataFetcher.backendEndpointURL + DataFetcher.userEndpointURL + "/" + id,
                     HttpMethod.DELETE,
                     null,
                     new ParameterizedTypeReference<>() {}

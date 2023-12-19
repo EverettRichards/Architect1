@@ -7,8 +7,8 @@ import edu.sdccd.cisc191.client.models.NewUser;
 import edu.sdccd.cisc191.common.cryptography.Hasher;
 import edu.sdccd.cisc191.common.entities.User;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -129,12 +129,18 @@ public class UserController implements DataFetcher {
     }
 
     @GetMapping("/delete")
-    public String deleteUser(@RequestParam Long id) {
+    public String deleteUser(@RequestParam Long id, Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+
         try {
             UserDataFetcher.delete(id);
         } catch (Exception error) {
             return "redirect:my-account";
         }
+
+        authentication.setAuthenticated(false);
+        session.invalidate();
+
         return "redirect:/";
     }
 }
