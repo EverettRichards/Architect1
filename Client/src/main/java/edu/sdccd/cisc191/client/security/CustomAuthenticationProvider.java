@@ -88,6 +88,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             if (!Hasher.isCorrectPassword(user, password)) {
                 return false;
             }
+            if (user.getRole() == User.Role.Regular) {
+                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("USER");
+            } else if (user.getRole() == User.Role.Admin) {
+                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ADMIN");
+            }
             return true;
         } catch(JsonProcessingException e) {
             return false;

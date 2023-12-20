@@ -81,4 +81,12 @@ public class User implements java.io.Serializable {
     public Role getRole() {
         return this.role;
     }
+
+    public String getRoleAsString() {
+        if (this.role == Role.Admin) {
+            return "ROLE_ADMIN";
+        } else {
+            return "ROLE_USER";
+        }
+    }
 }

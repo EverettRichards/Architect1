@@ -82,19 +82,9 @@ public class WebSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("password")
-//                        .roles("USER")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
         return new MyDatabaseUserDetailsService();
     }
 
-//    @Autowired
-//    private CustomAuthenticationProvider authProvider;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();

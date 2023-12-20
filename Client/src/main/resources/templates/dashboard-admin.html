@@ -23,19 +23,19 @@
     <main>
       <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 text-gray-50">
         <div class="mx-auto max-w-7xl flex justify-between border-b border-gray-200 pb-3">
-          <h2 class="text-xl font-medium tracking-tight text-slate-400">Your stock list</h2>
-          <div sec:authorize="hasRole('ADMIN')">
-            <a class="p-4 rounded-t-lg active bg-gray-800 text-blue-500" th:href="@{/dashboard}">Stocks</a>
-            <a class="p-4 rounded-t-lg hover:bg-gray-800 hover:text-gray-300" th:href="@{/dashboard/admin}">Users</a>
+          <h2 class="text-xl font-medium tracking-tight text-slate-400">Users</h2>
+          <div sec:authorize="hasRole('ROLE_ADMIN')">
+            <a class="p-4 rounded-t-lg hover:bg-gray-800 hover:text-gray-300" th:href="@{/dashboard}">Stocks</a>
+            <a class="p-4 rounded-t-lg active bg-gray-800 text-blue-500" th:href="@{/dashboard/admin}">Users</a>
           </div>
         </div>
 
-          <div class="flex flex-col mt-10">
+          <div class="flex flex-col">
             <div class="-m-1.5 overflow-x-auto">
               <div class="p-1.5 min-w-full inline-block align-middle">
                 <div class="overflow-hidden">
                   <div th:switch="${stocks}">
-                    <h2 th:case="${null}">No stocks yet!</h2>
+                    <h2 th:case="null">No stocks yet!</h2>
                     <div th:case="*">
                   <table class="min-w-full">
                     <thead>
