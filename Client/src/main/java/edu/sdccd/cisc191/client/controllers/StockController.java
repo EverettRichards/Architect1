@@ -2,6 +2,7 @@ package edu.sdccd.cisc191.client.controllers;
 
 import edu.sdccd.cisc191.client.models.DefaultStocksFileIO;
 import edu.sdccd.cisc191.client.models.RankedResult;
+import edu.sdccd.cisc191.client.models.StockDataFetcher;
 import edu.sdccd.cisc191.client.models.UserDataFetcher;
 import edu.sdccd.cisc191.common.entities.Stock;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
  */
 @Controller
 public class StockController implements DataFetcher {
+
 
     public StockList stockList = new StockList(); //List of stocks the user follows.
     RestTemplate restTemplate = new RestTemplate();
@@ -75,15 +77,7 @@ public class StockController implements DataFetcher {
             for (String ticker : tickers) {
                 Stock stock;
                 try {
-                    ResponseEntity<Stock> response = restTemplate.exchange(
-                            resourceURL + "/stock/" + ticker,
-                            HttpMethod.GET,
-                            null,
-                            new ParameterizedTypeReference<>() {
-                            }
-                    );
-
-                    stock = response.getBody();
+                    stock = StockDataFetcher.get(ticker);
                     if (stock != null) {
                         stockList.add(stock);
                     }
@@ -121,13 +115,7 @@ public class StockController implements DataFetcher {
         Stock stock;
 
         try {
-            ResponseEntity<Stock> response = restTemplate.exchange(
-                    resourceURL + "/stock/" + ticker,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<>() {}
-            );
-            stock = response.getBody();
+            stock = StockDataFetcher.get(ticker);
         } catch (Exception e) {
             stock = null;
         }
@@ -188,13 +176,7 @@ public class StockController implements DataFetcher {
 
         Stock stock;
         try {
-            ResponseEntity<Stock> response = restTemplate.exchange(
-                    resourceURL + "/stock/" + ticker,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<>() {}
-            );
-            stock = response.getBody();
+            stock = StockDataFetcher.get(ticker);
         } catch (Exception e) {
             stock = null;
         }
@@ -236,13 +218,9 @@ public class StockController implements DataFetcher {
                 try {
                     String ticker = result.getString();
                     System.out.println(result.getScore());
-                    ResponseEntity<Stock> response = restTemplate.exchange(
-                            resourceURL + "/stock/" + ticker,
-                            HttpMethod.GET,
-                            null,
-                            new ParameterizedTypeReference<>() {}
-                    );
-                    RankedResult rankedResult = new RankedResult(result.getScore(), response.getBody());
+                    Stock stock;
+                    stock = StockDataFetcher.get(ticker);
+                    RankedResult rankedResult = new RankedResult(result.getScore(), stock);
                     return rankedResult;
                 } catch (Exception e) {
                     System.err.println(e);

@@ -7,7 +7,6 @@ import edu.sdccd.cisc191.client.models.NewUser;
 import edu.sdccd.cisc191.common.cryptography.Hasher;
 import edu.sdccd.cisc191.common.entities.User;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,24 +19,36 @@ import edu.sdccd.cisc191.client.models.UserDataFetcher;
 
 import java.util.ArrayList;
 
+/**
+ * UserController*
+ * Handles routing and views for a user sign-in, sign-up,
+ * and account options.
+ */
 @Controller
 public class UserController implements DataFetcher {
-
     private final String baseURL = backendEndpointURL + userEndpointURL;
 
-    //Render sign in page
+    /**
+     * Renders Sign In Page
+     */
     @GetMapping("/sign-in")
     public String signIn() {
         return "signin";
     }
 
-    //Render sign in success page
+    /**
+     * Renders Sign In Success page
+     */
     @GetMapping("/sign-in/success")
     public String signInSuccess() {
         return "signin-success";
     }
 
-    //Render sign up page
+    /**
+     * Renders Sign Up page
+     * @param model model to pass an empty user for collecting form data
+     * @return signup (sign up page)
+     */
     @GetMapping("/sign-up")
     public String signUp(Model model) {
         NewUser newUser = new NewUser();
@@ -45,7 +56,12 @@ public class UserController implements DataFetcher {
         return "signup";
     }
 
-    //Handle sign up form submission and conditionally render success page or error.
+    /**
+     * Handles Sign Up form submission
+     * @param model model to pass error messages to Sign Up page.
+     * @return signup (sign up page if error)
+     * @return signup-success (sign up success page)
+     */
     @PostMapping("sign-up")
     public String signUpNewUser(@ModelAttribute("user") NewUser newUser, Model model) {
         String passwordHash = Hasher.hashNewPassword(newUser.getPassword());
@@ -69,7 +85,14 @@ public class UserController implements DataFetcher {
         return "signup-success";
     }
 
-    //Return user account page
+    /**
+     * Renders account page that shows authenticated user's details.
+     * @param model model to pass error messages or user data to account
+     *              page.
+     * @param request Used for session data to get the authenticated
+     *                user's details.
+     * @return myaccount (account page)
+     */
     @GetMapping("/my-account")
     public String myAccount(Model model, HttpServletRequest request) {
         //For getting user information
@@ -96,6 +119,14 @@ public class UserController implements DataFetcher {
         return "myaccount";
     }
 
+    /**
+     * Renders account edit page where a user can edit their data.
+     * @param model model to pass error messages or user data to account
+     *              edit page.
+     * @param request Used for session data to get the authenticated
+     *                user's details.
+     * @return myaccount-edit (account edit page)
+     */
     @GetMapping("/my-account/edit")
     public String editMyAccount(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -106,6 +137,16 @@ public class UserController implements DataFetcher {
         return "myaccount-edit";
     }
 
+    /**
+     * Handles account edit form submission when a user saves new account data.
+     * @param model model to pass error messages or user data to account
+     *              edit page.
+     * @param request Used for session data to get the authenticated
+     *                user's details.
+     * @param editedUserDetails Form data from form submission with new user data.
+     * @return myaccount-edit (account edit page if error)
+     * @return redirect:/my-account (redirect to my-account if successful)
+     */
     @PostMapping("/my-account")
     public String handleSubmitEditMyAccount(Model model, HttpServletRequest request, User editedUserDetails) {
         HttpSession session = request.getSession();
@@ -128,8 +169,17 @@ public class UserController implements DataFetcher {
         return "redirect:my-account";
     }
 
+    /**
+     * Handles when a user deletes their account.
+     * @param request Used for session data to get the authenticated
+     *                user's details.
+     * @param authentication Used to set authentication to false if successful.
+     * @param id The user's id to be deleted.
+     * @return redirect:/myaccount (account page if error)
+     * @return redirect:/ (redirect home if successful)
+     */
     @GetMapping("/delete")
-    public String deleteUser(@RequestParam Long id, Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
+    public String deleteUser(@RequestParam Long id, Authentication authentication, HttpServletRequest request) {
         HttpSession session = request.getSession();
 
         try {

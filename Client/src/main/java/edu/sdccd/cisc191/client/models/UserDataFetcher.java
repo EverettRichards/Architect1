@@ -10,10 +10,18 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * UserDataFetcher*
+ * Handles all API calls to backend for User data.
+ */
 public class UserDataFetcher implements DataFetcher {
     private static RestTemplate restTemplate = new RestTemplate();
 
-    //Fetch user by username
+    /**
+     * Fetches a user by username
+     * @param name username of user.
+     * @return fetchUser.getBody() returns the User object.
+     */
     public static User get(String name) {
         ResponseEntity<User> fetchUser;
         try {
@@ -30,7 +38,11 @@ public class UserDataFetcher implements DataFetcher {
         return fetchUser.getBody();
     }
 
-    //Fetch user by id
+    /**
+     * Fetches a user by id
+     * @param id id of user.
+     * @return fetchUser.getBody() returns the User object.
+     */
     public static User get(Long id) {
         ResponseEntity<User> fetchUser;
         try {
@@ -47,6 +59,11 @@ public class UserDataFetcher implements DataFetcher {
         return fetchUser.getBody();
     }
 
+    /**
+     * Adds a new user.
+     * @param user User object to be added.
+     * @return success (if successful)
+     */
     public static String add(User user) {
         ResponseEntity<String> response;
         try {
@@ -67,6 +84,11 @@ public class UserDataFetcher implements DataFetcher {
         return "Success";
     }
 
+    /**
+     * Updates an existing user.
+     * @param user User object to be updated.
+     * @return success (if successful)
+     */
     public static String update(User user) {
         try {
             restTemplate.exchange(
@@ -81,6 +103,11 @@ public class UserDataFetcher implements DataFetcher {
         return "Success";
     }
 
+    /**
+     * Deletes a user.
+     * @param id id of User object to be deleted.
+     * @return success (if successful)
+     */
     public static String delete(Long id) {
         try {
             restTemplate.exchange(
