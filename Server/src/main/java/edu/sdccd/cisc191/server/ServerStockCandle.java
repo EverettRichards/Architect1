@@ -35,11 +35,11 @@ public class ServerStockCandle extends StockCandle {
         this.t = newCandle.t;
         this.v = newCandle.v;
 
-        this.ticker = newCandle.getTicker();
-        this.lastRefreshTime = newCandle.getLastRefresh();
-        this.duration = newCandle.duration;
-        this.time1 = newCandle.time1;
-        this.time2 = newCandle.time2;
+        // this.ticker = newCandle.getTicker();
+        // this.lastRefreshTime = newCandle.getLastRefresh();
+        // this.duration = newCandle.duration;
+        // this.time1 = newCandle.time1;
+        // this.time2 = newCandle.time2;
         this.jsonVersion = stockCandleJsonVersion;
     }
 
@@ -96,12 +96,12 @@ public class ServerStockCandle extends StockCandle {
     // Will use an existing file OR the FinnHub API, depending on the availability and recency of a relevant file.
     public ServerStockCandle(String ticker, String duration) throws BadTickerException {
         Ticker ticker_object = new Ticker(ticker);
+
         setTicker(ticker_object.getTicker());
 
         long[] timeRange = TimeMethods.getTimeRange(duration);
         time1 = timeRange[0];
         time2 = timeRange[1];
-        // System.out.println(time1 + " " + time2);
         this.duration = duration;
 
         try {
@@ -142,13 +142,21 @@ public class ServerStockCandle extends StockCandle {
 
     // Determine an appropriate file name for the StockCandle
     private String getFileName(){
-        return String.format("%s;%s.json",ticker,duration);
+        return String.format("%s-%s.json",ticker,duration);
     }
 
     // Creates a file, TICKER.json, containing the JSON form of a provided Stock object
     public void saveAsJsonFile() throws JsonProcessingException, FileNotFoundException {
         // System.out.println("Saved a stock candle!!");
         String json = toJson();
-        new PrintWriter(Server.stockCandleDirectory+"/"+getFileName()).print(json);
+        String filePath = Server.stockCandleDirectory+"/"+getFileName();
+        // write json to filepath
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+            writer.write(json);
+            writer.close();
+        } catch(IOException e) {
+            System.out.println("Failed to write. Error: " + e);
+        }
     }
 }

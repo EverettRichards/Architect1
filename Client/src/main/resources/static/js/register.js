@@ -22,12 +22,13 @@ function broadcastMessage(message) {
                 "username": formData.get("username"),
                 "password": formData.get("password"),
             }),
-            redirect: "follow",
+            //redirect: "follow",
         });
 
 
-        let message = await response.text();
-        broadcastMessage(message);
+        let message = await response;
+        // broadcastMessage(message);
+        console.log(message);
 
         // in case follow didn't work
         let location = response.headers.get("Location");

@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+>
 
 <head th:replace="~{ layout :: common_header(~{::title}) }">
     <title>STOCKS | Sign Up</title>
@@ -16,11 +20,11 @@
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form class="space-y-6" id="register-form">
+            <form class="space-y-6" id="register-form" action="#" th:action="@{/sign-up}" method="post" th:object="${user}">
                 <div>
                     <label for="username" class="block text-sm font-medium leading-6 text-gray-50">Username</label>
                     <div class="mt-2">
-                        <input id="username" name="username" type="text" autocomplete="username" required class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input id="username" name="username" type="text" autocomplete="username" th:field="*{username}" required class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
 
@@ -28,14 +32,14 @@
                 <div>
                     <label for="nickname" class="block text-sm font-medium leading-6 text-gray-50">Nickname (optional)</label>
                     <div class="mt-2">
-                        <input id="nickname" name="nickname" type="text" autocomplete="firstname" class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input id="nickname" name="nickname" type="text" autocomplete="firstname" th:field="*{nickname}" class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
 
                 <div>
                     <label for="email" class="block text-sm font-medium leading-6 text-gray-50">Email address</label>
                     <div class="mt-2">
-                        <input id="email" name="email" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input id="email" name="email" type="email" th:field="*{email}" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
 
@@ -44,7 +48,7 @@
                         <label for="password" class="block text-sm font-medium leading-6 text-gray-50">Password</label>
                     </div>
                     <div class="mt-2">
-                        <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input id="password" name="password" type="password" th:field="*{password}" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
 
@@ -56,10 +60,12 @@
                 Already a member?
                 <a href="/sign-in" class="font-semibold leading-6 text-emerald-300 hover:text-emerald-200">Sign In</a>
             </p>
+            <div th:if="${error != null}" th:text="${error}" class="mt-10 text-center text-sm text-red-400">
+            </div>
         </div>
     </div>
 </div>
 
-<script th:src="@{js/register.js}"></script>
+<!--<script type="text/javascript" th:src="@{js/register.js}"></script>-->
 </body>
 </html>

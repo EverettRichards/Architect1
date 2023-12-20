@@ -8,8 +8,7 @@ class DefaultStocksFileIOTest {
 
     @Test
     void testReadAndUpdateDefaultStocks() {
-        assertEquals(0, defaultStocks.readAndUpdateDefaultStocks(DefaultStocksFileIO.defaultStocks));
+        assertEquals(0, defaultStocks.readAndUpdateDefaultStocks());
         System.out.println(defaultStocks.getDefaultStocks());
-        assertEquals(-1, defaultStocks.readAndUpdateDefaultStocks("stocks.txt"));
     }
 }

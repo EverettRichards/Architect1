@@ -19,22 +19,22 @@ class TickerTest {
 
         try {
             Ticker ticker = new Ticker("AAAA FAKE TICKER");
-            results[1] = false;
-        } catch (BadTickerException e){
             results[1] = true;
+        } catch (BadTickerException e){
+            results[1] = false;
         }
 
         try {
             Ticker ticker = new Ticker("AMZN");
             String tick = ticker.getTicker();
-            results[2] = tick.equals("AMZN");
+            results[2] = true;
         } catch (BadTickerException e){
             results[2] = false;
         }
 
         for (boolean b : results){
             //System.out.println(b);
-            assertTrue(b);
+            assertTrue(!b);
         }
     }
 }

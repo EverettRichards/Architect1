@@ -2,11 +2,18 @@ package edu.sdccd.cisc191.client.controllers;
 
 import edu.sdccd.cisc191.client.models.DefaultStocksFileIO;
 import edu.sdccd.cisc191.client.models.RankedResult;
+import edu.sdccd.cisc191.client.models.StockDataFetcher;
+import edu.sdccd.cisc191.client.models.UserDataFetcher;
 import edu.sdccd.cisc191.common.entities.Stock;
 import edu.sdccd.cisc191.common.entities.DataFetcher;
+import edu.sdccd.cisc191.common.entities.User;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +37,6 @@ import java.util.stream.Collectors;
  */
 @Controller
 public class StockController implements DataFetcher {
-
-    public StockList stockList = new StockList(); //List of stocks the user follows.
     RestTemplate restTemplate = new RestTemplate();
     String resourceURL = DataFetcher.backendEndpointURL + DataFetcher.apiEndpointURL;
 
@@ -41,47 +46,42 @@ public class StockController implements DataFetcher {
      * @return dashboard the dashboard page
      */
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
+    public String dashboard(Model model, HttpServletRequest request) {
+        StockList stockList = new StockList(); //List of stocks the user follows.
 
-        //Temporary file i/o for reading a list of stocks
-        //until we have proper authentication working.
-        //Will be replaced by the user's followed stocks instead of
-        //default.
-        DefaultStocksFileIO defaultStocks = new DefaultStocksFileIO();
-        defaultStocks.readAndUpdateDefaultStocks(DefaultStocksFileIO.defaultStocks);
-        ArrayList<String> tickers = defaultStocks.getDefaultStocks();
+        //For getting user information
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        HttpSession session = request.getSession();
 
-        System.out.println(defaultStocks.getDefaultStocks());
+        User user;
+
         //For use in html
-        LinkedList<Stock> stocks = null;
-
-        for (String ticker : tickers) {
-            Stock stock;
+        LinkedList<Stock> stocks;
+        if (session.getAttribute("user") != null) {
+            user = (User) session.getAttribute("user");
+        } else {
             try {
-                ResponseEntity<Stock> response = restTemplate.exchange(
-                        resourceURL + "/stock/" + ticker,
-                        HttpMethod.GET,
-                        null,
-                        new ParameterizedTypeReference<>() {}
-                );
-
-                stock = response.getBody();
-                if(stock != null) {
-                    this.stockList.add(stock);
-                    System.out.println("Added stock");
-                }
-                else {
-                    this.stockList = null;
-                    System.out.println("No stock foound.");
-                }
-            } catch (Exception e) {
-                this.stockList = null;
-                System.out.println("Error");
+                user = UserDataFetcher.get(currentPrincipalName);
+            } catch (Exception error) {
+                model.addAttribute("error", "Something went wrong!");
+                return "/dashboard";
             }
+
+            session.setAttribute("user", user);
         }
 
-        if(this.stockList.length() != 0) {
-            stocks = this.stockList.getStocks();
+        if(stockList.length() < 1) {
+            user.getFollowedTickers().parallelStream().forEach(ticker -> {
+                Stock fetchStock = StockDataFetcher.get(ticker);
+                stockList.add(fetchStock);
+            });
+        }
+
+        stocks = stockList.getStocks();
+
+        if(user.getFollowedTickers().isEmpty()) {
+            stocks = null;
         }
 
         model.addAttribute("stocks", stocks);
@@ -96,24 +96,84 @@ public class StockController implements DataFetcher {
      * @return stock the stock page
      */
     @GetMapping("/dashboard/stock/{ticker}")
-    public String stockDetails(@PathVariable("ticker") String ticker, Model model) {
+    public String stockDetails(@PathVariable("ticker") String ticker, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        List userTickers = user.getFollowedTickers();
+        Boolean userHasTicker = false;
+
         //Stock variable for passing into template
         Stock stock;
 
         try {
-            ResponseEntity<Stock> response = restTemplate.exchange(
-                    resourceURL + "/stock/" + ticker,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<>() {}
-            );
-            stock = response.getBody();
+            stock = StockDataFetcher.get(ticker);
         } catch (Exception e) {
             stock = null;
         }
 
+        if(userTickers.contains(stock.getTicker())) {
+            userHasTicker = true;
+        }
+        model.addAttribute("userHasTicker", userHasTicker);
         model.addAttribute("stock", stock);
         return "stock";
+    }
+
+    /**
+     * Removes a stock from user's followed tickers.
+     * @param ticker the Long id that identifies each stock
+     * @param model the method to create the stock listing
+     * @return redirect to dashboard
+     */
+    @GetMapping("/dashboard/delete_stock/{ticker}")
+    public String deleteFollowedStock(@PathVariable("ticker") String ticker, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        List<String> usersTickers = user.getFollowedTickers();
+        usersTickers.remove(ticker);
+        user.setFollowedTickers(usersTickers);
+
+        try {
+            UserDataFetcher.update(user);
+        } catch (Exception error) {
+            model.addAttribute("error", "There was an error processing your request.");
+            return "dashboard";
+        }
+//        this.stockList.delete(ticker);
+        session.setAttribute("user", user);
+        return "redirect:/dashboard";
+    }
+
+    /**
+     * Removes a stock from user's followed tickers.
+     * @param ticker the Long id that identifies each stock
+     * @param model the method to create the stock listing
+     * @return redirect to dashboard
+     */
+    @GetMapping("/dashboard/add_stock/{ticker}")
+    public String addFollowedStock(@PathVariable("ticker") String ticker, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        List<String> usersTickers = user.getFollowedTickers();
+        usersTickers.add(ticker);
+        user.setFollowedTickers(usersTickers);
+
+        try {
+            UserDataFetcher.update(user);
+        } catch (Exception error) {
+            model.addAttribute("error", "There was an error processing your request.");
+            return "dashboard";
+        }
+
+        Stock stock;
+        try {
+            stock = StockDataFetcher.get(ticker);
+        } catch (Exception e) {
+            stock = null;
+        }
+//        this.stockList.add(stock);
+        session.setAttribute("user", user);
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/search")
@@ -124,8 +184,11 @@ public class StockController implements DataFetcher {
     }
 
     @GetMapping("/search/{query}")
-    public String searchWithQuery(@PathVariable("query") String query, Model model) {
-        System.out.println(allTickers.size());
+    public String searchWithQuery(@PathVariable("query") String query, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        List<String> usersTickers = user.getFollowedTickers();
+
         List<ExtractedResult> topResults = FuzzySearch.extractTop(query, allTickers, 10);
 
         ArrayList<RankedResult> rankedResultList = new ArrayList<>();
@@ -146,13 +209,9 @@ public class StockController implements DataFetcher {
                 try {
                     String ticker = result.getString();
                     System.out.println(result.getScore());
-                    ResponseEntity<Stock> response = restTemplate.exchange(
-                            resourceURL + "/stock/" + ticker,
-                            HttpMethod.GET,
-                            null,
-                            new ParameterizedTypeReference<>() {}
-                    );
-                    RankedResult rankedResult = new RankedResult(result.getScore(), response.getBody());
+                    Stock stock;
+                    stock = StockDataFetcher.get(ticker);
+                    RankedResult rankedResult = new RankedResult(result.getScore(), stock);
                     return rankedResult;
                 } catch (Exception e) {
                     System.err.println(e);
@@ -190,6 +249,7 @@ public class StockController implements DataFetcher {
 
         model.addAttribute("query", query);
         model.addAttribute("stocks", stockList);
+        model.addAttribute("usersTickers", usersTickers);
         return "search";
     }
 }

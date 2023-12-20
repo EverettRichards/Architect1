@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+>
 
 <head th:replace="~{ layout :: common_header(~{::title}) }">
   <title>STOCKS  | Dashboard Search Stocks</title>
@@ -45,6 +49,7 @@
                 <th scope="col" class="px-6 py-3">Name</th>
                 <th scope="col" class="px-6 py-3">Price</th>
                 <th scope="col" class="px-6 py-3">Details</th>
+                <th scope="col" class="px-6 py-3">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -53,6 +58,10 @@
                 <td class="px-6 py-4" th:text="${stock.getName()}"></td>
                 <td class="px-6 py-4" th:text="${stock.getPrice()}"></td>
                 <td class="px-6 py-4"><a class="text-blue-500 hover:text-blue-700" th:href="@{/dashboard/stock/{ticker}(ticker = ${stock.getTicker()})}">Details</a></td>
+                <td class="px-6 py-4">
+                  <a th:if="${usersTickers.contains(stock.getTicker())}" class="text-blue-500 hover:text-blue-700" th:href="@{/dashboard/delete_stock/{id}(id = ${stock.getTicker()})}" >Remove</a>
+                  <a th:unless="${usersTickers.contains(stock.getTicker())}" class="text-blue-500 hover:text-blue-700" th:href="@{/dashboard/add_stock/{id}(id = ${stock.getTicker()})}" >Add</a>
+                </td>
               </tr>
             </tbody>
           </table>

@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+>
 
 <head>
   <div th:replace="~{ layout :: common_header(~{::title}) }">
@@ -10,6 +14,8 @@
   <script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.1/dist/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
   
   <script th:src="@{/js/chartjs-chart-financial.js}" defer></script>
   <script th:src="@{/js/candleChart.js}" defer></script>
@@ -56,7 +62,8 @@
         <p class="text-left font-medium text-gray-500" th:text="${'$' + stock.getDividend() + ' per share.'}"></p>
       </div>
       <div class="my-5 flex items-center">
-<!--        <a class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" th:attr="onclick=|remove(event, '${stock.getTicker()}', '/dashboard')|" href="#">Remove</a>-->
+        <a th:if="${userHasTicker == true}" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"  th:href="@{/dashboard/delete_stock/{id}(id = ${stock.getTicker()})}">Remove</a>
+        <a th:unless="${userHasTicker == true}" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"  th:href="@{/dashboard/add_stock/{id}(id = ${stock.getTicker()})}">Add</a>
       </div>
     </div>
       <div class="chart">
@@ -64,6 +71,18 @@
             <button id="day-button" onclick="changeResolution('day')" class="bg-gray-300 bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">Day</button>
             <button id="week-button" onclick="changeResolution('week')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4">Week</button>
             <button id="month-button" onclick="changeResolution('month')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">Month</button>
+            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center ml-2" onclick="resetZoom()">
+              <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 489.533 489.533" xml:space="preserve">
+                <g>
+                  <path d="M268.175,488.161c98.2-11,176.9-89.5,188.1-187.7c14.7-128.4-85.1-237.7-210.2-239.1v-57.6c0-3.2-4-4.9-6.7-2.9
+                    l-118.6,87.1c-2,1.5-2,4.4,0,5.9l118.6,87.1c2.7,2,6.7,0.2,6.7-2.9v-57.5c87.9,1.4,158.3,76.2,152.3,165.6
+                    c-5.1,76.9-67.8,139.3-144.7,144.2c-81.5,5.2-150.8-53-163.2-130c-2.3-14.3-14.8-24.7-29.2-24.7c-17.9,0-31.9,15.9-29.1,33.6
+                    C49.575,418.961,150.875,501.261,268.175,488.161z"/>
+                </g>
+              </svg>
+              <span>Reset Zoom</span>
+            </button>
           </div>
         <canvas id="chart"></canvas>
       </div>

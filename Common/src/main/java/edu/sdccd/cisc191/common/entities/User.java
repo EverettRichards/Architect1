@@ -69,4 +69,24 @@ public class User implements java.io.Serializable {
         this.role = role;
         this.followedTickers = new ArrayList<>();
     }
+    public User(String email, String name, String nickname, String passwordHash, Role role, ArrayList<String> followedTickers) {
+        this.email = email;
+        this.name = name;
+        this.nickname = nickname;
+        this.passwordHash = passwordHash;
+        this.role = role;
+        this.followedTickers = followedTickers;
+    }
+
+    public Role getRole() {
+        return this.role;
+    }
+
+    public String getRoleAsString() {
+        if (this.role == Role.Admin) {
+            return "ROLE_ADMIN";
+        } else {
+            return "ROLE_USER";
+        }
+    }
 }
