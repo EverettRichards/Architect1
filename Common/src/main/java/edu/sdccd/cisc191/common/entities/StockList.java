@@ -1,5 +1,6 @@
 package edu.sdccd.cisc191.common.entities;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -35,6 +36,17 @@ public class StockList {
      * instance variable.
      */
     public StockList(LinkedList<Stock> stocks) {
+        for (Stock stock : stocks) {
+            this.add(stock);
+        }
+    }
+
+    /**
+     * Constructor creates a new StockList from data
+     * @param stocks - an ArrayList of stocks to initialize the stocks
+     * instance variable.
+     */
+    public StockList(ArrayList<Stock> stocks) {
         for (Stock stock : stocks) {
             this.add(stock);
         }
