@@ -37,9 +37,6 @@ import java.util.stream.Collectors;
  */
 @Controller
 public class StockController implements DataFetcher {
-
-
-    public StockList stockList = new StockList(); //List of stocks the user follows.
     RestTemplate restTemplate = new RestTemplate();
     String resourceURL = DataFetcher.backendEndpointURL + DataFetcher.apiEndpointURL;
 
@@ -50,6 +47,8 @@ public class StockController implements DataFetcher {
      */
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpServletRequest request) {
+        StockList stockList = new StockList(); //List of stocks the user follows.
+
         //For getting user information
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
@@ -72,16 +71,16 @@ public class StockController implements DataFetcher {
             session.setAttribute("user", user);
         }
 
-        if(this.stockList.length() < 1) {
+        if(stockList.length() < 1) {
             user.getFollowedTickers().parallelStream().forEach(ticker -> {
                 Stock fetchStock = StockDataFetcher.get(ticker);
-                this.stockList.add(fetchStock);
+                stockList.add(fetchStock);
             });
         }
 
         stocks = stockList.getStocks();
 
-        if(stocks.isEmpty()) {
+        if(user.getFollowedTickers().isEmpty()) {
             stocks = null;
         }
 
@@ -140,7 +139,7 @@ public class StockController implements DataFetcher {
             model.addAttribute("error", "There was an error processing your request.");
             return "dashboard";
         }
-        this.stockList.delete(ticker);
+//        this.stockList.delete(ticker);
         session.setAttribute("user", user);
         return "redirect:/dashboard";
     }
@@ -172,7 +171,7 @@ public class StockController implements DataFetcher {
         } catch (Exception e) {
             stock = null;
         }
-        this.stockList.add(stock);
+//        this.stockList.add(stock);
         session.setAttribute("user", user);
         return "redirect:/dashboard";
     }

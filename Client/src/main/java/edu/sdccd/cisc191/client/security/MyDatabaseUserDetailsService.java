@@ -38,7 +38,8 @@ public class MyDatabaseUserDetailsService implements UserDetailsService {
         ResponseEntity<String> response;
         User user;
         UserDetails authUser;
-        String userRole = null;
+        String userRole = "USER";
+
 
         try {
             response = restTemplate.exchange(
@@ -49,36 +50,23 @@ public class MyDatabaseUserDetailsService implements UserDetailsService {
             );
 
             if(response.getStatusCode() != HttpStatus.OK) {
-                System.out.println("If clause in first try block.");
                 throw new UsernameNotFoundException("User not found.");
             }
         }
         catch(ClassCastException e) {
-            System.out.println("Wrong typecast.");
             throw new InvalidPayloadException("Invalid payload.");
         } catch(RestClientException e) {
-            System.out.println("Client Error.");
             throw new UsernameNotFoundException("Client Error.");
         }
         try {
             user = new ObjectMapper().readValue(response.getBody(),
                     User.class);
-            if (user.getRole() == User.Role.Regular) {
-                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_USER");
-                grantedAuthorities.add(grantedAuthority);
-                userRole = "ROLE_USER";
-            } else if (user.getRole() == User.Role.Admin) {
-                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
-                grantedAuthorities.add(grantedAuthority);
-                userRole = "ADMIN";
-            }
-            System.out.println("Success");
         } catch(JsonProcessingException e) {
-            System.out.println("Something went wrong.");
             throw new UsernameNotFoundException("User not found.");
         }
-        if (userRole == null) {
-            userRole = "USER";
+
+        if (user.getRoleAsString() == "ROLE_ADMIN") {
+            userRole = "ADMIN";
         }
 
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
