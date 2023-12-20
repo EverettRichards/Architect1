@@ -62,7 +62,8 @@
         <p class="text-left font-medium text-gray-500" th:text="${'$' + stock.getDividend() + ' per share.'}"></p>
       </div>
       <div class="my-5 flex items-center">
-<!--        <a class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" th:attr="onclick=|remove(event, '${stock.getTicker()}', '/dashboard')|" href="#">Remove</a>-->
+        <a th:if="${userHasTicker == true}" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"  th:href="@{/dashboard/delete_stock/{id}(id = ${stock.getTicker()})}">Remove</a>
+        <a th:unless="${userHasTicker == true}" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"  th:href="@{/dashboard/add_stock/{id}(id = ${stock.getTicker()})}">Add</a>
       </div>
     </div>
       <div class="chart">

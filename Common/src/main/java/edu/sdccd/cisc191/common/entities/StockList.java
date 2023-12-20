@@ -157,6 +157,46 @@ public class StockList {
         }
     }
 
+    /**
+     * delete
+     * @param ticker
+     * Takes the variable id and uses it to
+     * find a stock in the stocks list.  If successful,
+     * the stock is removed from the linked list and returns 0.
+     * If unsuccessful, the method returns -1.
+     */
+    public boolean delete(String ticker) {
+        //If the head is null, list is empty
+        if (head == null) {
+            return false;
+        } else if (head.item.getTicker().equals(ticker)) {
+            //If the stock to remove is the head, remove the head.
+            head = head.next;
+            this.length--;
+            return true;
+        } else {
+            Node runner;
+            Node previous;
+            runner = head.next;
+            previous = head;
+
+            //Traverse list.
+            while (runner != null && runner.item.getTicker().compareTo(ticker) < 0) {
+                previous = runner;
+                runner = runner.next;
+            }
+            if (runner != null && runner.item.getTicker().equals(ticker)) {
+                //If stockToRemove is found, remove it.
+                previous.next = runner.next;
+                this.length--;
+                return true;
+            } else {
+                //stockToRemove not found in list.
+                return false;
+            }
+        }
+    }
+
 
     /**
      * length
