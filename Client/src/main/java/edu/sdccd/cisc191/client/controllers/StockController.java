@@ -58,7 +58,7 @@ public class StockController implements DataFetcher {
         User user;
 
         //For use in html
-        LinkedList<Stock> stocks = new LinkedList<>();
+        LinkedList<Stock> stocks;
         if (session.getAttribute("user") != null) {
             user = (User) session.getAttribute("user");
         } else {
@@ -73,18 +73,10 @@ public class StockController implements DataFetcher {
         }
 
         if(this.stockList.length() < 1) {
-            List<String> tickers = user.getFollowedTickers();
-            for (String ticker : tickers) {
-                Stock stock;
-                try {
-                    stock = StockDataFetcher.get(ticker);
-                    if (stock != null) {
-                        stockList.add(stock);
-                    }
-                } catch (Exception e) {
-                    System.out.println("Error");
-                }
-            }
+            user.getFollowedTickers().parallelStream().forEach(ticker -> {
+                Stock fetchStock = StockDataFetcher.get(ticker);
+                this.stockList.add(fetchStock);
+            });
         }
 
         stocks = stockList.getStocks();
